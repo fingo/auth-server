@@ -1,0 +1,176 @@
+﻿@using System.Threading.Tasks
+@using Fingo.Auth.DbAccess.Models.Statuses
+@using Fingo.Auth.ManagementApp.Models.Enums
+@model IEnumerable<Fingo.Auth.Domain.Models.AuditLog.AuditLogModel>
+
+<table class="table table-hover" id="auditLogTable">
+    <colgroup>
+        <col style="width:15%">
+        <col style="width:15%">
+        <col style="width:55%">
+        <col style="width:15%">
+    </colgroup>
+    <thead>
+    <tr>
+        <th style="cursor: pointer; padding-left: 30px;" id="@SortByColumn.Name" class="sort" onclick="filterByColumn('@SortByColumn.Name')">Name</th>
+        <th style="cursor: pointer; padding-left: 30px;" id="@SortByColumn.EventType" class="sort" onclick="filterByColumn('@SortByColumn.EventType')">Event type</th>
+        <th style="cursor: pointer; padding-left: 30px;" id="@SortByColumn.EventMessage" class="sort" onclick="filterByColumn('@SortByColumn.EventMessage')">Event message</th>
+        <th style="cursor: pointer; padding-left: 30px;" id="@SortByColumn.CreationDate" class="sort desc" onclick="filterByColumn('@SortByColumn.CreationDate')">Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var auditLog in Model)
+    {
+        <tr>
+            <td style="word-wrap: break-word">
+                @if (auditLog.UserStatus == UserStatus.Deleted)
+                {
+                    <b>@auditLog.UserName</b>
+                }
+                else
+                {
+                    @(auditLog.UserStatus == UserStatus.Registered ? Html.ActionLink(auditLog.UserName , "GetById" , "Users" , new {id = auditLog.UserId} , new {style = "color: brown; "}) : Html.ActionLink(auditLog.UserName , "GetById" , "Users" , new {id = auditLog.UserId}))
+                }
+            </td>
+            <td style="word-wrap: break-word">@auditLog.EventType</td>
+            <td style="word-wrap: break-word">@auditLog.EventMessage</td>
+            <td style="word-wrap: break-word">@auditLog.CreationDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+        </tr>
+    }
+        @for (int i = 0; i < ViewBag.RowsPerPage - Model.Count(); i++)
+        {
+            <tr>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="12">
+            <p id="pag">
+            </p>
+        </td>
+    </tr>
+    </tfoot>
+</table>
+
+<script>
+    $(function() {
+        $("#pag")
+            .bs_pagination({
+                currentPage: @ViewBag.Page,
+                rowsPerPage: @ViewBag.RowsPerPage,
+                totalPages:'@(ViewBag.TotalRows % ViewBag.RowsPerPage == 0 ? ViewBag.UsersCount : ViewBag.UsersCount + 1)',
+                visiblePageLinks: 7,
+                totalRows: @ViewBag.TotalRows,
+                onChangePage: function(event, data) {
+                    var apiUrl = '@Url.Action("AuditLogTablePartialView")';
+                    var getData = {
+                        page: data.currentPage,
+                        pageSize: data.rowsPerPage,
+                        filterOption: '@ViewBag.FilterOption',
+                        from: '@ViewBag.FromDate',
+                        to: '@ViewBag.ToDate',
+                        name: '@ViewBag.Name',
+                        type: '@ViewBag.Type',
+                        message: '@ViewBag.Message',
+                        descending: '@ViewBag.IdDescending',
+                        sortOption: '@ViewBag.SortOption'
+                    };
+                    var container = $('#auditLogTableContainer');
+                    $.ajaxLoading({
+                        url: apiUrl,
+                        type: 'GET',
+                        data: getData,
+                        success: function(data) {
+                            container.empty();
+                            container.html(data);
+                            container
+                                .find("script")
+                                .each(function(i) {
+                                    eval($(this).text());
+                                });
+                        }
+                    });
+                }
+            });
+    });
+
+    function filterByColumn(filterOption) {
+        var header = $('#' + filterOption);
+        var apiUrl = '@Url.Action("AuditLogTablePartialView")';
+        var container = $('#auditLogTableContainer');
+        if (header.hasClass("desc")) {
+            var data = {
+                descending: false,
+                filterOption: '@ViewBag.FilterOption',
+                from: '@ViewBag.FromDate',
+                to: '@ViewBag.ToDate',
+                sortOption: filterOption,
+                name: '@ViewBag.Name',
+                type: '@ViewBag.Type',
+                message: '@ViewBag.Message'
+            };
+            $.ajaxLoading({
+                url: apiUrl,
+                type: 'GET',
+                data: data,
+                statusCode: {
+                    401: function(data) {
+                        location.reload();
+                    }
+                },
+                success: function(data) {
+                    container.empty();
+                    container.html(data);
+                    container
+                        .find("script")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                    DeleteSortingClass();
+                    $('#' + filterOption).addClass("asc");
+                }
+            });
+            $('#' + filterOption).addClass("asc");
+        }
+        else
+        {
+            var data = {
+                descending: true,
+                filterOption: '@ViewBag.FilterOption',
+                from: '@ViewBag.FromDate',
+                to: '@ViewBag.ToDate',
+                sortOption: filterOption,
+                name: '@ViewBag.Name',
+                type: '@ViewBag.Type',
+                message: '@ViewBag.Message'
+            };
+            $.ajaxLoading({
+                url: apiUrl,
+                type: 'GET',
+                data: data,
+                success: function(data) {
+                    container.empty();
+                    container.html(data);
+                    container
+                        .find("script")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                    DeleteSortingClass();
+                    $('#' + filterOption).addClass("desc");
+                }
+            });
+            $('#' + filterOption).addClass("desc");
+        }
+    }
+
+    function DeleteSortingClass() {
+        $('table[id=auditLogTable] thead tr th').removeClass("desc");
+        $('table[id=auditLogTable] thead tr th').removeClass("asc");
+    }
+</script>

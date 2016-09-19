@@ -1,0 +1,34 @@
+﻿@using System.Threading.Tasks
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model Fingo.Auth.Domain.Models.UserModels.UserModel
+<link href="~/css/site.css" rel="stylesheet" />
+@using (Html.BeginForm())
+{
+    <div id="login" style="padding-left: inherit">
+
+        <div class="col-md-offset-4 col-md-10" style="align-items: center">
+            <p style="font-size: 30px; padding-top: 70px">Please log in</p>
+           
+            <div>
+               <strong>E-mail:</strong> @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="col-md-offset-4 col-md-10">
+           
+            <div>
+                <strong>Password:</strong> @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })<br />
+            </div>
+        </div>
+        <div>
+            <div class="col-md-offset-4 col-md-10">
+                <input type="submit" value="Log in" class="btn btn-success" style="height: 40px; width: 280px; max-width: 280px" />
+                <br />
+            </div>
+        </div>
+    </div>
+}
+
+<div class="col-md-offset-4 col-md-10">
+    @Html.ActionLink("Sign up", "SignUp", "Account")
+</div>

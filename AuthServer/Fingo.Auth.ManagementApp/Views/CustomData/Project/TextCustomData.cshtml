@@ -1,0 +1,45 @@
+﻿@model Fingo.Auth.Domain.CustomData.ConfigurationClasses.Project.TextProjectConfiguration
+
+<div class="panel panel-success" style="margin-top:15px; margin-bottom:0">
+    <div class="panel-heading"><strong>Set text data</strong></div>
+    <div class="alert alert-info small" role="alert" id="minPassLengAlert" style="display: none; margin-bottom: 0">
+        <strong>Information!</strong> CurrentValue should be between 5 and 50.
+    </div>
+
+    <div class="panel-body">
+        @using (Html.BeginForm("SaveTextCustomData", "CustomData", new { projectId = ViewBag.ProjectId, crudOption = ViewBag.CrudOption }, FormMethod.Post, null, new { id = "minPasswordLengthForm" }))
+        {
+            <div style="max-width: 200px">
+                @Html.Hidden("oldConfigurationName", (string)ViewBag.ConfigurationName)
+                <p>Name: @Html.TextBox("configurationName", (string) ViewBag.ConfigurationName)</p>
+            </div>
+            <div id="content" style="max-width: 200px">
+                <p>Default value: @Html.EditorFor(m => m.Default)</p>
+                <p>Possible values:</p>
+                <div id="possibleValues">
+                    @foreach (var value in Model.PossibleValues)
+                    {
+                        <div><input type="text" name="possibleValues[]" value="@value"/>
+                        </div>
+                    }
+                    @if (!Model.PossibleValues.Any())
+                    {
+                        <div><input type="text" name="possibleValues[]" value=""/>
+                        </div>
+                    }
+                </div>
+            </div>
+            <button type="button" class="btn btn-default small" onclick="add_fields()" style="margin-top: 10px">Add value</button>
+            <button type="submit" class="btn btn-success pull-right button-narrow">Save</button>
+        }
+    </div>
+</div>
+
+<script>
+    function add_fields() {
+        var objTo = document.getElementById('possibleValues');
+        var ptest = document.createElement("div");
+        ptest.innerHTML = '<input type="text" name="possibleValues[]" value="" />';
+        objTo.appendChild(ptest);
+    }
+</script>

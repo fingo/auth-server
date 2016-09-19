@@ -1,0 +1,15 @@
+﻿@model Fingo.Auth.Domain.CustomData.ConfigurationClasses.UserView.TextUserConfigurationView
+
+<div class="panel panel-success" style="margin-top:15px; margin-bottom:0">
+    <div class="panel-heading"><strong>Set custom data for @Model.ConfigurationName</strong></div>
+    <div class="panel-body">
+        @using (Html.BeginForm("SaveUserTextCustomData", "CustomData", FormMethod.Post))
+        {
+            @Html.HiddenFor(m => m.ProjectId)@Html.HiddenFor(m => m.UserId)@Html.HiddenFor(m => m.ConfigurationName)
+            <div style="max-width: 200px;">
+                @Html.DropDownListFor(m => m.CurrentValue, new SelectList(Model.PossibleValuesList), new { @class = "form-control" })
+            </div>
+            <button type="submit" class="btn btn-success pull-right button-narrow">Save</button>
+        }
+    </div>
+</div>

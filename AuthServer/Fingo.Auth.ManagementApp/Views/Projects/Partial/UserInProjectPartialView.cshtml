@@ -1,0 +1,122 @@
+﻿@using Fingo.Auth.ManagementApp.Models.Enums
+@using Fingo.Auth.DbAccess.Models.Statuses
+@model IEnumerable<BaseUserModel>
+
+@if (!Model.Any())
+{
+    <p style="text-align:center">There are no users assigned to this project</p>
+    <p id="pag" style="display: none;">
+    </p>
+}
+else
+{
+    <table class="table table-striped" id="userTable">
+        <thead>
+            <tr >
+                <th>No</th>
+                <th>Name</th>
+                <th>Login</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="Registered">
+            @{ int rowNo = ViewBag.Number; }
+            @foreach (var user in Model)
+            {
+                {
+                    rowNo++;
+                }
+                <tr class="cell">
+                    <td style="vertical-align: middle;">@rowNo</td>
+                    <td style="vertical-align: middle;">
+                        @{ string name = user.FirstName + " " + user.LastName; }
+                        @{
+                            if (user.UserStatus == UserStatus.Registered)
+                            {
+                                @Html.ActionLink(name, "GetById", "Users", new { id = user.Id }, new { @style = "color: brown; ", title = "User has registered and hasn't confirmed their account yet.", data_toggle = "tooltip" })
+                            }
+                            else if (user.UserStatus == UserStatus.AccountCreated)
+                            {
+                                @Html.ActionLink(name, "GetById", "Users", new { id = user.Id }, new { @style = "color: Indigo; ", title = "User has been imported and hasn't set their password yet.", data_toggle= "tooltip" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink(name, "GetById", "Users", new { id = user.Id })
+                            }
+                        }
+                    </td>
+
+                    <td style="vertical-align: middle;">@user.Login</td>
+                    <td style="text-align: right;">
+                        <button type="button" class="btn btn-success button-wide" onclick="GetUserModalWindow('@ModalWidows.EditUserPolicyModalWindow', @ViewBag.Id, @user.Id)">Configure policies</button>
+                        <button type="button" class="btn btn-success button-wide" onclick="GetUserCustomDataModalWindow(@ViewBag.Id, @user.Id)">Configure data</button>
+                        <button type="button" class="btn btn-success button-narrow" onclick="GetUserModalWindow('@ModalWidows.DeleteUser', @ViewBag.Id, @user.Id)">Unassign</button>
+                    </td>
+                </tr>
+                            }
+            @for (int i = 0; i < ViewBag.RowsPerPage - Model.Count(); i++)
+            {
+                <tr class="cell">
+                    <td style="vertical-align: middle;">@(ViewBag.RowsPerPage * (ViewBag.Page - 1) + Model.Count() + i + 1)</td>
+                    <td style="vertical-align: middle;">-</td>
+                    <td style="vertical-align: middle;">-</td>
+                    <td style="vertical-align: middle;"></td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="7" >
+                    <p id="pag">
+                    </p>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+                            }
+
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+    $(function () {
+        $("#pag")
+            .bs_pagination({
+                currentPage: @ViewBag.Page,
+                rowsPerPage: @ViewBag.RowsPerPage,
+                totalPages: '@(ViewBag.TotalRows% ViewBag.RowsPerPage == 0? ViewBag.UsersCount: ViewBag.UsersCount+1)',
+                visiblePageLinks: 7,
+                totalRows: @ViewBag.TotalRows,
+
+                showGoToPage: true,
+                onChangePage: function (event, data) {
+                    var apiUrl = "/projects/userInProject";
+                    var _data = {
+                        number: '@ViewBag.RowNo',
+                        id: '@ViewBag.Id',
+                        page: data.currentPage,
+                        pageSize: data.rowsPerPage
+                    };
+                    $.ajaxLoading({
+                        url: apiUrl,
+                        type: 'GET',
+                        data: _data,
+                        success: function (data) {
+                            $('#usersContainer').empty();
+                            $('#usersContainer').html(data);
+                            $('#usersContainer')
+                                .find("script")
+                                .each(function (i) {
+                                    eval($(this).text());
+                                });
+                            $('#usersContainer')
+                                .find("link")
+                                .each(function (i) {
+                                    eval($(this).text());
+                                });
+                        }
+                    });
+                }
+            });
+    });
+</script>

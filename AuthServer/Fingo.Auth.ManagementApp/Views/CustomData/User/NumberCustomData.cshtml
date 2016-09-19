@@ -1,0 +1,30 @@
+﻿@model Fingo.Auth.Domain.CustomData.ConfigurationClasses.UserView.NumberUserConfigurationView
+
+<div class="panel panel-success" style="margin-top:15px; margin-bottom:0">
+    <div class="panel-heading"><strong>Set custom data for @Model.ConfigurationName</strong></div>
+    <div class="alert alert-info small" role="alert" id="numberConfigurationAlert" style="display: none; margin-bottom: 0">
+        <strong>Information!</strong> Value should be between @Model.LowerBound and @Model.UpperBound.
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("SaveUserNumberCustomData", "CustomData",null, FormMethod.Post,null,new {id= "numberConfigurationForm" }))
+        {
+            @Html.HiddenFor(m => m.ProjectId)@Html.HiddenFor(m => m.UserId)@Html.HiddenFor(m => m.ConfigurationName)
+            <div style="max-width: 200px;">
+                <p>@Html.EditorFor(m => m.CurrentValue)</p>
+            </div>
+            <button type="submit" class="btn btn-success pull-right button-narrow">Save</button>
+        }
+    </div>
+</div>
+
+<script>
+    $('#numberConfigurationForm')
+        .submit(function (event) {
+            var currentValue = parseInt($('#CurrentValue').val());
+            if (currentValue > @Model.UpperBound || @Model.LowerBound > currentValue ) {
+                $("#numberConfigurationAlert").show();
+                event.preventDefault();
+            }
+            return;
+        });
+</script>

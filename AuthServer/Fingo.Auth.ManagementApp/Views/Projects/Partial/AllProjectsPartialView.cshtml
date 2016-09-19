@@ -1,0 +1,111 @@
+﻿
+@model IEnumerable<ProjectModel>
+
+<table class="table table-striped" id="projectsList">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Unique project id</th>
+            <th>Creation date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var project in Model)
+        {
+            <tr class="cell">
+                <td style="vertical-align: middle;">@Html.ActionLink(project.Name, "GetById", "Projects", new { id = project.Id })</td>
+                <td style="vertical-align: middle;">@project.ProjectGuid</td>
+                <td style="vertical-align: middle;">@project.CreationDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                <td>
+                    <button type="button" class="btn btn-success button-narrow" data-toggle="modal" data-target="#@project.Id">Remove</button>
+
+                    <div class="modal fade" id="@project.Id" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Delete project</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Do you really want to delete <strong>@project.Name</strong> project?
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" onclick="deleteProject(@project.Id)" id="deleteProject" class="btn btn-success button-narrow">Yes</button>
+                                    <button type="button" class="btn btn-info button-narrow" data-dismiss="modal">No</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+        @for (int i = 0; i < ViewBag.RowsPerPage - Model.Count(); i++)
+        {
+            <tr class="cell">
+                <td style="vertical-align: middle;">-</td>
+                <td style="vertical-align: middle;">-</td>
+                <td style="vertical-align: middle;">-</td>
+                <td style="vertical-align: middle;">-</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="5">
+                <p id="pag">
+                </p>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+
+<script>
+        $(function () {
+            $("#pag")
+                .bs_pagination({
+                    currentPage: @ViewBag.Page,
+                    rowsPerPage: @ViewBag.RowsPerPage,
+                    totalPages: '@(ViewBag.TotalRows% ViewBag.RowsPerPage == 0? ViewBag.UsersCount: ViewBag.UsersCount+1)',
+                    visiblePageLinks: 7,
+                    totalRows: @ViewBag.TotalRows,
+
+                    showGoToPage: false,
+                    showRowsPerPage: false,
+                    showRowsDefaultInfo: false,
+                    onChangePage: function (event, data) {
+                        var apiUrl = "/projects/getAllProjects";
+                        var _data = {
+                            number: '@ViewBag.RowNo',
+
+                            page: data.currentPage,
+                            pageSize: data.rowsPerPage
+                        };
+                        $.ajaxLoading({
+                            url: apiUrl,
+                            type: 'GET',
+                            data: _data,
+                            success: function (data) {
+                                $('#projectsList').empty();
+                                $('#projectsList').html(data);
+                                $('#projectsList')
+                                    .find("script")
+                                    .each(function (i) {
+                                        eval($(this).text());
+                                    });
+                                $('#projectsList')
+                                    .find("link")
+                                    .each(function (i) {
+                                        eval($(this).text());
+                                    });
+                            }
+                        });
+                    }
+                });
+        });
+    
+</script>
+

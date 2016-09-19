@@ -1,0 +1,31 @@
+﻿<div class="modal fade" id="importUsers" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Import users from *.csv file</h4>
+            </div>
+            @using (Html.BeginForm("Import", "Users", new { projectId = ViewBag.ProjectId }, FormMethod.Post, null, new { id="formImport", enctype = "multipart/form-data" }))
+            {
+                <div class="modal-body">
+                    Each row should represent one user and should contain three columns separated by a tab character:
+                    first name, last name and e-mail address.
+                </div>
+                <div class="modal-body">
+                    <input type="file" name="file" accept=".csv"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success button-narrow">Submit</button>
+                    <button type="reset" class="btn btn-info button-narrow" data-dismiss="modal">Close</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#importUsers').modal('show');
+    $("#formImport").submit(function (event) {
+        $.ajaxLoading.loadingStart();
+    });
+</script>

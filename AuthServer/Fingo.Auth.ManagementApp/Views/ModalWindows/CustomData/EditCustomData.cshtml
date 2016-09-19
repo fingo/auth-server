@@ -1,0 +1,68 @@
+﻿@using System.Threading.Tasks
+@using Fingo.Auth.ManagementApp.Models.Enums
+@model string
+
+<div class="modal fade" id="customDataModalWindow" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 style="text-align: left" class="modal-title">Edit custom data</h4>
+            </div>
+            <div class="modal-body">
+                <div id="customDataModalWindowsContainer">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info button-narrow" id="closeModalButton">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#closeModalButton').click(function() {
+        $('#customDataModalWindow').modal('hide');
+    });
+    $('#customDataModalWindow').modal('show');
+    $(document)
+        .ready(
+            function() {
+                var apiUrl = "/customData/getPartialView";
+                var data = {
+                    configurationType: '@ViewBag.ConfigurationType',
+                    projectId: @ViewBag.ProjectId,
+                    configurationName: decodeCharRefs('@Model'),
+                    crudOption: '@Crud.Edit'
+                };
+                $.ajaxLoading({
+                    url: apiUrl,
+                    type: 'GET',
+                    data: data,
+                    success: function(data) {
+                        $('#customDataModalWindowsContainer').html(data);
+                        $('#customDataModalWindowsContainer')
+                            .find("script")
+                            .each(function(i) {
+                                eval($(this).text());
+                            });
+                        $('#customDataModalWindowsContainer')
+                            .find("link")
+                            .each(function(i) {
+                                eval($(this).text());
+                            });
+                    }
+                });
+            });
+    function decodeCharRefs(string) {
+        return string
+            .replace(/&#(\d+);/g,
+                function(match, num) {
+                    return String.fromCharCode(num);
+                })
+            .replace(/&#x([A-Za-z0-9]+);/g,
+                function(match, num) {
+                    return String.fromCharCode(parseInt(num, 16));
+                });
+    };
+</script>

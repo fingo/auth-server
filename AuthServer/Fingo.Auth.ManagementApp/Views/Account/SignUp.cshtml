@@ -1,0 +1,52 @@
+﻿@model UserModel
+
+@using (Html.BeginForm("AddUser", "Account", new { user = Model }, FormMethod.Post))
+{
+    <div id="signUp" style="padding-left: inherit">
+        <div class="col-md-offset-4 col-md-10" style="align-items: center">
+            <p style="font-size: 30px; padding-top: 70px">Please sign up</p>
+            
+            <div>
+                <strong>First name:</strong> @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="col-md-offset-4 col-md-10">
+            
+            <div>
+               <strong>Last name:</strong> @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+       
+        <div class="col-md-offset-4 col-md-10" >
+
+            <div>
+                <strong>E-mail:</strong> @Html.EditorFor(model => model.Login, new {htmlAttributes = new {@class = "form-control"}})             
+            </div>
+        </div>
+
+        <div class="col-md-offset-4 col-md-10">
+
+            <div>
+                <strong>Password:</strong> @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })               
+            </div>
+        </div>
+        <div class="col-md-offset-4 col-md-10">
+
+            <div>
+                <strong>Confirm password:</strong> @Html.EditorFor(model => model.ConfirmedPassword, new { htmlAttributes = new { @class = "form-control" } })
+                <br />
+            </div>
+        </div>
+        <div>
+            <div class="col-md-offset-4 col-md-10">
+                <input type="submit" value="Sign Up" class="btn btn-success" style="height: 40px; width: 280px; max-width: 280px"/>
+            </div>
+        </div>
+    </div>
+
+
+  
+}

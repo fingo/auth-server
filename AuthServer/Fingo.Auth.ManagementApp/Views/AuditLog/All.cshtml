@@ -1,0 +1,141 @@
+﻿@using System.Threading.Tasks
+@using Fingo.Auth.ManagementApp.Models.Enums
+
+<div class="alert alert-info" id="filterByDateAlert" style="display: none;">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <strong>Information!</strong> Please choose "from" date and "to" date.
+</div>
+<form class="form-inline">
+        <div class="form-group" style="width: 14%">
+            <input type="text" style="width: 100%" autocomplete="off" id="name" class="form-control" placeholder="Name" />
+        </div>
+        <div class="form-group" style="width: 14%">
+            <input type="text" style="width: 100%" autocomplete="off" id="type" class="form-control" placeholder="Event type" />
+        </div>
+        <div class="form-group" style="width: 14%">
+            <input type="text" style="width: 100%" autocomplete="off" id="message" class="form-control" placeholder="Event message" />
+        </div>
+        <div class="form-group">
+            <button style="vertical-align: middle" type="button" class="btn btn-success button-narrow" onclick="GetAuditLogTable()">Search <span class="glyphicon glyphicon-search" style="margin-left: 2px"></span></button>
+        </div>
+        <ul class="nav nav-pills pull-right">
+            <li id="@FilterByDate.All" class="active" onclick="changeSelectedFilter('@FilterByDate.All')"><a href="#" onclick="FilterAuditLogTableByDate('@FilterByDate.All')">All</a></li>
+            <li id="@FilterByDate.LastWeek" onclick="changeSelectedFilter('@FilterByDate.LastWeek')"><a href="#" onclick="FilterAuditLogTableByDate('@FilterByDate.LastWeek')">Last week</a></li>
+            <li id="@FilterByDate.LastMonth" onclick="changeSelectedFilter('@FilterByDate.LastMonth')"><a href="#" onclick="FilterAuditLogTableByDate('@FilterByDate.LastMonth')">Last month</a></li>
+            <li id="@FilterByDate.Custom" onclick="changeSelectedFilter('@FilterByDate.Custom')">
+                <a data-toggle="collapse" href="#collapse">Custom</a>
+                <div id="collapse" class="panel-collapse collapse">
+                    <ul class="list-group">
+                        <li class="list-group-item">From: <input class="form_datetime form-control" id="fromDate" placeholder="from" readonly="readonly" style="margin-bottom: 10px; " type="text" value=""></li>
+                        <li class="list-group-item">To: <input class="form_datetime form-control" id="toDate" placeholder="to" readonly="readonly" style="margin-bottom: 10px;" type="text" value=""></li>
+                        <li class="list-group-item"><button class="btn btn-default" type="button" onclick="FilterAuditLogTableByDate('@FilterByDate.Custom')">Search</button></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+</form>
+<div id="auditLogTableContainer">
+</div>
+
+
+@section scripts
+{
+    <link href="~/css/jquery.bs_pagination.css" rel="stylesheet"/>
+    <script src="~/js/jquery.bs_pagination.js"></script>
+    <script src="~/js/localization/en.js"></script>
+    <link href="~/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <script src="~/js/bootstrap-datetimepicker.js"></script>
+
+    <script>
+        var name=null;
+        var type=null;
+        var message=null;
+        $(".form_datetime")
+            .datetimepicker({
+                format: 'dd-mm-yyyy',
+                minView: 2,
+                autoclose: true,
+                endDate: new Date(Date.now())
+            });
+        $(document).ready(function() { GetAuditLogTable(); });
+
+        function GetAuditLogTable() {
+            var apiUrl = '@Url.Action("AuditLogTablePartialView")';
+            var container = $('#auditLogTableContainer');
+            window.name = $('#name').val();
+            window.type = $('#type').val();
+            window.message = $('#message').val();
+            var data = {
+                name: name,
+                type: type,
+                message: message
+            };
+            $.ajaxLoading({
+                url: apiUrl,
+                type: 'GET',
+                data: data,
+                statusCode: {
+                    401: function(data) {
+                        location.reload();
+                    }
+                },
+                success: function(data) {
+                    container.empty();
+                    container.html(data);
+                    container
+                        .find("script")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                    changeSelectedFilter('@FilterByDate.All');
+                }
+            });
+        };
+        function changeSelectedFilter(filterOption) {
+            $('ul li').removeClass("active");
+            $('#'+filterOption).addClass("active");
+        };
+        function FilterAuditLogTableByDate(filterOption) {
+            $('#collapse').collapse('hide');
+            var from = null;
+            var to = null;
+            if (filterOption === '@FilterByDate.Custom') {
+                from = $('#fromDate').val();
+                to = $('#toDate').val();
+                if (from === "" || to === "") {
+                    $("#filterByDateAlert").show();
+                    return;
+                }
+            }
+            var apiUrl = '@Url.Action("AuditLogTablePartialView")';
+            var container = $('#auditLogTableContainer');
+            var data = {
+                filterOption: filterOption,
+                from: from,
+                to: to,
+                name: window.name,
+                type: window.type,
+                message: window.message
+            };
+            $.ajaxLoading({
+                url: apiUrl,
+                type: 'GET',
+                data: data,
+                statusCode: {
+                    401: function (data) {
+                        location.reload();
+                    }
+                },
+                success: function (data) {
+                    container.empty();
+                    container.html(data);
+                    container
+                        .find("script")
+                        .each(function (i) {
+                            eval($(this).text());
+                        });
+                }
+            });
+        };
+    </script>
+}

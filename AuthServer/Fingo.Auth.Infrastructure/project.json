@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "Microsoft.NETCore.App": {
+      "type": "platform",
+      "version": "1.0.0-*"
+    },
+    "Serilog": "2.0.0",
+    "Serilog.Enrichers.Thread": "2.0.0",
+    "Serilog.Sinks.File": "2.1.0",
+    "Serilog.Sinks.RollingFile": "2.1.0"
+  },
+
+  "frameworks": {
+    "netcoreapp1.0": {}
+  }
+}

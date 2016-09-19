@@ -1,0 +1,36 @@
+﻿@using System.Threading.Tasks
+@model Fingo.Auth.Domain.Policies.ConfigurationClasses.UserDateView
+
+<div class="panel panel-success" style="margin-top:15px; margin-bottom:0">
+    <div class="panel-heading"><strong>Set account expiration date policy for chosen user</strong></div>
+    <div class="alert alert-info small" role="alert" id="userAccExpDateAlert" style="display: none; margin-bottom: 0">
+        <strong>Information!</strong> TODO: Information about given data.
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("SaveUserAccountExpirationDatePolicy", "Policy", new { projectId = ViewData["projectId"] }, FormMethod.Post, null, new { @class = "userAccExpDateForms" }))
+        {
+            <div>
+                @Html.HiddenFor(m => m.UserId)
+                @Html.TextBoxFor(m => m.DateTime, "{0:dd-MM-yyyy}", new { @class = "form_datetime", @readonly = "readonly", placeholder = "Choose expiration date", @style = "margin-bottom: 10px;" })
+                <span class="glyphicon glyphicon-calendar" style="margin-left: -25px;" aria-hidden="true"></span>
+            </div>
+            <button class="btn btn-sm btn-default" onclick="ResetDateTimeInput()" type="button">Clear date</button>
+            <button type="submit" class="btn btn-success pull-right button-narrow">Save</button>
+        }
+    </div>
+</div>
+
+<link href="~/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+<script src="~/js/bootstrap-datetimepicker.js"></script>
+<script>
+    $(".form_datetime")
+            .datetimepicker({
+                format: 'dd-mm-yyyy',
+                minView: 2,
+                autoclose: true,
+                startDate: new Date(Date.now())
+            });
+    function ResetDateTimeInput() {
+        $(".form_datetime").val("");
+    }
+</script>

@@ -1,0 +1,67 @@
+﻿@using System.Threading.Tasks
+@using Fingo.Auth.Domain.Policies.ConfigurationClasses
+@model List<Fingo.Auth.DbAccess.Models.Policies.Enums.Policy>
+
+<div class="modal fade" id="policyModalWindow" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 style="text-align: left" class="modal-title">Add policy</h4>
+            </div>
+            <div class="modal-body">
+                <div class="dropdown" id="availablePolicyDropdownList">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                        <strong>Select policy</strong>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        @foreach (var policy in Model)
+                        {
+                            <li><a href="#" onclick="GetProjectPolicyTypeModalWindow('@policy',@ViewBag.ProjectId)">@PolicyData.Name[policy]</a></li>
+                        }
+                    </ul>
+                </div>
+                <div id="policyModalWindowsContainer">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info button-narrow" id="closeModalButton">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#closeModalButton').click(function() {
+        $('#policyModalWindow').modal('hide');
+    });
+    $('#policyModalWindow').modal('show');
+    $(".dropdown-menu li a")
+            .click(
+                function () {
+                    $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+                    $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+                });
+    function GetProjectPolicyTypeModalWindow(policyOption, projectId)
+    {
+        $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+        $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+        var apiUrl = "/policy/{policyOption}/{projectId}";
+        apiUrl = apiUrl.replace("{policyOption}", policyOption);
+        apiUrl = apiUrl.replace("{projectId}", projectId);
+        $.ajaxLoading({
+            url: apiUrl,
+            type: 'GET',
+            success: function (data) {
+                $('#policyModalWindowsContainer').html(data);
+                $('#policyModalWindowsContainer').find("script").each(function (i) {
+                    eval($(this).text());
+                });
+                $('#policyModalWindowsContainer').find("link").each(function (i) {
+                    eval($(this).text());
+                });
+            }
+        });
+    }
+</script>

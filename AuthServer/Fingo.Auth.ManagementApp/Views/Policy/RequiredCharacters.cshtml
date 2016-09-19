@@ -1,0 +1,36 @@
+﻿@using System.Threading.Tasks
+@using Fingo.Auth.DbAccess.Models.Policies.Enums
+@model Fingo.Auth.Domain.Policies.ConfigurationClasses.RequiredPasswordCharactersConfiguration
+
+<div class="panel panel-success" style="margin-top: 15px; margin-bottom: 0">
+    <div class="panel-heading"><strong>Set required characters</strong></div>
+    <div class="alert alert-info small" role="alert" id="reqPassCharAlert" style="display: none; margin-bottom: 0">
+        <strong>Information!</strong> At least one check-box should be checked.
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("SaveRequiredPasswordCharactersPolicy" , "Policy" , new {policy = Policy.RequiredPasswordCharacters , projectId = ViewData["projectId"]} , FormMethod.Post , null , new {id = "reqPasswordCharForm" }))
+        {
+            <div class="checkbox">
+                <label>@Html.CheckBoxFor(m => m.UpperCase)Include at least one upper-case character</label>
+            </div>
+            <div class="checkbox">
+                <label>@Html.CheckBoxFor(m => m.Digit)Include at least one digit</label>
+            </div>
+            <div class="checkbox">
+                <label>@Html.CheckBoxFor(m => m.Special)Include at least one special character</label>
+            </div>
+            <button type="submit" class="btn btn-success pull-right button-narrow">Save</button>
+        }
+    </div>
+</div>
+
+<script>
+    $('#reqPasswordCharForm')
+        .submit(function(event) {
+            if ($('form[id=reqPasswordCharForm] input[type=checkbox]:checked').length > 0) {
+                return;
+            }
+            $("#reqPassCharAlert").show();
+            event.preventDefault();
+        });
+</script>

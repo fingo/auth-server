@@ -1,0 +1,37 @@
+﻿@model Fingo.Auth.Domain.CustomData.ConfigurationClasses.Project.NumberProjectConfiguration
+
+<div class="panel panel-success" style="margin-top: 15px; margin-bottom: 0">
+    <div class="panel-heading"><strong>Set number data</strong>
+    </div>
+    <div class="alert alert-info small" role="alert" id="numberConfigurationAlert" style="display: none; margin-bottom: 0">
+        <strong>Information!</strong> Default value should be between lower bound and upper bound.
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("SaveNumberCustomData" , "CustomData" , new {projectId = ViewBag.ProjectId , crudOption = ViewBag.CrudOption} , FormMethod.Post , null , new {id = "numberConfigurationForm"}))
+        {
+            <div style="max-width: 200px;">
+                @Html.Hidden("oldConfigurationName" , (string) ViewBag.ConfigurationName)
+                <p>Name:@Html.TextBox("configurationName" , (string) ViewBag.ConfigurationName)</p>
+                <p>Default value:@Html.EditorFor(m => m.Default)</p>
+                <p>Lower bound:@Html.EditorFor(m => m.LowerBound)</p>
+                <p>Upper bound:@Html.EditorFor(m => m.UpperBound)</p>
+            </div>
+            <button type="submit" class="btn btn-success pull-right button-narrow">Save</button>
+        }
+    </div>
+</div>
+
+<script>
+    $('#numberConfigurationForm')
+        .submit(function (event) {
+            var upperBound = parseInt($('#UpperBound').val());
+            var lowerBound = parseInt($('#LowerBound').val());
+            var defaultValue = parseInt($('#Default').val());
+            if (defaultValue > upperBound || defaultValue < lowerBound) {
+                $("#numberConfigurationAlert").show();
+                event.preventDefault();
+            }
+            return;
+        });
+</script>
+

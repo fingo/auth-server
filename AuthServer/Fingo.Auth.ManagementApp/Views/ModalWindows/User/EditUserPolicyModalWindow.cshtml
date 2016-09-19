@@ -1,0 +1,82 @@
+﻿@using System.Threading.Tasks
+@using System.Linq;
+@using Fingo.Auth.Domain.Policies.ConfigurationClasses
+@using Fingo.Auth.Domain.Policies.Factories.Interfaces
+@using Fingo.Auth.Domain.Policies.ExtensionMethods
+@model BaseUserModel
+@inject IGetPoliciesFromProjectFactory GetPoliciesFromProjectFactory
+
+<div class="modal fade" id="editUserPolicyModalWindow" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 style="text-align: left" class="modal-title">Configure policies</h4>
+            </div>
+            @{ var chosenPolicyInProjectConfigurableForUser = GetPoliciesFromProjectFactory.Create().Invoke((int)ViewBag.ProjectId).ConfigurablePerUser();}
+            <div class="modal-body">
+                @if (!chosenPolicyInProjectConfigurableForUser.Any())
+                {
+                    <div>There are no configurable policies for users</div>
+                }
+                else
+                {
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                            <strong>Select policy for user</strong>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            @foreach (var policy in chosenPolicyInProjectConfigurableForUser)
+                            {
+                                <li><a href="#" onclick="MakeRequest('@policy.Item1', @ViewBag.ProjectId, @Model.Id)">@PolicyData.Name[policy.Item1]</a></li>
+                            }
+                        </ul>
+                    </div>
+                    <div>
+                        <div id="editUserPolicyPartialModalWindow">
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info button-narrow" id="closeModalButton">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#closeModalButton').click(function() {
+        $('#editUserPolicyModalWindow').modal('hide');
+    });
+    $('#editUserPolicyModalWindow').modal('show');
+    $(".dropdown-menu li a")
+            .click(
+                function () {
+                    $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+                    $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+                });
+    function MakeRequest(policy,projectId,userId)
+    {
+        var apiUrl = "/policy/{policy}/{projectId}/{userId}";
+        apiUrl = apiUrl.replace("{policy}", policy);
+        apiUrl = apiUrl.replace("{projectId}", projectId);
+        apiUrl = apiUrl.replace("{userId}", userId);
+        $.ajaxLoading({
+            url: apiUrl,
+            type: 'GET',
+            success: function(data){
+                $('#editUserPolicyPartialModalWindow').html(data);
+                $('#editUserPolicyPartialModalWindow').find("script").each(function (i) {
+                    eval($(this).text());
+                });
+                $('#editUserPolicyPartialModalWindow').find("link").each(function (i) {
+                    eval($(this).text());
+                });
+            }
+
+
+        });
+    }
+</script>

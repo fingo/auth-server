@@ -1,0 +1,131 @@
+﻿@using Fingo.Auth.DbAccess.Models.Statuses
+@model BaseUserModelWithProjects
+
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-lg-12">
+
+            <div class="panel panel-success">
+
+                <div class="panel-heading" style="background-color: #ccffcc;">
+                    <h3 class="panel-title pull-left">
+                        User details
+                    </h3>
+                    <div class="pull-right">
+                        @if (User.Identity.Name == Model.Login)
+                        {
+                            @Html.ActionLink("Change password", "ChangePassword", "Account", new { login = Model.Login }, new { @class = "btn btn-success button-wide" })
+                        }
+
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                    <div class="panel-body">
+                        <div>
+                            <p style="font-weight: bold;">@Html.DisplayFor(m => m.FirstName) @Html.DisplayFor(m => m.LastName)</p>
+
+                        </div>
+                        <div>
+                            <p>Login: @Html.DisplayFor(m => m.Login)</p>
+                        </div>
+                        <div>
+                            @if (Model.UserStatus == UserStatus.Registered)
+                            {
+                                <p>User has not been activated.</p>
+                            }
+                            @if (Model.UserStatus == UserStatus.AccountCreated)
+                            {
+                                <p>User has been imported and hasn't set their password yet.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-success">
+                        <div class="panel-heading" style="background-color: #ccffcc">Project list</div>
+                        <div class="panel-body">
+                        </div>
+                        <div class="panel-body" id="projectsListFromUser">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalWindowContainer">
+</div>
+
+@section scripts
+{
+<link href="~/css/jquery.bs_pagination.css" rel="stylesheet" />
+<script src="~/js/jquery.bs_pagination.js"></script>
+<script src="~/js/localization/en.js"></script>
+
+  <script>
+      $(document).ready(function () { GetUsersWithProjects(); });
+
+      function GetUsersWithProjects() {
+          var apiUrl = "/users/getAllProjectsFormUser";
+          var data = {
+              id: @Model.Id
+          };
+
+          $.ajaxLoading({
+              url: apiUrl,
+              type: 'GET',
+              data: data,
+              success: function(data) {
+                  $('#projectsListFromUser').empty();
+                  $('#projectsListFromUser').html(data);
+                  $('#projectsListFromUser')
+                      .find("script")
+                      .each(function(i) {
+                          eval($(this).text());
+                      });
+                  $('#projectsListFromUser')
+                      .find("link")
+                      .each(function(i) {
+                          eval($(this).text());
+                      });
+              }
+          });
+      };
+    </script>
+
+    <script src="~/lib/jquery-tableselect/jQuery.jTableCheckbox.js"></script>
+    <script src="~/lib/jquery-tableselect/multifilter.js"></script>
+    <script>
+        function GetProjectModalWindow(modalOptions, userId, projectId) {
+            var apiUrl = "/ModalWindow/project";
+            var data = { modalOptions: modalOptions, userId: userId, projectId: projectId };
+            $.ajaxLoading({
+                url: apiUrl,
+                type: 'GET',
+                data: data,
+                success: function(data) {
+                    $('#modalWindowContainer').html(data);
+                    $('#modalWindowContainer')
+                        .find("script")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                    $('#modalWindowContainer')
+                        .find("link")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,10 @@
+﻿
+<ul class="nav navbar-nav navbar-right">
+   
+
+    <li>@Html.ActionLink("Logged in as: " +  User.Identity.Name, "GetByLogin", "Users", new { login = User.Identity.Name }) </li>
+
+    <li>@Html.ActionLink("Sign out", "SignOut", "Account")</li>
+
+
+</ul>

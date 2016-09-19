@@ -1,0 +1,295 @@
+﻿@using System.Threading.Tasks
+@using Fingo.Auth.DbAccess.Models.Policies.Enums
+@using Fingo.Auth.Domain.Policies.ConfigurationClasses
+@using Fingo.Auth.ManagementApp.Models.Enums
+@model ProjectDetailWithAll
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-success">
+                <div class="panel-heading" style="background-color: #ccffcc">
+                    <h3 class="panel-title pull-left">Project information</h3>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <div>
+                        <p style="font-weight: bold;">@Html.DisplayFor(m => m.Name)</p>
+                    </div>
+                    <div>
+                        <p>Project GUID: @Html.DisplayFor(m => m.ProjectGuid)</p>
+                    </div>
+                    <div>
+                        <p>Creation date: @Model.CreationDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-success">
+                <div class="panel-heading" style="background-color: #ccffcc">
+                    <h3 class="panel-title pull-left">Active policies</h3>
+                    @if (Model.Policies.Count == Enum.GetValues(typeof(Policy)).Length)
+                    {
+                        <button type="button" data-toggle="tooltip" title="There are no more policies that you can add." class="btn btn-success button-wide pull-right disabled">Add new policy</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-success button-wide pull-right" onclick="GetPolicyModalWindow(@Model.Id, '@Crud.Add')">Add new policy</button>
+                    }
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    @if (!Model.Policies.Any())
+                    {
+                        <p>No password policies have been chosen</p>
+                    }
+                    else
+                    {
+                        <table class="table table-striped">
+                            <tbody>
+                                @foreach (var policy in Model.Policies)
+                                {
+                                    <tr>
+                                        <td style="vertical-align: middle;">
+                                            @PolicyData.Name[policy]
+                                        </td>
+                                        <td style="text-align: right;">
+                                            @if (policy == Policy.ExcludeCommonPasswords)
+                                            {
+                                                <button type="button" data-toggle="tooltip" title="This policy has no configuration." class="btn btn-success button-narrow disabled">Configure</button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-success button-narrow" onclick="GetPolicyModalWindow(@Model.Id, '@Crud.Edit', '@policy')">Configure</button>
+                                            }
+                                            <button type="button" class="btn btn-success button-narrow" onclick="GetPolicyModalWindow(@Model.Id, '@Crud.Delete', '@policy')">Remove</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="panel panel-success">
+                <div class="panel-heading" style="background-color: #ccffcc;">
+                    <h3 class="panel-title pull-left">Configured custom data</h3>
+                    <button type="button" class="btn btn-success pull-right button-wide" onclick="GetCustomDataModalWindow(@Model.Id, '@Crud.Add')">Add new data</button>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    @if (!Model.Data.Any())
+                    {
+                        <p>No custom data have been chosen.</p>
+                    }
+                    else
+                    {
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var data in Model.Data)
+                                {
+                                    <tr>
+                                        <td style="vertical-align: middle;">
+                                            @data.ConfigurationName
+                                        </td>
+                                        <td style="vertical-align: middle;">@data.ConfigurationType.ToString().ToLower()</td>
+                                        <td style="text-align: right;">
+                                            <button type="button" class="btn btn-success button-narrow" onclick="GetCustomDataModalWindow(@Model.Id, '@Crud.Edit', '@data.ConfigurationName', '@data.ConfigurationType')">Configure</button>
+                                            <button type="button" class="btn btn-success button-narrow" onclick="GetCustomDataModalWindow(@Model.Id, '@Crud.Delete', '@data.ConfigurationName')">Remove</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-success">
+                <div class="panel-heading" style="background-color: #ccffcc;">
+                    <h3 class="panel-title pull-left" style="width: 40%">
+                        User list
+                    </h3>
+                    <div class="pull-right">
+                        @Html.ActionLink("Export users", "Export", "Projects", new { projectId = Model.Id }, new { @class = "btn btn-success button-wide" })
+                        <button type="button" class="btn btn-success button-wide" onclick="GetUserModalWindow('@ModalWidows.ImportUsersFromCsv', @Model.Id)">Import users</button>
+                        <button type="button" class="btn btn-success button-wide" onclick="GetUserModalWindow('@ModalWidows.AssignUsers', @Model.Id)">Assign users</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body" id="usersContainer">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalWindowContainer">
+</div>
+
+@section scripts
+{
+    <link href="~/css/jquery.bs_pagination.css" rel="stylesheet" />
+    <script src="~/js/jquery.bs_pagination.js"></script>
+    <script src="~/js/localization/en.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        $(document).ready(function () { GetUsersWithProjects(); });
+
+        function GetUsersWithProjects() {
+            var apiUrl = "/projects/userInProject";
+            var data = {
+                id: '@Model.Id'
+            };
+            $.ajaxLoading({
+                url: apiUrl,
+                type: 'GET',
+                data: data,
+                success: function(data) {
+                    $('#usersContainer').empty();
+                    $('#usersContainer').html(data);
+                    $('#usersContainer')
+                        .find("script")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                    $('#usersContainer')
+                        .find("link")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                }
+            });
+        };
+    </script>
+
+    <script src="~/lib/jquery-tableselect/jQuery.jTableCheckbox.js"></script>
+    <script src="~/lib/jquery-tableselect/multifilter.js"></script>
+    <script>
+        function GetPolicyModalWindow(projectId, crudOption, policy) {
+            var apiUrl = "/ModalWindow/policy";
+            var data = { projectId: projectId, crudOption: crudOption, policy: policy };
+            $.ajaxLoading({
+                url: apiUrl,
+                type: 'GET',
+                data: data,
+                success: function(data) {
+                    $('#modalWindowContainer').html(data);
+                    $('#modalWindowContainer')
+                        .find("script")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                    $('#modalWindowContainer')
+                        .find("link")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                }
+            });
+        }
+
+        function GetCustomDataModalWindow(projectId, crudOption, configurationName, configurationType) {
+            var apiUrl = "/ModalWindow/customData";
+            var data = {
+                projectId: projectId,
+                crudOption: crudOption,
+                configurationName: configurationName,
+                configurationType: configurationType
+            };
+            $.ajaxLoading({
+                url: apiUrl,
+                type: 'GET',
+                data: data,
+                success: function(data) {
+                    $('#modalWindowContainer').html(data);
+                    $('#modalWindowContainer')
+                        .find("script")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                    $('#modalWindowContainer')
+                        .find("link")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                }
+            });
+        }
+
+        function GetUserModalWindow(modalOption, projectId, userId) {
+            var apiUrl = "/ModalWindow/user";
+            var data = { modalOption: modalOption, projectId: projectId, userId: userId };
+            $.ajaxLoading({
+                url: apiUrl,
+                type: 'GET',
+                data: data,
+                success: function(data) {
+                    $('#modalWindowContainer').html(data);
+                    $('#modalWindowContainer')
+                        .find("script")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                    $('#modalWindowContainer')
+                        .find("link")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                    $('#modalWindowContainer').show();
+                    if (modalOption === '@ModalWidows.AssignUsers') {
+                        $(document)
+                            .ready(function() {
+                                $('table.custom')
+                                    .jTableCheckbox({
+                                        showTickValue: '<span class="glyphicon glyphicon-ok"></span>'
+                                    });
+                            });
+                    }
+                }
+            });
+        };
+
+        function GetUserCustomDataModalWindow(projectId, userId) {
+            var apiUrl = "/ModalWindow/userCustomData";
+            var data = {projectId: projectId, userId: userId };
+            $.ajaxLoading({
+                url: apiUrl,
+                type: 'GET',
+                data: data,
+                success: function(data) {
+                    $('#modalWindowContainer').html(data);
+                    $('#modalWindowContainer')
+                        .find("script")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                    $('#modalWindowContainer')
+                        .find("link")
+                        .each(function(i) {
+                            eval($(this).text());
+                        });
+                    $('#modalWindowContainer').show();
+                }
+            });
+        };
+    </script>
+}

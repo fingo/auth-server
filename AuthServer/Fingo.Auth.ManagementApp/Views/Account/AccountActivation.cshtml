@@ -1,0 +1,38 @@
+﻿@if (ViewBag.ActivatedSuccessfully)
+{
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title pull-left">Success</h3>
+            <div class="clearfix"></div>
+        </div>
+        <div class="panel-body">
+            <div style="text-align: center;">
+                <img src="~/images/green-tick.png" alt="Green tick" style="width: 200px;">
+            </div>
+            <div style="text-align: center; font-size: 24px; margin:15px">
+                <p>Your account was activated successfully.</p>
+                <label style="font-weight:normal;">Now you can @Html.ActionLink(" log in", "LoginPage", "Account", new { id = string.Empty }, new { @style = "font-size:24px; font-weight:normal;" }).</label>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+<div class="col-lg-12">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title pull-left">Error</h3>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <div style="text-align: center;">
+                        <img src="~/images/red-cross.png" alt="Green tick" style="width: 200px;">
+                    </div>
+                    <div style="text-align: center; font-size: 24px; margin:15px">
+                        <p>Your account wasn't activated.</p>
+                        <p>You entered wrong activation token in URL or account is already active.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+}

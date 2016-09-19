@@ -1,0 +1,42 @@
+@using System.Threading.Tasks
+@using Fingo.Auth.Domain.Policies.ConfigurationClasses
+@model Fingo.Auth.DbAccess.Models.Policies.Enums.Policy
+
+<div class="modal fade" id="deletePolicy" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 style="text-align: center" class="modal-title">Delete policy from project</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Do you really want to delete <strong>@PolicyData.Name[Model].ToLower()</strong> policy from this project?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="RemoveData(@ViewBag.ProjectId, '@Model')" class="btn btn-success button-narrow">Yes</button>
+                <button type="button" class="btn btn-info button-narrow" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#deletePolicy').modal('show');
+    function RemoveData(projectId, policy) {
+        var apiUrl = "/policy/{projectId}/{policy}";
+        apiUrl = apiUrl.replace("{projectId}", projectId);
+        apiUrl = apiUrl.replace("{policy}", policy);
+        $.ajaxLoading({
+            url: apiUrl,
+            type: 'DELETE',
+            cache: false,
+            statusCode: {
+                200: function (data) {
+                    location.reload();
+                }
+            }
+        });
+    };
+</script>

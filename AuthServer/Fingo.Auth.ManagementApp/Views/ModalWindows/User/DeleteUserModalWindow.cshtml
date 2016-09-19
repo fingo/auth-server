@@ -1,0 +1,40 @@
+﻿@model BaseUserModel
+
+<div class="modal fade" id="DeleteUser" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete user from project</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Do you really want to delete <strong>@Model.FirstName @Model.LastName</strong> user from this project?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="RemoveUser(@ViewBag.ProjectId, @Model.Id)" class="btn btn-success button-narrow">Yes</button>
+                <button type="button" class="btn btn-info button-narrow" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#DeleteUser').modal('show');
+    function RemoveUser(projectId, userId) {
+        var apiUrl = "/projects/{projectId}/{userId}";
+        apiUrl = apiUrl.replace("{projectId}", projectId);
+        apiUrl = apiUrl.replace("{userId}", userId);
+        $.ajaxLoading({
+            url: apiUrl,
+            type: 'DELETE',
+            cache: false,
+            statusCode: {
+                200: function (data) {
+                    location.reload();
+                }
+            }
+        });
+    };
+</script>

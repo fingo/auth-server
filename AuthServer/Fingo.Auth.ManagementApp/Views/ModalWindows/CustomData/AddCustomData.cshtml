@@ -1,0 +1,73 @@
+﻿@using Fingo.Auth.ManagementApp.Models.Enums
+@model IEnumerable<Fingo.Auth.DbAccess.Models.CustomData.Enums.ConfigurationType>
+
+<div class="modal fade" id="customDataModalWindow" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 style="text-align: left" class="modal-title">Add custom data</h4>
+            </div>
+            <div class="modal-body">
+                <div class="dropdown" id="availablePolicyDropdownList">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                        <strong>Select type</strong>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        @foreach (var configurationType in Model)
+                        {
+                            <li><a href="#" onclick="GetProjectConfigurationTypeModalWindow('@configurationType',@ViewBag.ProjectId,null)">@configurationType</a></li>
+                        }
+                    </ul>
+                </div>
+                <div id="configurationModalWindowContainer">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info button-narrow" id="closeModalButton">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#closeModalButton').click(function() {
+        $('#customDataModalWindow').modal('hide');
+    });
+    $(".dropdown-menu li a")
+            .click(
+                function () {
+                    $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+                    $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+                });
+    $('#customDataModalWindow').modal('show');
+    function GetProjectConfigurationTypeModalWindow(configurationType, projectId, configurationName) {
+        var apiUrl = "/customData/getPartialView";
+        var data = {
+            configurationType: configurationType,
+            projectId: projectId,
+            configurationName: configurationName,
+            crudOption: '@Crud.Add'
+        };
+        $.ajaxLoading({
+            url: apiUrl,
+            type: 'GET',
+            data: data,
+            success: function (data) {
+                $('#configurationModalWindowContainer').html(data);
+                $('#configurationModalWindowContainer')
+                    .find("script")
+                    .each(function (i) {
+                        eval($(this).text());
+                    });
+                $('#configurationModalWindowContainer')
+                    .find("link")
+                    .each(function (i) {
+                        eval($(this).text());
+                    });
+            }
+        });
+    };
+
+</script>

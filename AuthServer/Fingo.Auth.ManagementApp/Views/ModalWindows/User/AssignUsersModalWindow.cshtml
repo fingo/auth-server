@@ -1,0 +1,111 @@
+@model IEnumerable<BaseUserModel>
+
+<div class="modal fade" id="asignUsersModalWindow" role="dialog" data-backdrop="static">
+    <div class="modal-dialog" style="width: 850px">
+        @using (Html.BeginForm("AsignUsersToProject", "Projects", new { projectId = ViewBag.ProjectId }, FormMethod.Post, null, new { id = "assignUsersModalForm" }))
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Select users which you want to assign to the project</h3>
+                    <div class="alert alert-info" role="alert" id="assignUsersToProjectAlert" style="display: none; margin-bottom: 0">
+                        <strong>Information!</strong> You didn't choose anyone.
+                    </div>
+                </div>
+                <div class="modal-body">
+                    @if (!Model.Any())
+                    {
+                        <p>There are no users which you can assign.</p>
+                    }
+                    else
+                    {
+                        <div class="panel panel-success" style="margin-bottom: 0">
+                            <div class="panel-heading">
+                                <table>
+                                    <tr>
+                                        <th>
+                                            <div class="input-group" style="width: 90%">
+                                                <input type="text" autocomplete='off' name="first" class='filter form-control' placeholder='first name' data-col='first' />
+                                                <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-search"></span></button>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="input-group" style="width: 90%">
+                                                <input type="text" autocomplete='off' name="last" class='filter form-control' placeholder='last name' data-col='last' />
+                                                <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-search"></span></button>
+                                                </div>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="input-group" style="width: 90%">
+                                                <input type="text" autocomplete='off' name="email" class='filter form-control' placeholder='e-mail' data-col='email' />
+                                                <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-search"></span></button>
+                                                </div>
+                                            </div>
+                                        </th>
+                                </table>
+                            </div>
+                            <div style="max-height: 200px; overflow-y: scroll; overflow-wrap: normal">
+                                <table class="table table-hover custom" id="notAssignedUsersTable" style="table-layout: fixed; width: 100%; margin-bottom: 0;">
+                                    <thead class="hidden">
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th class="first">first</th>
+                                        <th class="last">last</th>
+                                        <th class="email">email</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody style="cursor: pointer;">
+                                        @foreach (var user in Model)
+                                        {
+                                            <tr>
+                                                <td class='first' data-jtable="@user.Id" style="word-wrap: break-word">@user.FirstName</td>
+                                                <td class="last" style="word-wrap: break-word">@user.LastName</td>
+                                                <td class="email" style="word-wrap: break-word">@user.Login</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    @if (Model.Any())
+                    {
+                        <button id="submitAssignUsers" type="submit" style="display: none;" class="btn btn-success button-narrow">Submit</button>
+                    }
+                    <button type="reset" class = "btn btn-info button-narrow" id="closeModalButton">Close</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $('table[id=notAssignedUsersTable] tr').click(function () {
+        if ($('form[id=assignUsersModalForm] input[type=checkbox]:checked').length > 0)
+            $('#submitAssignUsers').show();
+        else $('#submitAssignUsers').hide();
+    });
+    $('#closeModalButton').click(function() {
+        $('#asignUsersModalWindow').modal('hide');
+    });
+    $('#asignUsersModalWindow').modal('show');
+    $('.filter')
+        .multifilter({
+            'target': $('#notAssignedUsersTable')
+        });
+    $('#assignUsersModalForm')
+        .submit(function(event) {
+            if ($('form[id=assignUsersModalForm] input[type=checkbox]:checked').length > 0) {
+                return;
+            }
+            $("#assignUsersToProjectAlert").show();
+            event.preventDefault();
+        });
+</script>
