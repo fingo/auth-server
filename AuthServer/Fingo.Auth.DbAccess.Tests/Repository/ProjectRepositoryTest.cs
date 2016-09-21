@@ -11,13 +11,13 @@ namespace Fingo.Auth.DbAccess.Tests.Repository
 {
     public class ProjectRepositoryTest
     {
-        private AuthServerContext context;
-
         public ProjectRepositoryTest()
         {
-            MockDbInMemory createDbInMemory = new MockDbInMemory();
+            var createDbInMemory = new MockDbInMemory();
             context = createDbInMemory.CreateNewContextOptions();
         }
+
+        private readonly AuthServerContext context;
 
         public void Dispose()
         {
@@ -30,10 +30,10 @@ namespace Fingo.Auth.DbAccess.Tests.Repository
             //Arrange 
 
             IProjectRepository _repo = new ProjectRepository(context);
-            Project newProject = new Project()
+            var newProject = new Project
             {
                 Id = 5 ,
-                Information = new ClientInformation() { ContactData = "contactData5" } ,
+                Information = new ClientInformation {ContactData = "contactData5"} ,
                 Name = "name5"
             };
 
@@ -48,6 +48,64 @@ namespace Fingo.Auth.DbAccess.Tests.Repository
             Assert.True(newProject.Name == datas.Name);
             Assert.True(context.Set<Project>().Count() == 5);
         }
+
+        [Fact]
+        public void Can_Delete_Project()
+        {
+            //Arrange 
+
+            IProjectRepository _repo = new ProjectRepository(context);
+
+            //Act
+            var toDelete = _repo.GetById(4);
+            _repo.Delete(toDelete);
+            var data = context.Set<Project>().Count();
+
+            //Assert
+
+            Assert.True(data == 3);
+        }
+
+        [Fact]
+        public void Can_Edit_Project()
+        {
+            //Arrange
+
+            IProjectRepository _repo = new ProjectRepository(context);
+
+            //Act
+
+            var toChange = _repo.GetById(4);
+            toChange.Name = "newName4";
+            toChange.Information = new ClientInformation {ContactData = "newClientInformation"};
+            _repo.Edit(toChange);
+            var result = _repo.GetById(4);
+
+            //Assert
+
+            Assert.True(result.Name == "newName4");
+            Assert.True(result.Information.ContactData == "newClientInformation");
+            Assert.True(context.Set<Project>().Count() == 4);
+        }
+
+        [Fact]
+        public void Can_Get_Project_By_Guid()
+        {
+            //Arrange
+
+            IProjectRepository _repo = new ProjectRepository(context);
+
+            //Act
+
+            var project = _repo.GetByGuid(Guid.Parse("1dbcbea0-1633-4790-a0e6-2e70acf944a1"));
+
+            //Assert
+
+            Assert.NotNull(project);
+            Assert.True(project.ProjectGuid == Guid.Parse("1dbcbea0-1633-4790-a0e6-2e70acf944a1"));
+            Assert.True(project.Name == "name3");
+        }
+
         [Fact]
         public void Can_GetAll_Project()
         {
@@ -63,43 +121,7 @@ namespace Fingo.Auth.DbAccess.Tests.Repository
 
             Assert.True(data.Count() == 4);
         }
-        [Fact]
-        public void Can_Delete_Project()
-        {
-            //Arrange 
 
-            IProjectRepository _repo = new ProjectRepository(context);
-
-            //Act
-            Project toDelete = _repo.GetById(4);
-            _repo.Delete(toDelete);
-            int data = context.Set<Project>().Count();
-
-            //Assert
-
-            Assert.True(data == 3);
-        }
-        [Fact]
-        public void Can_Edit_Project()
-        {
-            //Arrange
-
-            IProjectRepository _repo = new ProjectRepository(context);
-
-            //Act
-
-            Project toChange = _repo.GetById(4);
-            toChange.Name = "newName4";
-            toChange.Information = new ClientInformation() { ContactData = "newClientInformation" };
-            _repo.Edit(toChange);
-            Project result = _repo.GetById(4);
-
-            //Assert
-
-            Assert.True(result.Name == "newName4");
-            Assert.True(result.Information.ContactData == "newClientInformation");
-            Assert.True(context.Set<Project>().Count() == 4);
-        }
         [Fact]
         public void Can_GetById_Project()
         {
@@ -109,7 +131,7 @@ namespace Fingo.Auth.DbAccess.Tests.Repository
 
             //Act
 
-            Project result = _repo.GetById(1);
+            var result = _repo.GetById(1);
 
             //Assert
 
@@ -134,24 +156,6 @@ namespace Fingo.Auth.DbAccess.Tests.Repository
             Assert.True(users.Count() == 2);
             Assert.True(users.First().FirstName == "pierwszy");
             Assert.True(users.Last().FirstName == "trzeci");
-        }
-
-        [Fact]
-        public void Can_Get_Project_By_Guid()
-        {
-            //Arrange
-
-            IProjectRepository _repo = new ProjectRepository(context);
-
-            //Act
-
-            var project = _repo.GetByGuid(Guid.Parse("1dbcbea0-1633-4790-a0e6-2e70acf944a1"));
-
-            //Assert
-
-            Assert.NotNull(project);
-            Assert.True(project.ProjectGuid == Guid.Parse("1dbcbea0-1633-4790-a0e6-2e70acf944a1"));
-            Assert.True(project.Name == "name3");
         }
 
         [Fact]

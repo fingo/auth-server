@@ -16,6 +16,76 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
     public class GetUserCustomDataListFromProjectTest
     {
         [Fact]
+        public void Can_Get_Custom_Data_List_From_Project()
+        {
+            // Arrange
+
+            const string userLogin = "login1";
+            const int userId = 1;
+            const bool boolValue = true;
+            var guid = new Guid();
+
+            var convertService = new CustomDataJsonConvertService();
+
+            var userCustomDataMock = new UserCustomData
+            {
+                UserId = userId ,
+                ProjectCustomData = new ProjectCustomData
+                {
+                    ProjectId = userId ,
+                    ConfigurationName = "testConfigurationName" ,
+                    ConfigurationType = ConfigurationType.Boolean
+                } ,
+                SerializedConfiguration = convertService.Serialize(new BooleanUserConfiguration {Value = boolValue})
+            };
+
+            var userRepositoryMock = new Mock<IUserRepository>();
+            userRepositoryMock.Setup(m => m.GetAll()).Returns(new[]
+            {
+                new User
+                {
+                    Id = userId ,
+                    Login = userLogin ,
+                    UserCustomData = new List<UserCustomData>
+                    {
+                        userCustomDataMock
+                    }
+                }
+            });
+
+            var projectMock = new Project
+            {
+                Id = userId ,
+                ProjectGuid = guid ,
+                ProjectCustomData = new List<ProjectCustomData>
+                {
+                    new ProjectCustomData
+                    {
+                        UserCustomData = new List<UserCustomData>
+                        {
+                            userCustomDataMock
+                        }
+                    }
+                }
+            };
+
+            var projectRepositoryMock = new Mock<IProjectRepository>();
+            projectRepositoryMock.Setup(m => m.GetAll()).Returns(new[] {projectMock});
+            projectRepositoryMock.Setup(m => m.GetByIdWithCustomDatas(It.IsAny<int>())).Returns(projectMock);
+
+            // Act
+
+            var target = new GetUserCustomDataListFromProject(projectRepositoryMock.Object , userRepositoryMock.Object ,
+                convertService);
+
+            var list = target.Invoke(guid , userLogin);
+
+            // Assert
+
+            Assert.Contains(new Tuple<string , string>("testConfigurationName" , boolValue.ToString()) , list);
+        }
+
+        [Fact]
         public void Cannot_Get_Custom_Data_List_From_Non_Existing_Project()
         {
             // Arrange
@@ -24,28 +94,28 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
             const int userId = 1;
             var guid = new Guid();
 
-            Mock<IUserRepository> userRepositoryMock = new Mock<IUserRepository>();
-            userRepositoryMock.Setup(m => m.GetAll()).Returns(new []
+            var userRepositoryMock = new Mock<IUserRepository>();
+            userRepositoryMock.Setup(m => m.GetAll()).Returns(new[]
             {
-                new User()
+                new User
                 {
-                    Id = userId,
+                    Id = userId ,
                     Login = userLogin
-                },
+                }
             });
 
-            Mock<IProjectRepository> projectRepositoryMock = new Mock<IProjectRepository>();
+            var projectRepositoryMock = new Mock<IProjectRepository>();
             projectRepositoryMock.Setup(m => m.GetAll()).Returns(() => null);
 
             var convertServiceMock = new Mock<ICustomDataJsonConvertService>();
             // Act
 
-            var target = new GetUserCustomDataListFromProject(projectRepositoryMock.Object,userRepositoryMock.Object,
+            var target = new GetUserCustomDataListFromProject(projectRepositoryMock.Object , userRepositoryMock.Object ,
                 convertServiceMock.Object);
 
             // Assert
 
-            Assert.Throws<ArgumentNullException>(()=>target.Invoke(guid , userLogin));
+            Assert.Throws<ArgumentNullException>(() => target.Invoke(guid , userLogin));
         }
 
         [Fact]
@@ -57,30 +127,30 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
             const int userId = 1;
             var guid = new Guid();
 
-            Mock<IUserRepository> userRepositoryMock = new Mock<IUserRepository>();
+            var userRepositoryMock = new Mock<IUserRepository>();
             userRepositoryMock.Setup(m => m.GetAll()).Returns(() => null);
 
-            Mock<IProjectRepository> projectRepositoryMock = new Mock<IProjectRepository>();
+            var projectRepositoryMock = new Mock<IProjectRepository>();
             projectRepositoryMock.Setup(m => m.GetAll()).Returns(new[]
             {
-                new Project()
+                new Project
                 {
-                    Id = userId,
+                    Id = userId ,
                     ProjectGuid = guid
-                },
+                }
             });
 
             var convertServiceMock = new Mock<ICustomDataJsonConvertService>();
 
             // Act
 
-            var target = new GetUserCustomDataListFromProject(projectRepositoryMock.Object, userRepositoryMock.Object,
+            var target = new GetUserCustomDataListFromProject(projectRepositoryMock.Object , userRepositoryMock.Object ,
                 convertServiceMock.Object);
 
 
             // Assert
 
-            Assert.Throws<ArgumentNullException>(() => target.Invoke(guid, userLogin));
+            Assert.Throws<ArgumentNullException>(() => target.Invoke(guid , userLogin));
         }
 
         [Fact]
@@ -97,18 +167,18 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
             {
                 new User
                 {
-                    Id = userId,
+                    Id = userId ,
                     Login = userLogin
                 }
             });
 
             var projectMock = new Project
             {
-                Id = userId,
-                ProjectGuid = guid,
-                ProjectCustomData = new List<ProjectCustomData>()
+                Id = userId ,
+                ProjectGuid = guid ,
+                ProjectCustomData = new List<ProjectCustomData>
                 {
-                    new ProjectCustomData()
+                    new ProjectCustomData
                     {
                         UserCustomData = new List<UserCustomData>
                         {
@@ -121,22 +191,22 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
                 }
             };
 
-            Mock<IProjectRepository> projectRepositoryMock = new Mock<IProjectRepository>();
-            projectRepositoryMock.Setup(m => m.GetAll()).Returns(new[] { projectMock });
+            var projectRepositoryMock = new Mock<IProjectRepository>();
+            projectRepositoryMock.Setup(m => m.GetAll()).Returns(new[] {projectMock});
             projectRepositoryMock.Setup(m => m.GetByIdWithCustomDatas(It.IsAny<int>())).Returns(projectMock);
 
             var convertServiceMock = new Mock<ICustomDataJsonConvertService>();
 
             // Act
 
-            var target = new GetUserCustomDataListFromProject(projectRepositoryMock.Object, userRepositoryMock.Object,
+            var target = new GetUserCustomDataListFromProject(projectRepositoryMock.Object , userRepositoryMock.Object ,
                 convertServiceMock.Object);
 
-            var result = target.Invoke(guid, userLogin);
+            var result = target.Invoke(guid , userLogin);
 
             // Assert
 
-            Assert.IsType<List<Tuple<string, string>>>(result);
+            Assert.IsType<List<Tuple<string , string>>>(result);
             Assert.Empty(result);
         }
 
@@ -149,113 +219,43 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
             const int userId = 1;
             var guid = new Guid();
 
-            Mock<IUserRepository> userRepositoryMock = new Mock<IUserRepository>();
+            var userRepositoryMock = new Mock<IUserRepository>();
             userRepositoryMock.Setup(m => m.GetAll()).Returns(new[]
             {
-                new User()
+                new User
                 {
-                    Id = userId,
-                    Login = userLogin.Insert(0,"test")
-                },
+                    Id = userId ,
+                    Login = userLogin.Insert(0 , "test")
+                }
             });
 
-            Project projectMock = new Project()
+            var projectMock = new Project
             {
-                Id = userId,
-                ProjectGuid = guid,
-                ProjectCustomData = new List<ProjectCustomData>()
+                Id = userId ,
+                ProjectGuid = guid ,
+                ProjectCustomData = new List<ProjectCustomData>
                 {
-                    new ProjectCustomData()
+                    new ProjectCustomData
                     {
                         UserCustomData = null
                     }
                 }
             };
-            Mock<IProjectRepository> projectRepositoryMock = new Mock<IProjectRepository>();
-            projectRepositoryMock.Setup(m => m.GetAll()).Returns(new[] { projectMock });
+            var projectRepositoryMock = new Mock<IProjectRepository>();
+            projectRepositoryMock.Setup(m => m.GetAll()).Returns(new[] {projectMock});
             projectRepositoryMock.Setup(m => m.GetByIdWithCustomDatas(It.IsAny<int>())).Returns(projectMock);
 
             var convertServiceMock = new Mock<ICustomDataJsonConvertService>();
 
             // Act
 
-            var target = new GetUserCustomDataListFromProject(projectRepositoryMock.Object, userRepositoryMock.Object,
+            var target = new GetUserCustomDataListFromProject(projectRepositoryMock.Object , userRepositoryMock.Object ,
                 convertServiceMock.Object);
 
 
             // Assert
 
-            Assert.Throws<ArgumentNullException>(() => target.Invoke(guid, userLogin));
-        }
-
-        [Fact]
-        public void Can_Get_Custom_Data_List_From_Project()
-        {
-            // Arrange
-
-            const string userLogin = "login1";
-            const int userId = 1;
-            const bool boolValue = true;
-            var guid = new Guid();
-
-            var convertService = new CustomDataJsonConvertService();
-
-            var userCustomDataMock = new UserCustomData
-            {
-                UserId = userId,
-                ProjectCustomData = new ProjectCustomData()
-                {
-                    ProjectId = userId,
-                    ConfigurationName = "testConfigurationName",
-                    ConfigurationType = ConfigurationType.Boolean
-                },
-                SerializedConfiguration = convertService.Serialize(new BooleanUserConfiguration { Value = boolValue })
-            };
-
-            var userRepositoryMock = new Mock<IUserRepository>();
-            userRepositoryMock.Setup(m => m.GetAll()).Returns(new[]
-            {
-                new User
-                {
-                    Id = userId,
-                    Login = userLogin,
-                    UserCustomData = new List<UserCustomData>()
-                    {
-                        userCustomDataMock
-                    }
-                }
-            });
-
-            var projectMock = new Project
-            {
-                Id = userId,
-                ProjectGuid = guid,
-                ProjectCustomData = new List<ProjectCustomData>()
-                {
-                    new ProjectCustomData()
-                    {
-                        UserCustomData = new List<UserCustomData>()
-                        {
-                            userCustomDataMock
-                        }
-                    }
-                }
-            };
-
-            var projectRepositoryMock = new Mock<IProjectRepository>();
-            projectRepositoryMock.Setup(m => m.GetAll()).Returns(new[] { projectMock });
-            projectRepositoryMock.Setup(m => m.GetByIdWithCustomDatas(It.IsAny<int>())).Returns(projectMock);
-
-            // Act
-
-            var target = new GetUserCustomDataListFromProject(projectRepositoryMock.Object, userRepositoryMock.Object,
-                convertService);
-
-            var list = target.Invoke(guid, userLogin);
-
-            // Assert
-
-            Assert.Contains(new Tuple<string, string>("testConfigurationName", boolValue.ToString()), list);
+            Assert.Throws<ArgumentNullException>(() => target.Invoke(guid , userLogin));
         }
     }
 }

@@ -2,14 +2,14 @@
 
 namespace Fingo.Auth.Domain.Infrastructure.EventBus.Events.User
 {
-    public class UserRegistrationConfirmed:EventBase
+    public class UserRegistrationConfirmed : EventBase
     {
         public UserRegistrationConfirmed(string userLogin)
         {
             UserLogin = userLogin;
         }
 
-        public string UserLogin { get; private set; }
+        public string UserLogin { get; }
 
         public override string ToString()
         {

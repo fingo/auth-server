@@ -8,7 +8,7 @@ namespace Fingo.Auth.Domain.Policies.CheckingFunctions
 {
     public static class Check
     {
-        public static bool ExcludeCommonPasswords(ExcludeCommonPasswordsConfiguration config, string password)
+        public static bool ExcludeCommonPasswords(ExcludeCommonPasswordsConfiguration config , string password)
         {
             using (var stream = File.OpenText(@"common_passwords_list.txt"))
             {
@@ -22,21 +22,23 @@ namespace Fingo.Auth.Domain.Policies.CheckingFunctions
 
             return true;
         }
-        
-        public static bool AccountExpirationDate(AccountExpirationDateConfiguration config, UserAccountExpirationDateConfiguration userConfig)
+
+        public static bool AccountExpirationDate(AccountExpirationDateConfiguration config ,
+            UserAccountExpirationDateConfiguration userConfig)
         {
-            if (!config.IsEnabled || userConfig.ExpirationDate==default(DateTime))
+            if (!config.IsEnabled || (userConfig.ExpirationDate == default(DateTime)))
                 return true;
 
             return userConfig.ExpirationDate >= DateTime.UtcNow;
         }
 
-        public static bool MinimumPasswordLength(MinimumPasswordLengthConfiguration config, string password)
+        public static bool MinimumPasswordLength(MinimumPasswordLengthConfiguration config , string password)
         {
             return password.Length >= config.Length;
         }
 
-        public static bool PasswordExpirationDate(PasswordExpirationDateConfiguration config, DateTime lastPasswordChange)
+        public static bool PasswordExpirationDate(PasswordExpirationDateConfiguration config ,
+            DateTime lastPasswordChange)
         {
             switch (config.PasswordExpiration)
             {
@@ -55,11 +57,11 @@ namespace Fingo.Auth.Domain.Policies.CheckingFunctions
             }
         }
 
-        public static bool RequiredPasswordCharacters(RequiredPasswordCharactersConfiguration config, string password)
+        public static bool RequiredPasswordCharacters(RequiredPasswordCharactersConfiguration config , string password)
         {
-            return Implication(config.Digit, password.Any(char.IsDigit))
-                   && Implication(config.Special, password.Any(IsSpecial))
-                   && Implication(config.UpperCase, password.Any(char.IsUpper));
+            return Implication(config.Digit , password.Any(char.IsDigit))
+                   && Implication(config.Special , password.Any(IsSpecial))
+                   && Implication(config.UpperCase , password.Any(char.IsUpper));
         }
 
         private static bool IsSpecial(char c)
@@ -67,7 +69,7 @@ namespace Fingo.Auth.Domain.Policies.CheckingFunctions
             return char.IsSymbol(c) || char.IsPunctuation(c) || char.IsSeparator(c) || char.IsWhiteSpace(c);
         }
 
-        private static bool Implication(bool p, bool q)
+        private static bool Implication(bool p , bool q)
         {
             return !p || q;
         }

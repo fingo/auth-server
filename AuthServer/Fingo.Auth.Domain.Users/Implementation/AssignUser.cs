@@ -11,14 +11,15 @@ using Fingo.Auth.Domain.Users.Services.Interfaces;
 
 namespace Fingo.Auth.Domain.Users.Implementation
 {
-    public class AssignUser: IAssignUser
+    public class AssignUser : IAssignUser
     {
-        private readonly IProjectRepository projectRepository;
         private readonly IEventBus eventBus;
-        private readonly IUserRepository userRepository;
+        private readonly IProjectRepository projectRepository;
         private readonly ISetDefaultUserCustomDataBasedOnProject setDefaultUserCustomDataBasedOnProject;
+        private readonly IUserRepository userRepository;
 
-        public AssignUser(IProjectRepository projectRepository , IEventBus eventBus, IUserRepository userRepository,ISetDefaultUserCustomDataBasedOnProject setDefaultUserCustomDataBasedOnProject)
+        public AssignUser(IProjectRepository projectRepository , IEventBus eventBus , IUserRepository userRepository ,
+            ISetDefaultUserCustomDataBasedOnProject setDefaultUserCustomDataBasedOnProject)
         {
             this.projectRepository = projectRepository;
             this.eventBus = eventBus;
@@ -28,24 +29,22 @@ namespace Fingo.Auth.Domain.Users.Implementation
 
         public void Invoke(int projectId , int userId)
         {
-            Project project = projectRepository.GetById(projectId).WithoutStatuses(ProjectStatus.Deleted);
+            var project = projectRepository.GetById(projectId).WithoutStatuses(ProjectStatus.Deleted);
 
             if (project == null)
                 throw new ArgumentNullException(
                     $"Cannot assign users to project with id:{projectId}, because this project non exist.");
 
             if (project.ProjectUsers == null)
-            {
                 project.ProjectUsers = new List<ProjectUser>();
-            }
 
-            User user = userRepository.GetById(userId).WithoutStatuses(UserStatus.Deleted);
+            var user = userRepository.GetById(userId).WithoutStatuses(UserStatus.Deleted);
 
             if (user == null)
                 throw new ArgumentNullException(
                     $"Cannot assign user to project with id:{projectId}, because user non exist.");
 
-            project.ProjectUsers.Add(new ProjectUser() {UserId = user.Id});
+            project.ProjectUsers.Add(new ProjectUser {UserId = user.Id});
 
             setDefaultUserCustomDataBasedOnProject.SetDefaultUserCustomData(project , user);
 

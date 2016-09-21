@@ -8,9 +8,10 @@ using Fingo.Auth.Domain.Users.Interfaces;
 
 namespace Fingo.Auth.Domain.Users.Implementation
 {
-    public class GetAllNotAssignedUsersToProject: IGetAllNotAssignedUsersToProject
+    public class GetAllNotAssignedUsersToProject : IGetAllNotAssignedUsersToProject
     {
         private readonly IUserRepository repo;
+
         public GetAllNotAssignedUsersToProject(IUserRepository repo)
         {
             this.repo = repo;
@@ -20,7 +21,7 @@ namespace Fingo.Auth.Domain.Users.Implementation
         {
             var users = repo.GetAll().WithoutStatuses(UserStatus.Deleted);
 
-            var model= users.Where(user => user.ProjectUsers.All(m => m.ProjectId != projectId));
+            var model = users.Where(user => user.ProjectUsers.All(m => m.ProjectId != projectId));
 
             var result = model.Select(user => new BaseUserModel(user));
 

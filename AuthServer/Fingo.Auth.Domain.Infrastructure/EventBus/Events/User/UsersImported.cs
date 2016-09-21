@@ -2,9 +2,9 @@
 
 namespace Fingo.Auth.Domain.Infrastructure.EventBus.Events.User
 {
-    public class UsersImported:EventBase
+    public class UsersImported : EventBase
     {
-        public UsersImported(int added, int duplicated, int all, int projectId)
+        public UsersImported(int added , int duplicated , int all , int projectId)
         {
             Added = added;
             Duplicated = duplicated;
@@ -13,15 +13,16 @@ namespace Fingo.Auth.Domain.Infrastructure.EventBus.Events.User
         }
 
         public int ProjectId { get; }
-        public int Added { get; private set; }
-        public int Duplicated { get; private set; }
-        public int All { get; private set; }
+        public int Added { get; }
+        public int Duplicated { get; }
+        public int All { get; }
 
         public override string ToString()
         {
-            return $"Successfully added {Added} users from file to project (id: {ProjectId}). {Duplicated} users were not added " +
-                   $"because of being a duplicate, {All - Added - Duplicated} were not added because of having not valid " +
-                   $"e-mail adress.";
+            return
+                $"Successfully added {Added} users from file to project (id: {ProjectId}). {Duplicated} users were not added " +
+                $"because of being a duplicate, {All - Added - Duplicated} were not added because of having not valid " +
+                $"e-mail adress.";
         }
     }
 }

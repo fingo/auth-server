@@ -1,18 +1,18 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
+using Fingo.Auth.Domain.Infrastructure.EventBus.Interfaces;
 using Fingo.Auth.Domain.Models.ProjectModels;
 using Fingo.Auth.Domain.Projects.Factories.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Fingo.Auth.Infrastructure.Logging;
-using System;
-using System.Text;
 using Fingo.Auth.Domain.Users.Factories.Interfaces;
+using Fingo.Auth.Infrastructure.Logging;
+using Fingo.Auth.ManagementApp.Alerts;
 using Fingo.Auth.ManagementApp.Configuration;
 using Fingo.Auth.ManagementApp.Services.Interfaces;
-using Fingo.Auth.Domain.Infrastructure.EventBus.Interfaces;
-using Fingo.Auth.ManagementApp.Alerts;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Fingo.Auth.ManagementApp.Controllers
 {
@@ -20,16 +20,16 @@ namespace Fingo.Auth.ManagementApp.Controllers
     [Route("projects")]
     public class ProjectsController : BaseController
     {
-        private readonly IGetAllProjectFactory _getAllProjectFactory;
         private readonly IAddProjectFactory _addProjectFactory;
-        private readonly IDeleteProjectFactory _deleteProjectFactory;
-        private readonly IGetProjectFactory _getProjectFactory;
-        private readonly IDeleteByIdUserFactory _deleteByIdUserFactory;
         private readonly IAssignUserFactory _assignUserFactory;
-        private readonly IMessageSender _messageSender;
-        private readonly IGetUserFactory _getUserFactory;
-        private readonly IGetProjectWithAllFactory getProjectWithAllFactory;
         private readonly ICsvService _csvGenerator;
+        private readonly IDeleteByIdUserFactory _deleteByIdUserFactory;
+        private readonly IDeleteProjectFactory _deleteProjectFactory;
+        private readonly IGetAllProjectFactory _getAllProjectFactory;
+        private readonly IGetProjectFactory _getProjectFactory;
+        private readonly IGetUserFactory _getUserFactory;
+        private readonly IMessageSender _messageSender;
+        private readonly IGetProjectWithAllFactory getProjectWithAllFactory;
 
 
         public ProjectsController(IEventWatcher eventWatcher , ILogger<ProjectsController> logger , IEventBus eventBus ,
@@ -73,7 +73,7 @@ namespace Fingo.Auth.ManagementApp.Controllers
         {
             try
             {
-                ProjectDetailWithAll model = getProjectWithAllFactory.Create().Invoke(id);
+                var model = getProjectWithAllFactory.Create().Invoke(id);
                 return View("ProjectDetails" , model);
             }
             catch (Exception ex)
@@ -100,21 +100,20 @@ namespace Fingo.Auth.ManagementApp.Controllers
         }
 
         [HttpPost("{projectId}")]
-        public IActionResult AsignUsersToProject(int projectId, int[] usersId)
+        public IActionResult AsignUsersToProject(int projectId , int[] usersId)
         {
             try
             {
-                bool succesAssignAllUsers = true;
-                string projectName = _getProjectFactory.Create().Invoke(projectId).Name;
+                var succesAssignAllUsers = true;
+                var projectName = _getProjectFactory.Create().Invoke(projectId).Name;
                 foreach (var userId in usersId)
-                {
                     try
                     {
-                        _assignUserFactory.Create().Invoke(projectId, userId);
+                        _assignUserFactory.Create().Invoke(projectId , userId);
                         try
                         {
-
-                            SendMessageAboutAssignment(projectName, $"your account was assigned to a new project: {projectName}.",
+                            SendMessageAboutAssignment(projectName ,
+                                $"your account was assigned to a new project: {projectName}." ,
                                 _getUserFactory.Create().Invoke(userId).Login);
                         }
                         catch (Exception)
@@ -126,54 +125,49 @@ namespace Fingo.Auth.ManagementApp.Controllers
                     {
                         succesAssignAllUsers = false;
                     }
-                }
                 if (succesAssignAllUsers)
-                {
-                    Alert(AlertType.Success, "Users were assigned correctly.");
-                }
+                    Alert(AlertType.Success , "Users were assigned correctly.");
                 else
-                {
-                    Alert(AlertType.Warning, "Some users were not assigned because of an error.");
-                }
-                return RedirectToAction("GetById", new {id = projectId});
+                    Alert(AlertType.Warning , "Some users were not assigned because of an error.");
+                return RedirectToAction("GetById" , new {id = projectId});
             }
             catch (Exception ex)
             {
-                Alert(AlertType.Warning, ex.Message);
+                Alert(AlertType.Warning , ex.Message);
                 return View("ErrorPage");
             }
         }
 
         [HttpDelete("{projectId}/{userId}")]
-        public HttpResponseMessage DeleteUserFromProject(int projectId, int userId)
+        public HttpResponseMessage DeleteUserFromProject(int projectId , int userId)
         {
             try
             {
-                _deleteByIdUserFactory.Create().Invoke(projectId, userId);
+                _deleteByIdUserFactory.Create().Invoke(projectId , userId);
 
                 try
                 {
                     var user = _getUserFactory.Create().Invoke(userId);
-                    SendMessageAboutUnassignment(user.FirstName + user.LastName,
-                        $"your account was unassigned from project: {_getProjectFactory.Create().Invoke(projectId).Name}.", user.Login);
+                    SendMessageAboutUnassignment(user.FirstName + user.LastName ,
+                        $"your account was unassigned from project: {_getProjectFactory.Create().Invoke(projectId).Name}." ,
+                        user.Login);
                 }
                 catch (Exception)
                 {
                     //ignored
                 }
 
-                Alert(AlertType.Success, "User was correctly removed from the project.");
+                Alert(AlertType.Success , "User was correctly removed from the project.");
             }
             catch (ArgumentNullException)
             {
-
-                Alert(AlertType.Warning, "Could not find such user in the database.");
+                Alert(AlertType.Warning , "Could not find such user in the database.");
 
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
             catch (Exception)
             {
-                Alert(AlertType.Warning, "User wasn't removed from the project.");
+                Alert(AlertType.Warning , "User wasn't removed from the project.");
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
 
@@ -189,11 +183,11 @@ namespace Fingo.Auth.ManagementApp.Controllers
                 project.Name = name;
                 _addProjectFactory.Create().Invoke(project);
 
-                Alert(AlertType.Success, "Project was added correctly.");
+                Alert(AlertType.Success , "Project was added correctly.");
             }
             catch (Exception)
             {
-                Alert(AlertType.Warning, "Project was not added.");
+                Alert(AlertType.Warning , "Project was not added.");
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
 
@@ -201,7 +195,7 @@ namespace Fingo.Auth.ManagementApp.Controllers
         }
 
         [HttpGet("userInProject")]
-        public IActionResult UserInProject(int id, int pageSize = 10, int page = 1)
+        public IActionResult UserInProject(int id , int pageSize = 10 , int page = 1)
         {
             try
             {
@@ -215,7 +209,7 @@ namespace Fingo.Auth.ManagementApp.Controllers
 
                 users = users.OrderBy(m => m.Id).Skip(pageSize * (page - 1)).Take(pageSize);
 
-                return PartialView("Partial/UserInProjectPartialView", users);
+                return PartialView("Partial/UserInProjectPartialView" , users);
             }
             catch
             {
@@ -224,7 +218,7 @@ namespace Fingo.Auth.ManagementApp.Controllers
         }
 
         [HttpGet("getAllProjects")]
-        public IActionResult GetAllProjects(int pageSize = 10, int page=1)
+        public IActionResult GetAllProjects(int pageSize = 10 , int page = 1)
         {
             try
             {
@@ -234,13 +228,13 @@ namespace Fingo.Auth.ManagementApp.Controllers
                 ViewBag.Page = page;
                 ViewBag.TotalRows = projects.Count();
                 projects = projects.OrderBy(m => m.Id).Skip(pageSize * (page - 1)).Take(pageSize);
-                return PartialView("Partial/AllProjectsPartialView", projects);
+                return PartialView("Partial/AllProjectsPartialView" , projects);
             }
 
             catch
             {
                 return PartialView("ErrorPartialView");
-             }
+            }
         }
 
         [HttpDelete("{id}")]
@@ -250,40 +244,42 @@ namespace Fingo.Auth.ManagementApp.Controllers
             {
                 _deleteProjectFactory.Create().Invoke(id);
 
-                Alert(AlertType.Success, "Project was removed correctly.");
+                Alert(AlertType.Success , "Project was removed correctly.");
             }
             catch (ArgumentNullException)
             {
-                Alert(AlertType.Information, "Project doesn't exist in our database.");
+                Alert(AlertType.Information , "Project doesn't exist in our database.");
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
             catch (Exception)
             {
-                Alert(AlertType.Warning, "Project was not removed.");
+                Alert(AlertType.Warning , "Project was not removed.");
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
 
             return new HttpResponseMessage(HttpStatusCode.NoContent);
         }
 
-        private void SendMessageAboutAssignment(string projectName, string content, string email)
+        private void SendMessageAboutAssignment(string projectName , string content , string email)
         {
-            var emailContent = _messageSender.CreateContent(content, EmailConfiguration.Greeting, EmailConfiguration.Sender);
+            var emailContent = _messageSender.CreateContent(content , EmailConfiguration.Greeting ,
+                EmailConfiguration.Sender);
 
-            var message = _messageSender.CreateMessage(projectName, email, EmailConfiguration.Sender,
-                EmailConfiguration.SenderEmail, "Your account was assigned to a new project", emailContent);
-            _messageSender.SendEmail(message, EmailConfiguration.ServerEmail, EmailConfiguration.ServerPassword,
-                EmailConfiguration.ServerName, 465);
+            var message = _messageSender.CreateMessage(projectName , email , EmailConfiguration.Sender ,
+                EmailConfiguration.SenderEmail , "Your account was assigned to a new project" , emailContent);
+            _messageSender.SendEmail(message , EmailConfiguration.ServerEmail , EmailConfiguration.ServerPassword ,
+                EmailConfiguration.ServerName , 465);
         }
 
-        private void SendMessageAboutUnassignment(string userName, string content, string email)
+        private void SendMessageAboutUnassignment(string userName , string content , string email)
         {
-            var emailContent = _messageSender.CreateContent(content, EmailConfiguration.Greeting, EmailConfiguration.Sender);
+            var emailContent = _messageSender.CreateContent(content , EmailConfiguration.Greeting ,
+                EmailConfiguration.Sender);
 
-            var message = _messageSender.CreateMessage(userName, email, EmailConfiguration.Sender,
-                EmailConfiguration.SenderEmail, "Your account was unassigned from a project", emailContent);
-            _messageSender.SendEmail(message, EmailConfiguration.ServerEmail, EmailConfiguration.ServerPassword,
-                EmailConfiguration.ServerName, 465);
+            var message = _messageSender.CreateMessage(userName , email , EmailConfiguration.Sender ,
+                EmailConfiguration.SenderEmail , "Your account was unassigned from a project" , emailContent);
+            _messageSender.SendEmail(message , EmailConfiguration.ServerEmail , EmailConfiguration.ServerPassword ,
+                EmailConfiguration.ServerName , 465);
         }
     }
 }

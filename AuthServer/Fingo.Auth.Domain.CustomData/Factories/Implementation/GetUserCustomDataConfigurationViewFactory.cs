@@ -9,12 +9,12 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Implementation
 {
     public class GetUserCustomDataConfigurationViewFactory : IGetUserCustomDataConfigurationViewFactory
     {
-        private readonly IProjectRepository projectRepository;
         private readonly ICustomDataJsonConvertService jsonConvertService;
+        private readonly IProjectRepository projectRepository;
         private readonly IUserCustomDataRepository userCustomDataRepository;
 
-        public GetUserCustomDataConfigurationViewFactory(IProjectRepository projectRepository,
-            ICustomDataJsonConvertService jsonConvertService, IUserCustomDataRepository userCustomDataRepository)
+        public GetUserCustomDataConfigurationViewFactory(IProjectRepository projectRepository ,
+            ICustomDataJsonConvertService jsonConvertService , IUserCustomDataRepository userCustomDataRepository)
         {
             this.projectRepository = projectRepository;
             this.jsonConvertService = jsonConvertService;
@@ -23,7 +23,8 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Implementation
 
         public IGetUserCustomDataConfigurationView Create()
         {
-            return new GetUserCustomDataConfigurationView(projectRepository, jsonConvertService, userCustomDataRepository);
+            return new GetUserCustomDataConfigurationView(projectRepository , jsonConvertService ,
+                userCustomDataRepository);
         }
     }
 }

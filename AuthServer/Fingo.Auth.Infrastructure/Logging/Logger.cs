@@ -11,17 +11,10 @@ namespace Fingo.Auth.Infrastructure.Logging
             SetTypeName();
         }
 
-        private void SetTypeName()
-        {
-            _callingClassName = typeof(T).Name;
-        }
-
-        public void Log(LogLevel logLevel, string message)
+        public void Log(LogLevel logLevel , string message)
         {
             if (string.IsNullOrEmpty(_callingClassName))
-            {
                 _callingClassName = "_callingClassName N/A";
-            }
 
             var newMessage = "<" + _callingClassName + "> " + message;
 
@@ -44,6 +37,11 @@ namespace Fingo.Auth.Infrastructure.Logging
             {
                 // ignored
             }
+        }
+
+        private void SetTypeName()
+        {
+            _callingClassName = typeof(T).Name;
         }
     }
 }

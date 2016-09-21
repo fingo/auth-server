@@ -10,37 +10,17 @@ namespace Fingo.Auth.DbAccess.Tests.Repository
 {
     public class UserRepositoryTest
     {
-        private AuthServerContext context;
-
         public UserRepositoryTest()
         {
-            MockDbInMemory createDbInMemory = new MockDbInMemory();
+            var createDbInMemory = new MockDbInMemory();
             context = createDbInMemory.CreateNewContextOptions();
         }
+
+        private readonly AuthServerContext context;
 
         public void Dispose()
         {
             context.Dispose();
-        }
-
-        [Fact]
-        public void Can_Get_User_By_Id()
-        {
-            //Arrange
-
-            IUserRepository repo = new UserRepository(context);
-
-            //Act
-
-            User result = repo.GetById(1);
-            User noResult = repo.GetById(5);
-
-            //Assert
-
-            Assert.True(result.Id == 1);
-            Assert.True(result.Login == "tekst");
-            Assert.True(result.FirstName == "pierwszy");
-            Assert.Null(noResult);
         }
 
         [Fact]
@@ -49,12 +29,12 @@ namespace Fingo.Auth.DbAccess.Tests.Repository
             //Arrange
 
             IUserRepository repo = new UserRepository(context);
-            User newUser = new User() { Id = 5 , FirstName = "piaty" , Password = "piec" , Login = "piec" };
+            var newUser = new User {Id = 5 , FirstName = "piaty" , Password = "piec" , Login = "piec"};
 
             //Act
 
             repo.Add(newUser);
-            User addedUser = repo.GetById(5);
+            var addedUser = repo.GetById(5);
 
             //Assert
 
@@ -64,37 +44,17 @@ namespace Fingo.Auth.DbAccess.Tests.Repository
         }
 
         [Fact]
-        public void Can_Remove_User()
-        {
-            //Arrange
-
-            IUserRepository repo = new UserRepository(context);
-
-            //Act
-            User toDelete = repo.GetById(1);
-            repo.Delete(toDelete);
-            User removedUser = repo.GetById(1);
-            User firstUser = context.Set<User>().FirstOrDefault();
-
-            //Assert
-
-            Assert.True(context.Set<User>().Count() == 3);
-            Assert.Null(removedUser);
-            Assert.True(firstUser.Id == 2);
-        }
-
-        [Fact]
         public void Can_Change_User_Password()
         {
             //Arrange
 
             IUserRepository repo = new UserRepository(context);
-            User toUpdate = repo.GetById(3);
+            var toUpdate = repo.GetById(3);
 
             //Act
 
             repo.UpdateUserPassword(toUpdate , "newPassword3");
-            User afterChangePassword = repo.GetById(3);
+            var afterChangePassword = repo.GetById(3);
 
             //Assert
 
@@ -116,8 +76,48 @@ namespace Fingo.Auth.DbAccess.Tests.Repository
 
             //Assert
 
-            Assert.True(result.Count()==1);
-            Assert.True(result.First().Name== "name1");
+            Assert.True(result.Count() == 1);
+            Assert.True(result.First().Name == "name1");
+        }
+
+        [Fact]
+        public void Can_Get_User_By_Id()
+        {
+            //Arrange
+
+            IUserRepository repo = new UserRepository(context);
+
+            //Act
+
+            var result = repo.GetById(1);
+            var noResult = repo.GetById(5);
+
+            //Assert
+
+            Assert.True(result.Id == 1);
+            Assert.True(result.Login == "tekst");
+            Assert.True(result.FirstName == "pierwszy");
+            Assert.Null(noResult);
+        }
+
+        [Fact]
+        public void Can_Remove_User()
+        {
+            //Arrange
+
+            IUserRepository repo = new UserRepository(context);
+
+            //Act
+            var toDelete = repo.GetById(1);
+            repo.Delete(toDelete);
+            var removedUser = repo.GetById(1);
+            var firstUser = context.Set<User>().FirstOrDefault();
+
+            //Assert
+
+            Assert.True(context.Set<User>().Count() == 3);
+            Assert.Null(removedUser);
+            Assert.True(firstUser.Id == 2);
         }
     }
 }

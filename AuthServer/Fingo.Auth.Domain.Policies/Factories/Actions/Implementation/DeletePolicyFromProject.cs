@@ -10,15 +10,16 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Implementation
 {
     public class DeletePolicyFromProject : IDeletePolicyFromProject
     {
-        private readonly IProjectRepository projectRepository;
         private readonly IEventBus eventBus;
-        public DeletePolicyFromProject(IProjectRepository projectRepository, IEventBus eventBus)
+        private readonly IProjectRepository projectRepository;
+
+        public DeletePolicyFromProject(IProjectRepository projectRepository , IEventBus eventBus)
         {
             this.eventBus = eventBus;
             this.projectRepository = projectRepository;
         }
 
-        public void Invoke(int projectId, Policy policy)
+        public void Invoke(int projectId , Policy policy)
         {
             var project = projectRepository.GetById(projectId);
 
@@ -33,7 +34,7 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Implementation
             project.ProjectPolicies.Remove(projectPolicy);
 
             projectRepository.Edit(project);
-            eventBus.Publish(new PolicyRemoved(projectId, policy));
+            eventBus.Publish(new PolicyRemoved(projectId , policy));
         }
     }
 }

@@ -9,8 +9,9 @@ namespace Fingo.Auth.Domain.Projects.Factories.Implementation
     public class AddProjectFactory : IAddProjectFactory
     {
         private readonly IProjectRepository _repository;
-        private IEventBus _eventBus;
-        public AddProjectFactory(IProjectRepository repository, IEventBus eventBus)
+        private readonly IEventBus _eventBus;
+
+        public AddProjectFactory(IProjectRepository repository , IEventBus eventBus)
         {
             _repository = repository;
             _eventBus = eventBus;
@@ -18,7 +19,7 @@ namespace Fingo.Auth.Domain.Projects.Factories.Implementation
 
         public IAddProject Create()
         {
-            return new AddProject(_repository,_eventBus);
+            return new AddProject(_repository , _eventBus);
         }
     }
 }

@@ -19,14 +19,14 @@ namespace Fingo.Auth.AuthServer.Client.Services.Implementation
 
         public void CreateNewUserInProject(UserModel user)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>
+            var parameters = new Dictionary<string , string>
             {
-                {"activationToken", user.ActivationToken},
-                {"login", user.Login},
-                {"password", user.Password},
-                {"firstName", user.FirstName},
-                {"lastName", user.LastName},
-                {"projectGuid", Configuration.Guid}
+                {"activationToken" , user.ActivationToken} ,
+                {"login" , user.Login} ,
+                {"password" , user.Password} ,
+                {"firstName" , user.FirstName} ,
+                {"lastName" , user.LastName} ,
+                {"projectGuid" , Configuration.Guid}
             };
 
             string authServerAnswer;
@@ -34,7 +34,7 @@ namespace Fingo.Auth.AuthServer.Client.Services.Implementation
 
             try
             {
-                authServerAnswer = _postService.SendAndGetAnswer(Configuration.CreateNewUserInProjectAdress, parameters);
+                authServerAnswer = _postService.SendAndGetAnswer(Configuration.CreateNewUserInProjectAdress , parameters);
             }
             catch
             {
@@ -69,12 +69,12 @@ namespace Fingo.Auth.AuthServer.Client.Services.Implementation
 
         public void PasswordChangeForUser(ChangingPasswordUser user)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>
+            var parameters = new Dictionary<string , string>
             {
-                {"userEmail", user.Email },
-                {"password", user.Password},
-                {"newPassword", user.NewPassword},
-                {"confirmedNewPassword", user.ConfirmNewPassword}
+                {"userEmail" , user.Email} ,
+                {"password" , user.Password} ,
+                {"newPassword" , user.NewPassword} ,
+                {"confirmedNewPassword" , user.ConfirmNewPassword}
             };
 
             string authServerAnswer;
@@ -82,7 +82,7 @@ namespace Fingo.Auth.AuthServer.Client.Services.Implementation
 
             try
             {
-                authServerAnswer = _postService.SendAndGetAnswer(Configuration.ChangingPasswordUserAddress, parameters);
+                authServerAnswer = _postService.SendAndGetAnswer(Configuration.ChangingPasswordUserAddress , parameters);
             }
             catch (Exception)
             {
@@ -115,12 +115,12 @@ namespace Fingo.Auth.AuthServer.Client.Services.Implementation
             }
         }
 
-        public void SetPasswordForUser(string token, string password)
+        public void SetPasswordForUser(string token , string password)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>
+            var parameters = new Dictionary<string , string>
             {
-                {"token", token },
-                {"password", password}
+                {"token" , token} ,
+                {"password" , password}
             };
 
             string authServerAnswer;
@@ -128,7 +128,7 @@ namespace Fingo.Auth.AuthServer.Client.Services.Implementation
 
             try
             {
-                authServerAnswer = _postService.SendAndGetAnswer(Configuration.SetPasswordForUserAdress, parameters);
+                authServerAnswer = _postService.SendAndGetAnswer(Configuration.SetPasswordForUserAdress , parameters);
             }
             catch (Exception)
             {

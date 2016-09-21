@@ -8,17 +8,18 @@ namespace Fingo.Auth.Domain.Users.Factories.Implementation
 {
     public class ActivateByActivationTokenFactory : IActivateByActivationTokenFactory
     {
-        private readonly IUserRepository _repository;
         private readonly IEventBus _eventBus;
+        private readonly IUserRepository _repository;
 
         public ActivateByActivationTokenFactory(IUserRepository repository , IEventBus eventBus)
         {
             _repository = repository;
             _eventBus = eventBus;
         }
+
         public IActivateByActivationToken Create()
         {
-            return new ActivateByActivationToken(_repository, _eventBus);
+            return new ActivateByActivationToken(_repository , _eventBus);
         }
     }
 }

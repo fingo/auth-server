@@ -11,23 +11,24 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Implementation
 {
     public class SaveUserPolicyToProject : ISaveUserPolicyToProject
     {
-        private readonly IProjectRepository projectRepository;
         private readonly IPolicyJsonConvertService jsonConvertService;
-        public SaveUserPolicyToProject(IProjectRepository projectRepository,
+        private readonly IProjectRepository projectRepository;
+
+        public SaveUserPolicyToProject(IProjectRepository projectRepository ,
             IPolicyJsonConvertService jsonConvertService)
         {
             this.projectRepository = projectRepository;
             this.jsonConvertService = jsonConvertService;
         }
 
-        public void Invoke(int projectId, int userId, Policy policy, DateTime userExpDate)
+        public void Invoke(int projectId , int userId , Policy policy , DateTime userExpDate)
         {
             var project = projectRepository.GetByIdWithPolicies(projectId);
 
             if (project == null)
                 throw new ArgumentNullException($"Cannot find user with id:{projectId}");
 
-            UserPolicies userPolicy = project.ProjectPolicies.FirstOrDefault(m => m.Policy == policy)
+            var userPolicy = project.ProjectPolicies.FirstOrDefault(m => m.Policy == policy)
                 .UserPolicies.FirstOrDefault(m => m.UserId == userId);
 
             if (userPolicy != null)
@@ -38,7 +39,9 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Implementation
                     projectRepository.Edit(project);
                     return;
                 }
-                UserAccountExpirationDateConfiguration result =(UserAccountExpirationDateConfiguration)jsonConvertService.DeserializeUser(policy, userPolicy.SerializedUserPolicySetting);
+                var result =
+                    (UserAccountExpirationDateConfiguration)
+                    jsonConvertService.DeserializeUser(policy , userPolicy.SerializedUserPolicySetting);
                 result.ExpirationDate = userExpDate;
                 userPolicy.SerializedUserPolicySetting = jsonConvertService.Serialize(result);
                 project.ProjectPolicies.FirstOrDefault(m => m.Policy == policy).UserPolicies.Add(userPolicy);
@@ -46,13 +49,15 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Implementation
             else
             {
                 if (userExpDate == default(DateTime))
-                {
                     return;
-                }
-                userPolicy = new UserPolicies()
+                userPolicy = new UserPolicies
                 {
-                    UserId = userId,
-                    SerializedUserPolicySetting = jsonConvertService.Serialize(new UserAccountExpirationDateConfiguration() {ExpirationDate = userExpDate})
+                    UserId = userId ,
+                    SerializedUserPolicySetting =
+                        jsonConvertService.Serialize(new UserAccountExpirationDateConfiguration
+                        {
+                            ExpirationDate = userExpDate
+                        })
                 };
                 project.ProjectPolicies.FirstOrDefault(m => m.Policy == policy).UserPolicies.Add(userPolicy);
             }

@@ -17,7 +17,9 @@
                     <ul class="dropdown-menu">
                         @foreach (var configurationType in Model)
                         {
-                            <li><a href="#" onclick="GetProjectConfigurationTypeModalWindow('@configurationType',@ViewBag.ProjectId,null)">@configurationType</a></li>
+                            <li>
+                                <a href="#" onclick="GetProjectConfigurationTypeModalWindow('@configurationType', @ViewBag.ProjectId, null)">@configurationType</a>
+                            </li>
                         }
                     </ul>
                 </div>
@@ -32,16 +34,18 @@
 </div>
 
 <script>
-    $('#closeModalButton').click(function() {
-        $('#customDataModalWindow').modal('hide');
-    });
+    $('#closeModalButton')
+        .click(function() {
+            $('#customDataModalWindow').modal('hide');
+        });
     $(".dropdown-menu li a")
-            .click(
-                function () {
-                    $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
-                    $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
-                });
+        .click(
+            function() {
+                $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+                $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+            });
     $('#customDataModalWindow').modal('show');
+
     function GetProjectConfigurationTypeModalWindow(configurationType, projectId, configurationName) {
         var apiUrl = "/customData/getPartialView";
         var data = {
@@ -54,16 +58,16 @@
             url: apiUrl,
             type: 'GET',
             data: data,
-            success: function (data) {
+            success: function(data) {
                 $('#configurationModalWindowContainer').html(data);
                 $('#configurationModalWindowContainer')
                     .find("script")
-                    .each(function (i) {
+                    .each(function(i) {
                         eval($(this).text());
                     });
                 $('#configurationModalWindowContainer')
                     .find("link")
-                    .each(function (i) {
+                    .each(function(i) {
                         eval($(this).text());
                     });
             }

@@ -9,28 +9,52 @@ namespace Fingo.Auth.Domain.Policies.Tests.CheckingFunctions
     public class CheckTest
     {
         [Fact]
-        public void AccountExpirationDateCheckShouldReturnTrueBecauseOfNotEnabled()
+        public void AccountExpirationDateCheckShouldReturnFalseBecauseOfDateExpired()
         {
             // arrange
-            var configuration = new AccountExpirationDateConfiguration{IsEnabled = false};
-            var userConfiguration = new UserAccountExpirationDateConfiguration() { ExpirationDate = DateTime.Now.AddDays(1) };
+            var configuration = new AccountExpirationDateConfiguration {IsEnabled = true};
+            var userConfiguration = new UserAccountExpirationDateConfiguration
+            {
+                ExpirationDate = DateTime.Now.AddDays(-1)
+            };
 
             // act
-            var checkResult = Check.AccountExpirationDate(configuration, userConfiguration);
+
+            var checkResult = Check.AccountExpirationDate(configuration , userConfiguration);
 
             // assert
-            Assert.True(checkResult);
+            Assert.False(checkResult);
         }
 
         [Fact]
         public void AccountExpirationDateCheckShouldReturnTrue()
         {
             // arrange
-            var configuration = new AccountExpirationDateConfiguration { IsEnabled = true };
-            var userConfiguration = new UserAccountExpirationDateConfiguration() { ExpirationDate = DateTime.Now.AddDays(1) };
+            var configuration = new AccountExpirationDateConfiguration {IsEnabled = true};
+            var userConfiguration = new UserAccountExpirationDateConfiguration
+            {
+                ExpirationDate = DateTime.Now.AddDays(1)
+            };
 
             // act
-            var checkResult = Check.AccountExpirationDate(configuration, userConfiguration);
+            var checkResult = Check.AccountExpirationDate(configuration , userConfiguration);
+
+            // assert
+            Assert.True(checkResult);
+        }
+
+        [Fact]
+        public void AccountExpirationDateCheckShouldReturnTrueBecauseOfNotEnabled()
+        {
+            // arrange
+            var configuration = new AccountExpirationDateConfiguration {IsEnabled = false};
+            var userConfiguration = new UserAccountExpirationDateConfiguration
+            {
+                ExpirationDate = DateTime.Now.AddDays(1)
+            };
+
+            // act
+            var checkResult = Check.AccountExpirationDate(configuration , userConfiguration);
 
             // assert
             Assert.True(checkResult);
@@ -40,42 +64,11 @@ namespace Fingo.Auth.Domain.Policies.Tests.CheckingFunctions
         public void AccountExpirationDateCheckShouldReturnTrueBecauseUserAccountExpirationDateIsNotSet()
         {
             // arrange
-            var configuration = new AccountExpirationDateConfiguration { IsEnabled = true };
-            var userConfiguration = new UserAccountExpirationDateConfiguration() { ExpirationDate = default(DateTime) };
+            var configuration = new AccountExpirationDateConfiguration {IsEnabled = true};
+            var userConfiguration = new UserAccountExpirationDateConfiguration {ExpirationDate = default(DateTime)};
 
             // act
-            var checkResult = Check.AccountExpirationDate(configuration, userConfiguration);
-
-            // assert
-            Assert.True(checkResult);
-        }
-
-        [Fact]
-        public void AccountExpirationDateCheckShouldReturnFalseBecauseOfDateExpired()
-        {
-            // arrange
-            var configuration = new AccountExpirationDateConfiguration{ IsEnabled = true };
-            var userConfiguration=new UserAccountExpirationDateConfiguration() {ExpirationDate = DateTime.Now.AddDays(-1)};
-
-            // act
-
-            var checkResult = Check.AccountExpirationDate(configuration, userConfiguration);
-
-            // assert
-            Assert.False(checkResult);
-        }
-
-        [Fact]
-        public void MinimumPasswordLengthCheckShouldReturnTrue()
-        {
-            // arrange
-            var configuration = new MinimumPasswordLengthConfiguration
-            {
-                Length = 7
-            };
-
-            // act
-            var checkResult = Check.MinimumPasswordLength(configuration, "password");
+            var checkResult = Check.AccountExpirationDate(configuration , userConfiguration);
 
             // assert
             Assert.True(checkResult);
@@ -91,24 +84,23 @@ namespace Fingo.Auth.Domain.Policies.Tests.CheckingFunctions
             };
 
             // act
-            var checkResult = Check.MinimumPasswordLength(configuration, "password");
+            var checkResult = Check.MinimumPasswordLength(configuration , "password");
 
             // assert
             Assert.False(checkResult);
         }
 
         [Fact]
-        public void PasswordExpirationDateCheckShouldReturnTrue()
+        public void MinimumPasswordLengthCheckShouldReturnTrue()
         {
             // arrange
-            var configuration = new PasswordExpirationDateConfiguration
+            var configuration = new MinimumPasswordLengthConfiguration
             {
-                PasswordExpiration = PasswordExpiration.Custom,
-                CustomValue = 42
+                Length = 7
             };
 
             // act
-            var checkResult = Check.PasswordExpirationDate(configuration, DateTime.UtcNow.AddDays(-41));
+            var checkResult = Check.MinimumPasswordLength(configuration , "password");
 
             // assert
             Assert.True(checkResult);
@@ -124,55 +116,27 @@ namespace Fingo.Auth.Domain.Policies.Tests.CheckingFunctions
             };
 
             // act
-            var checkResult = Check.PasswordExpirationDate(configuration, DateTime.Now.AddMonths(-2));
+            var checkResult = Check.PasswordExpirationDate(configuration , DateTime.Now.AddMonths(-2));
 
             // assert
             Assert.False(checkResult);
         }
 
         [Fact]
-        public void RequiredPasswordCharactersCheckShouldReturnTrue()
+        public void PasswordExpirationDateCheckShouldReturnTrue()
         {
             // arrange
-            var configuration1 = new RequiredPasswordCharactersConfiguration
+            var configuration = new PasswordExpirationDateConfiguration
             {
-                UpperCase = false,
-                Digit = false,
-                Special = true,
-            };
-
-            var configuration2 = new RequiredPasswordCharactersConfiguration
-            {
-                UpperCase = true,
-                Digit = false,
-                Special = false,
-            };
-
-            var configuration3 = new RequiredPasswordCharactersConfiguration
-            {
-                UpperCase = false,
-                Digit = true,
-                Special = false,
-            };
-
-            var configuration4 = new RequiredPasswordCharactersConfiguration
-            {
-                UpperCase = true,
-                Digit = true,
-                Special = true,
+                PasswordExpiration = PasswordExpiration.Custom ,
+                CustomValue = 42
             };
 
             // act
-            var checkResult1 = Check.RequiredPasswordCharacters(configuration1, "hello!");
-            var checkResult2 = Check.RequiredPasswordCharacters(configuration2, "Hello");
-            var checkResult3 = Check.RequiredPasswordCharacters(configuration3, "h3llo");
-            var checkResult4 = Check.RequiredPasswordCharacters(configuration4, "H3llo!");
+            var checkResult = Check.PasswordExpirationDate(configuration , DateTime.UtcNow.AddDays(-41));
 
             // assert
-            Assert.True(checkResult1);
-            Assert.True(checkResult2);
-            Assert.True(checkResult3);
-            Assert.True(checkResult4);
+            Assert.True(checkResult);
         }
 
         [Fact]
@@ -181,43 +145,88 @@ namespace Fingo.Auth.Domain.Policies.Tests.CheckingFunctions
             // arrange
             var configuration1 = new RequiredPasswordCharactersConfiguration
             {
-                UpperCase = false,
-                Digit = false,
-                Special = true,
+                UpperCase = false ,
+                Digit = false ,
+                Special = true
             };
 
             var configuration2 = new RequiredPasswordCharactersConfiguration
             {
-                UpperCase = true,
-                Digit = false,
-                Special = false,
+                UpperCase = true ,
+                Digit = false ,
+                Special = false
             };
 
             var configuration3 = new RequiredPasswordCharactersConfiguration
             {
-                UpperCase = false,
-                Digit = true,
-                Special = false,
+                UpperCase = false ,
+                Digit = true ,
+                Special = false
             };
 
             var configuration4 = new RequiredPasswordCharactersConfiguration
             {
-                UpperCase = true,
-                Digit = true,
-                Special = true,
+                UpperCase = true ,
+                Digit = true ,
+                Special = true
             };
 
             // act
-            var checkResult1 = Check.RequiredPasswordCharacters(configuration1, "H3llo");
-            var checkResult2 = Check.RequiredPasswordCharacters(configuration2, "h3llo!");
-            var checkResult3 = Check.RequiredPasswordCharacters(configuration3, "Hello!");
-            var checkResult4 = Check.RequiredPasswordCharacters(configuration4, "hello");
+            var checkResult1 = Check.RequiredPasswordCharacters(configuration1 , "H3llo");
+            var checkResult2 = Check.RequiredPasswordCharacters(configuration2 , "h3llo!");
+            var checkResult3 = Check.RequiredPasswordCharacters(configuration3 , "Hello!");
+            var checkResult4 = Check.RequiredPasswordCharacters(configuration4 , "hello");
 
             // assert
             Assert.False(checkResult1);
             Assert.False(checkResult2);
             Assert.False(checkResult3);
             Assert.False(checkResult4);
+        }
+
+        [Fact]
+        public void RequiredPasswordCharactersCheckShouldReturnTrue()
+        {
+            // arrange
+            var configuration1 = new RequiredPasswordCharactersConfiguration
+            {
+                UpperCase = false ,
+                Digit = false ,
+                Special = true
+            };
+
+            var configuration2 = new RequiredPasswordCharactersConfiguration
+            {
+                UpperCase = true ,
+                Digit = false ,
+                Special = false
+            };
+
+            var configuration3 = new RequiredPasswordCharactersConfiguration
+            {
+                UpperCase = false ,
+                Digit = true ,
+                Special = false
+            };
+
+            var configuration4 = new RequiredPasswordCharactersConfiguration
+            {
+                UpperCase = true ,
+                Digit = true ,
+                Special = true
+            };
+
+            // act
+            var checkResult1 = Check.RequiredPasswordCharacters(configuration1 , "hello!");
+            var checkResult2 = Check.RequiredPasswordCharacters(configuration2 , "Hello");
+            var checkResult3 = Check.RequiredPasswordCharacters(configuration3 , "h3llo");
+            var checkResult4 = Check.RequiredPasswordCharacters(configuration4 , "H3llo!");
+
+            // assert
+            Assert.True(checkResult1);
+            Assert.True(checkResult2);
+            Assert.True(checkResult3);
+            Assert.True(checkResult4);
         }
     }
 }

@@ -3,8 +3,7 @@ using Fingo.Auth.DbAccess.Repository.Interfaces.GenericInterfaces;
 
 namespace Fingo.Auth.DbAccess.Repository.Interfaces.CustomData
 {
-    public interface IProjectCustomDataRepository:IGenericRepository<ProjectCustomData>
+    public interface IProjectCustomDataRepository : IGenericRepository<ProjectCustomData>
     {
-
     }
 }

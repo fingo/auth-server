@@ -22,7 +22,9 @@
                         <ul class="dropdown-menu">
                             @foreach (var configuration in Model.ProjectCustomData)
                             {
-                                <li><a href="#" onclick="MakeRequest('@configuration.ConfigurationType','@configuration.ConfigurationName',@Model.Id, @ViewBag.UserId)">@configuration.ConfigurationName</a></li>
+                                <li>
+                                    <a href="#" onclick="MakeRequest('@configuration.ConfigurationType', '@configuration.ConfigurationName', @Model.Id, @ViewBag.UserId)">@configuration.ConfigurationName</a>
+                                </li>
                             }
                         </ul>
                     </div>
@@ -40,21 +42,22 @@
 </div>
 
 <script>
-    $('#closeModalButton').click(function() {
-        $('#editUserCustomDataModalWindow').modal('hide');
-    });
+    $('#closeModalButton')
+        .click(function() {
+            $('#editUserCustomDataModalWindow').modal('hide');
+        });
     $('#editUserCustomDataModalWindow').modal('show');
     $(".dropdown-menu li a")
-            .click(
-                function () {
-                    $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
-                    $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
-                });
-    function MakeRequest(configurationType,configurationName,projectId,userId)
-    {
+        .click(
+            function() {
+                $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+                $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+            });
+
+    function MakeRequest(configurationType, configurationName, projectId, userId) {
         var apiUrl = "/customData/getUserPartialView";
         var data = {
-            configurationType:configurationType,
+            configurationType: configurationType,
             configurationName: configurationName,
             projectId: projectId,
             userId: userId
@@ -63,14 +66,18 @@
             url: apiUrl,
             type: 'GET',
             data: data,
-            success: function(data){
+            success: function(data) {
                 $('#editUserDataPartialModalWindow').html(data);
-                $('#editUserDataPartialModalWindow').find("script").each(function (i) {
-                    eval($(this).text());
-                });
-                $('#editUserDataPartialModalWindow').find("link").each(function (i) {
-                    eval($(this).text());
-                });
+                $('#editUserDataPartialModalWindow')
+                    .find("script")
+                    .each(function(i) {
+                        eval($(this).text());
+                    });
+                $('#editUserDataPartialModalWindow')
+                    .find("link")
+                    .each(function(i) {
+                        eval($(this).text());
+                    });
             }
 
 

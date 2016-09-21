@@ -5,7 +5,7 @@ using Fingo.Auth.Domain.Projects.Interfaces;
 
 namespace Fingo.Auth.Domain.Projects.Factories.Implementation
 {
-    public class GetProjectWithCustomDataFactory: IGetProjectWithCustomDataFactory
+    public class GetProjectWithCustomDataFactory : IGetProjectWithCustomDataFactory
     {
         private readonly IProjectRepository _projectRepository;
 

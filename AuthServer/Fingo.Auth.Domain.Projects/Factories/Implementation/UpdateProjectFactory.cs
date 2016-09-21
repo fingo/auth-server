@@ -8,6 +8,7 @@ namespace Fingo.Auth.Domain.Projects.Factories.Implementation
     public class UpdateProjectFactory : IUpdateProjectFactory
     {
         private readonly IProjectRepository _repository;
+
         public UpdateProjectFactory(IProjectRepository repository)
         {
             _repository = repository;

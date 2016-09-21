@@ -13,7 +13,7 @@ namespace Fingo.Auth.ManagementApp.Configuration
             var builder = new ContainerBuilder();
 
             RegisterModules(builder);
-            
+
             builder.Populate(services);
 
             var container = builder.Build();

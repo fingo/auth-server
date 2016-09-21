@@ -3,6 +3,6 @@
     public interface IRemoteTokenService
     {
         bool VerifyToken(string jwt);
-        string AcquireToken(string login, string password);
+        string AcquireToken(string login , string password);
     }
 }

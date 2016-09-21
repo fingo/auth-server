@@ -12,16 +12,19 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Implementation
     public class EditProjectCustomDataToProjectFactoryTest
     {
         [Fact]
-        public void EditProjectCustomDataToProjectFactory_Should_Return_Instance_Of_EditProjectCustomDataToProject_Given_By_IEditProjectCustomDataToProject()
+        public void
+            EditProjectCustomDataToProjectFactory_Should_Return_Instance_Of_EditProjectCustomDataToProject_Given_By_IEditProjectCustomDataToProject
+            ()
         {
             //Arrange
 
-            Mock<ICustomDataJsonConvertService> customDataJsonConvertServiceMock = new Mock<ICustomDataJsonConvertService>();
-            Mock<IProjectRepository> projectMock = new Mock<IProjectRepository>();
+            var customDataJsonConvertServiceMock = new Mock<ICustomDataJsonConvertService>();
+            var projectMock = new Mock<IProjectRepository>();
 
             //Act
 
-            IEditProjectCustomDataToProjectFactory target = new EditProjectCustomDataToProjectFactory(projectMock.Object,customDataJsonConvertServiceMock.Object);
+            IEditProjectCustomDataToProjectFactory target = new EditProjectCustomDataToProjectFactory(
+                projectMock.Object , customDataJsonConvertServiceMock.Object);
             var result = target.Create();
 
             //Assert

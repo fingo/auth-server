@@ -15,7 +15,7 @@ namespace Fingo.Auth.Domain.Policies.Tests.Factories.Implementation
             // arrange
             var repositoryMock = new Mock<IProjectRepository>();
             var convertMock = new Mock<IPolicyJsonConvertService>();
-            var factory = new GetPoliciesFromProjectFactory(repositoryMock.Object, convertMock.Object);
+            var factory = new GetPoliciesFromProjectFactory(repositoryMock.Object , convertMock.Object);
 
             // act
             var action = factory.Create();

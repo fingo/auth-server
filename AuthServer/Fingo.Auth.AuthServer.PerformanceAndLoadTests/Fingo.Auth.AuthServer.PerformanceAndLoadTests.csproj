@@ -62,13 +62,22 @@
     <None Include="AuthServerTests\AcquireToken_AllPolicies_5CustomData.webtest">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="LoadTests\Step_AllPolicies_5CustomData.loadtest">
+    <None Include="LoadTests\Constant\120Users_AllPolicies_1CustomData.loadtest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="LoadTests\Step_AllPolicies_1CustomData.loadtest">
+    <None Include="LoadTests\Constant\120Users_AllPolicies_5CustomData.loadtest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="LoadTests\Step_NoPolicies_NoCustomData.loadtest">
+    <None Include="LoadTests\Constant\120Users_NoPolicies_NoCustomData.loadtest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="LoadTests\Step\Step_AllPolicies_5CustomData.loadtest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="LoadTests\Step\Step_AllPolicies_1CustomData.loadtest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="LoadTests\Step\Step_NoPolicies_NoCustomData.loadtest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

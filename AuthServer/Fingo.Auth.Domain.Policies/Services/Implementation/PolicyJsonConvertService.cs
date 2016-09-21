@@ -13,7 +13,7 @@ namespace Fingo.Auth.Domain.Policies.Services.Implementation
             return JsonConvert.SerializeObject(policyConfiguration);
         }
 
-        public PolicyConfiguration Deserialize(Policy policy, string serialized)
+        public PolicyConfiguration Deserialize(Policy policy , string serialized)
         {
             switch (policy)
             {
@@ -31,7 +31,8 @@ namespace Fingo.Auth.Domain.Policies.Services.Implementation
                     throw new ArgumentException("Wrong policy given to Deserialize()");
             }
         }
-        public PolicyConfiguration DeserializeUser(Policy policy, string serialized)
+
+        public PolicyConfiguration DeserializeUser(Policy policy , string serialized)
         {
             switch (policy)
             {

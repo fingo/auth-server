@@ -1,11 +1,13 @@
 ﻿@model Fingo.Auth.Domain.CustomData.ConfigurationClasses.UserView.BooleanUserConfigurationView
 
-<div class="panel panel-success" style="margin-top:15px; margin-bottom:0">
-    <div class="panel-heading"><strong>Set custom data for @Model.ConfigurationName</strong></div>
+<div class="panel panel-success" style="margin-bottom: 0; margin-top: 15px;">
+    <div class="panel-heading">
+        <strong>Set custom data for @Model.ConfigurationName</strong>
+    </div>
     <div class="panel-body">
-        @using (Html.BeginForm("SaveUserBooleanCustomData", "CustomData", FormMethod.Post))
+        @using (Html.BeginForm("SaveUserBooleanCustomData" , "CustomData" , FormMethod.Post))
         {
-            @Html.HiddenFor(m=>m.ProjectId)@Html.HiddenFor(m => m.UserId)@Html.HiddenFor(m => m.ConfigurationName)
+            @Html.HiddenFor(m => m.ProjectId)@Html.HiddenFor(m => m.UserId)@Html.HiddenFor(m => m.ConfigurationName)
             <div style="max-width: 200px;">
                 <p>Value is true: @Html.EditorFor(m => m.CurrentValue)</p>
             </div>

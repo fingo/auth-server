@@ -2,7 +2,7 @@
 {
     public enum ProjectStatus
     {
-        Active = 0,
+        Active = 0 ,
         Deleted = 1
     }
 }

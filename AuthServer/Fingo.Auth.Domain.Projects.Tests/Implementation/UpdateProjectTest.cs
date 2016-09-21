@@ -15,21 +15,21 @@ namespace Fingo.Auth.Domain.Projects.Tests.Implementation
         public void Can_Update_Project()
         {
             //Arrange
-            Mock<IProjectRepository> mockRepository = new Mock<IProjectRepository>();
-            mockRepository.Setup(m => m.GetById(It.IsAny<int>())).Returns(new Project()
+            var mockRepository = new Mock<IProjectRepository>();
+            mockRepository.Setup(m => m.GetById(It.IsAny<int>())).Returns(new Project
             {
                 Id = 1 ,
                 Name = "pierwszy" ,
-                ProjectGuid = Guid.Parse("e3491b73-1f7b-4afb-b031-28b84c5ea4e2"),
-                Information = new ClientInformation() { ContactData = "contactData1" },
+                ProjectGuid = Guid.Parse("e3491b73-1f7b-4afb-b031-28b84c5ea4e2") ,
+                Information = new ClientInformation {ContactData = "contactData1"} ,
                 Status = ProjectStatus.Active
             });
             IUpdateProject service = new UpdateProject(mockRepository.Object);
 
             //Act
 
-            service.Invoke(1, "newName1");
-            Project afterUpdate = mockRepository.Object.GetById(4);
+            service.Invoke(1 , "newName1");
+            var afterUpdate = mockRepository.Object.GetById(4);
 
             //Assert
 

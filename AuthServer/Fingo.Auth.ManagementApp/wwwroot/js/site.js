@@ -1,7 +1,7 @@
 ﻿// Write your Javascript code.
 
-(function ($) {
-    $.ajaxLoading = function (options) {
+(function($) {
+    $.ajaxLoading = function(options) {
         // wrappers
         var loadingSuccess = function(data) {
             $.ajaxLoading.cleanup();
@@ -24,10 +24,10 @@
             done: loadingDone
         };
         var statusCodeDefaults = {
-            400: function (data) {
+            400: function(data) {
                 location.reload();
             },
-            401: function (data) {
+            401: function(data) {
                 location.reload();
             }
         };
@@ -42,24 +42,26 @@
         return this;
     };
 
-    $.ajaxLoading.loadingStart = function () {
+    $.ajaxLoading.loadingStart = function() {
         // check if we are already started
         if ($.ajaxLoading.timer) return;
 
         // not started yet - start with delay
-        $.ajaxLoading.timer = setTimeout(function () {
-            $($.ajaxLoading.defaults.selector).addClass($.ajaxLoading.defaults.loadingClass);
-            clearTimeout($.ajaxLoading.timer);
-        }, $.ajaxLoading.defaults.timeout);
+        $.ajaxLoading.timer = setTimeout(function() {
+                $($.ajaxLoading.defaults.selector).addClass($.ajaxLoading.defaults.loadingClass);
+                clearTimeout($.ajaxLoading.timer);
+            },
+            $.ajaxLoading.defaults.timeout);
     };
 
     $.ajaxLoading.errorStart = function() {
         $($.ajaxLoading.defaults.selector).addClass($.ajaxLoading.defaults.errorClass);
         $.ajaxLoading.timer = setTimeout(function() {
-            $.ajaxLoading.cleanup();
-        }, $.ajaxLoading.defaults.timeout);
+                $.ajaxLoading.cleanup();
+            },
+            $.ajaxLoading.defaults.timeout);
     };
-    $.ajaxLoading.cleanup = function () {
+    $.ajaxLoading.cleanup = function() {
         // clear timeout and hide layers
         clearTimeout($.ajaxLoading.timer);
         $.ajaxLoading.timer = null;
@@ -74,6 +76,6 @@
         selector: 'body',
         loadingClass: 'loading',
         errorClass: 'error',
-        timeout: 500 
+        timeout: 500
     };
 }(jQuery));

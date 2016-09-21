@@ -3,7 +3,7 @@ using Fingo.Auth.Domain.Users.Interfaces;
 
 namespace Fingo.Auth.Domain.Users.Factories.Interfaces
 {
-    public interface IGetUserByLoginFactory:IActionFactory
+    public interface IGetUserByLoginFactory : IActionFactory
     {
         IGetUserByLogin Create();
     }

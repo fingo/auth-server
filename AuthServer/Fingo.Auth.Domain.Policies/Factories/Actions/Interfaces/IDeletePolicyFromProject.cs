@@ -4,6 +4,6 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Interfaces
 {
     public interface IDeletePolicyFromProject
     {
-        void Invoke(int projectId, Policy policy);
+        void Invoke(int projectId , Policy policy);
     }
 }

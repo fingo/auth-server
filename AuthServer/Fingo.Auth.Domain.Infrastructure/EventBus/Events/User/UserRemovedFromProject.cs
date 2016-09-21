@@ -2,9 +2,9 @@
 
 namespace Fingo.Auth.Domain.Infrastructure.EventBus.Events.User
 {
-    public class UserRemovedFromProject:EventBase
+    public class UserRemovedFromProject : EventBase
     {
-        public UserRemovedFromProject(string firstName , string lastName , string login, int projectId)
+        public UserRemovedFromProject(string firstName , string lastName , string login , int projectId)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -12,10 +12,10 @@ namespace Fingo.Auth.Domain.Infrastructure.EventBus.Events.User
             ProjectId = projectId;
         }
 
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public string Login { get; private set; }
-        public int ProjectId { get; private set; }
+        public string FirstName { get; }
+        public string LastName { get; }
+        public string Login { get; }
+        public int ProjectId { get; }
 
         public override string ToString()
         {

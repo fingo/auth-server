@@ -9,20 +9,24 @@ namespace Fingo.Auth.Domain.Users.Factories.Implementation
 {
     public class AddImportedUsersFactory : IAddImportedUsersFactory
     {
-        private readonly IUserRepository repository;
-        private readonly IProjectRepository projectRepository;
         private readonly IEventBus eventBus;
+        private readonly IProjectRepository projectRepository;
+        private readonly IUserRepository repository;
         private readonly ISetDefaultUserCustomDataBasedOnProject setDefaultUserCustomDataBasedOnProject;
-        public AddImportedUsersFactory(IUserRepository repository, IProjectRepository projectRepository, IEventBus eventBus, ISetDefaultUserCustomDataBasedOnProject setDefaultUserCustomDataBasedOnProject)
+
+        public AddImportedUsersFactory(IUserRepository repository , IProjectRepository projectRepository ,
+            IEventBus eventBus , ISetDefaultUserCustomDataBasedOnProject setDefaultUserCustomDataBasedOnProject)
         {
             this.repository = repository;
             this.projectRepository = projectRepository;
             this.eventBus = eventBus;
             this.setDefaultUserCustomDataBasedOnProject = setDefaultUserCustomDataBasedOnProject;
         }
+
         public IAddImportedUsers Create()
         {
-            return new AddImportedUsers(repository, projectRepository, eventBus, setDefaultUserCustomDataBasedOnProject);
+            return new AddImportedUsers(repository , projectRepository , eventBus ,
+                setDefaultUserCustomDataBasedOnProject);
         }
     }
 }

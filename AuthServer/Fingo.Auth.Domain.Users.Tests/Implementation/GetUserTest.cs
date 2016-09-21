@@ -13,7 +13,7 @@ namespace Fingo.Auth.Domain.Users.Tests.Implementation
         [Fact]
         public void Get_NonExisting_User()
         {
-            Mock<IUserRepository> userMock = new Mock<IUserRepository>();
+            var userMock = new Mock<IUserRepository>();
 
             userMock.Setup(m => m.GetById(It.IsAny<int>())).Returns(() => null);
 
@@ -22,27 +22,25 @@ namespace Fingo.Auth.Domain.Users.Tests.Implementation
             Exception ex = Assert.Throws<ArgumentNullException>(() => target.Invoke(1));
 
             Assert.True(ex.Message.Contains("Cannot find user with id=1"));
-
         }
 
         [Fact]
         public void Get_User()
         {
-            Mock<IUserRepository> userMock = new Mock<IUserRepository>();
+            var userMock = new Mock<IUserRepository>();
 
-            userMock.Setup(m => m.GetById(It.IsAny<int>())).Returns(new User()
+            userMock.Setup(m => m.GetById(It.IsAny<int>())).Returns(new User
             {
-                Id = 1,
-                Login = "user1",
+                Id = 1 ,
+                Login = "user1"
             });
             IGetUser target = new GetUser(userMock.Object);
 
             var result = target.Invoke(1);
 
             Assert.NotNull(result);
-            Assert.True(result.Id==1);
+            Assert.True(result.Id == 1);
             Assert.True(result.Login == "user1");
-
         }
     }
 }

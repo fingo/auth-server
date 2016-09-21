@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Fingo.Auth.Infrastructure.Logging;
 
 namespace Fingo.Auth.ManagementApp.Configuration.Modules
 {
@@ -11,7 +12,7 @@ namespace Fingo.Auth.ManagementApp.Configuration.Modules
 
         private void RegisterSubServices(ContainerBuilder builder)
         {
-            builder.RegisterGeneric(typeof(Infrastructure.Logging.Logger<>)).As(typeof(Infrastructure.Logging.ILogger<>)).InstancePerDependency();
+            builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).InstancePerDependency();
         }
     }
 }

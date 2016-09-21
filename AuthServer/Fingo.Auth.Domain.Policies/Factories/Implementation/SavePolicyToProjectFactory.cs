@@ -9,11 +9,11 @@ namespace Fingo.Auth.Domain.Policies.Factories.Implementation
 {
     public class SavePolicyToProjectFactory : ISavePolicyToProjectFactory
     {
-        private readonly IPolicyJsonConvertService _jsonConvertService;
         private readonly IEventBus _eventBus;
+        private readonly IPolicyJsonConvertService _jsonConvertService;
         private readonly IProjectRepository _projectRepository;
 
-        public SavePolicyToProjectFactory(IPolicyJsonConvertService jsonConvertService, IEventBus eventBus,
+        public SavePolicyToProjectFactory(IPolicyJsonConvertService jsonConvertService , IEventBus eventBus ,
             IProjectRepository projectRepository)
         {
             _projectRepository = projectRepository;
@@ -23,7 +23,7 @@ namespace Fingo.Auth.Domain.Policies.Factories.Implementation
 
         public ISavePolicyToProject Create()
         {
-            return new SavePolicyToProject(_projectRepository, _eventBus, _jsonConvertService);
+            return new SavePolicyToProject(_projectRepository , _eventBus , _jsonConvertService);
         }
     }
 }

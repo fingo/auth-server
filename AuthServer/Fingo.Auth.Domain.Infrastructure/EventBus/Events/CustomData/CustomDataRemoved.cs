@@ -4,14 +4,14 @@ namespace Fingo.Auth.Domain.Infrastructure.EventBus.Events.CustomData
 {
     public class CustomDataRemoved : EventBase
     {
-        public int ProjectId { get; set; }
-        public string Name { get; set; }
-
-        public CustomDataRemoved(int projectId, string name)
+        public CustomDataRemoved(int projectId , string name)
         {
             ProjectId = projectId;
             Name = name;
         }
+
+        public int ProjectId { get; set; }
+        public string Name { get; set; }
 
         public override string ToString()
         {

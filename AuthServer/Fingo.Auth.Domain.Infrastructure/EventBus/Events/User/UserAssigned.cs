@@ -2,18 +2,18 @@
 
 namespace Fingo.Auth.Domain.Infrastructure.EventBus.Events.User
 {
-    public class UserAssigned:EventBase
+    public class UserAssigned : EventBase
     {
-        public UserAssigned(int projectId, string projectName, int userId)
+        public UserAssigned(int projectId , string projectName , int userId)
         {
             ProjectId = projectId;
             ProjectName = projectName;
             UserId = userId;
         }
 
-        public int ProjectId { get; private set; }
-        public string ProjectName { get; private set; }
-        public int UserId { get; private set; }
+        public int ProjectId { get; }
+        public string ProjectName { get; }
+        public int UserId { get; }
 
         public override string ToString()
         {

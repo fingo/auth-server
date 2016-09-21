@@ -15,32 +15,10 @@ namespace Fingo.Auth.Domain.Users.Tests.Implementation
         {
             //Arrange
 
-            Mock<IUserRepository> userMock=new Mock<IUserRepository>();
-            userMock.Setup(m => m.GetAll()).Returns(new []
-            {
-                new User() {Id = 1, Login = "user1",Status = UserStatus.Active}
-            });
-            IGetUserByLogin target=new GetUserByLogin(userMock.Object);
-
-            //Act
-
-            var result = target.Invoke("user1");
-
-            //Assert
-
-            Assert.NotNull(result);           
-            Assert.True(result.Id==1);
-        }
-
-        [Fact]
-        public void Recive_Null_When_User_With_Given_Loggin_Not_Exist()
-        {
-            //Arrange
-
-            Mock<IUserRepository> userMock = new Mock<IUserRepository>();
+            var userMock = new Mock<IUserRepository>();
             userMock.Setup(m => m.GetAll()).Returns(new[]
             {
-                new User() {Id = 1, Login = "user2",Status = UserStatus.Active}
+                new User {Id = 1 , Login = "user1" , Status = UserStatus.Active}
             });
             IGetUserByLogin target = new GetUserByLogin(userMock.Object);
 
@@ -50,21 +28,45 @@ namespace Fingo.Auth.Domain.Users.Tests.Implementation
 
             //Assert
 
-            Assert.Null(result);
+            Assert.NotNull(result);
+            Assert.True(result.Id == 1);
+        }
+
+        [Fact]
+        public void Finds_User_With_Status_Registered()
+        {
+            //Arrange
+            var mockUser = new Mock<IUserRepository>();
+
+            mockUser.Setup(m => m.GetAll()).Returns(new[]
+            {
+                new User {Id = 1 , Login = "user1" , Status = UserStatus.Registered}
+            });
+
+            IGetUserByLogin target = new GetUserByLogin(mockUser.Object);
+
+            //Act
+
+            var result = target.Invoke("user1");
+
+            //Assert
+
+            Assert.NotNull(result);
+            Assert.True(result.Id == 1);
         }
 
         [Fact]
         public void Receive_null_When_UserStatus_Equals_Deleted()
         {
             //Arrange
-            Mock<IUserRepository> mockRepository = new Mock<IUserRepository>();
+            var mockRepository = new Mock<IUserRepository>();
 
             mockRepository.Setup(m => m.GetAll()).Returns(new[]
             {
-                new User()
+                new User
                 {
-                    Id=1,
-                    Login = "user1",
+                    Id = 1 ,
+                    Login = "user1" ,
                     Status = UserStatus.Deleted
                 }
             });
@@ -80,17 +82,16 @@ namespace Fingo.Auth.Domain.Users.Tests.Implementation
         }
 
         [Fact]
-        public void Finds_User_With_Status_Registered()
+        public void Recive_Null_When_User_With_Given_Loggin_Not_Exist()
         {
             //Arrange
-            Mock<IUserRepository> mockUser = new Mock<IUserRepository>();
 
-            mockUser.Setup(m => m.GetAll()).Returns(new[]
-           {
-                new User() {Id = 1, Login = "user1",Status = UserStatus.Registered}
+            var userMock = new Mock<IUserRepository>();
+            userMock.Setup(m => m.GetAll()).Returns(new[]
+            {
+                new User {Id = 1 , Login = "user2" , Status = UserStatus.Active}
             });
-
-            IGetUserByLogin target = new GetUserByLogin(mockUser.Object);
+            IGetUserByLogin target = new GetUserByLogin(userMock.Object);
 
             //Act
 
@@ -98,8 +99,7 @@ namespace Fingo.Auth.Domain.Users.Tests.Implementation
 
             //Assert
 
-            Assert.NotNull(result);
-            Assert.True(result.Id == 1);
+            Assert.Null(result);
         }
     }
 }

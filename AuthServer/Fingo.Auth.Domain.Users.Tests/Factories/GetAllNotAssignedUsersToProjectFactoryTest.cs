@@ -11,11 +11,13 @@ namespace Fingo.Auth.Domain.Users.Tests.Factories
     public class GetAllNotAssignedUsersToProjectFactoryTest
     {
         [Fact]
-        public void GetAllNotAssignedUsersToProjectFactory_Returns_Instance_Of_GetAllNotAssignedUsersToProject_Given_By_IGetAllNotAssignedUsersToProject()
+        public void
+            GetAllNotAssignedUsersToProjectFactory_Returns_Instance_Of_GetAllNotAssignedUsersToProject_Given_By_IGetAllNotAssignedUsersToProject
+            ()
         {
             //Arrange
 
-            Mock<IUserRepository> userMock = new Mock<IUserRepository>();
+            var userMock = new Mock<IUserRepository>();
 
             //Act
 

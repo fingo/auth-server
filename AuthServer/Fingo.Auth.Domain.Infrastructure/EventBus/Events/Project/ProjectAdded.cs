@@ -2,16 +2,16 @@
 
 namespace Fingo.Auth.Domain.Infrastructure.EventBus.Events.Project
 {
-    public class ProjectAdded:EventBase
+    public class ProjectAdded : EventBase
     {
-        public ProjectAdded(int projectId, string projectName)
+        public ProjectAdded(int projectId , string projectName)
         {
             ProjectId = projectId;
             ProjectName = projectName;
         }
 
-        public int ProjectId { get; private set; }
-        public string ProjectName { get; private set; }
+        public int ProjectId { get; }
+        public string ProjectName { get; }
 
         public override string ToString()
         {

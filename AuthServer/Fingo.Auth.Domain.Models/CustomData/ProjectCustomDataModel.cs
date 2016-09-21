@@ -12,6 +12,7 @@ namespace Fingo.Auth.Domain.Models.CustomData
             SerializedConfiguration = customData.SerializedConfiguration;
             ProjectId = customData.ProjectId;
         }
+
         public string ConfigurationName { get; set; }
 
         public ConfigurationType ConfigurationType { get; set; }

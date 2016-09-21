@@ -8,10 +8,11 @@ namespace Fingo.Auth.Domain.Policies.Factories.Implementation
 {
     public class GetPoliciesFromProjectFactory : IGetPoliciesFromProjectFactory
     {
-        private readonly IProjectRepository _projectRepository;
         private readonly IPolicyJsonConvertService _jsonConvertService;
+        private readonly IProjectRepository _projectRepository;
 
-        public GetPoliciesFromProjectFactory(IProjectRepository projectRepository, IPolicyJsonConvertService jsonConvertService)
+        public GetPoliciesFromProjectFactory(IProjectRepository projectRepository ,
+            IPolicyJsonConvertService jsonConvertService)
         {
             _projectRepository = projectRepository;
             _jsonConvertService = jsonConvertService;
@@ -19,7 +20,7 @@ namespace Fingo.Auth.Domain.Policies.Factories.Implementation
 
         public IGetPoliciesFromProject Create()
         {
-            return new GetPoliciesFromProject(_projectRepository, _jsonConvertService);
+            return new GetPoliciesFromProject(_projectRepository , _jsonConvertService);
         }
     }
 }

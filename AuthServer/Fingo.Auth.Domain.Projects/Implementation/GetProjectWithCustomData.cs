@@ -1,5 +1,4 @@
 ﻿using System;
-using Fingo.Auth.DbAccess.Models;
 using Fingo.Auth.DbAccess.Models.Statuses;
 using Fingo.Auth.DbAccess.Repository.Interfaces;
 using Fingo.Auth.Domain.Infrastructure.ExtensionMethods;
@@ -19,12 +18,10 @@ namespace Fingo.Auth.Domain.Projects.Implementation
 
         public ProjectWithCustomDataModel Invoke(int projectId)
         {
-            Project project = projectRepository.GetByIdWithCustomDatas(projectId).WithoutStatuses(ProjectStatus.Deleted);
+            var project = projectRepository.GetByIdWithCustomDatas(projectId).WithoutStatuses(ProjectStatus.Deleted);
 
             if (project == null)
-            {
                 throw new ArgumentNullException($"Cannot find project with id={projectId}.");
-            }
 
             return new ProjectWithCustomDataModel(project);
         }

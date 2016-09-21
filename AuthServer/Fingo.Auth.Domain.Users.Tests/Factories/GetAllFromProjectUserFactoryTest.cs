@@ -11,11 +11,12 @@ namespace Fingo.Auth.Domain.Users.Tests.Factories
     public class GetAllFromProjectUserFactoryTest
     {
         [Fact]
-        public void GetAllFromProjectUserFactory_Returns_Instance_Of_GetAllFromProjectUser_Given_By_IGetAllFromProjectUser()
+        public void
+            GetAllFromProjectUserFactory_Returns_Instance_Of_GetAllFromProjectUser_Given_By_IGetAllFromProjectUser()
         {
             //Arrange
 
-            Mock<IProjectRepository> projectMock = new Mock<IProjectRepository>();
+            var projectMock = new Mock<IProjectRepository>();
 
             //Act
 

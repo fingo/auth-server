@@ -2,9 +2,9 @@
 {
     public enum PasswordExpiration
     {
-        Year,
-        HalfYear,
-        Month,
+        Year ,
+        HalfYear ,
+        Month ,
         Custom
     }
 }

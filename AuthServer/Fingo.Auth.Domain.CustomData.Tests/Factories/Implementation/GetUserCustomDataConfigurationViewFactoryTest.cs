@@ -13,17 +13,21 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Implementation
     public class GetUserCustomDataConfigurationViewFactoryTest
     {
         [Fact]
-        public void GetUserCustomDataConfigurationViewFactory_Should_Return_Instance_Of_GetUserCustomDataConfigurationView_Given_By_IGetUserCustomDataConfigurationView()
+        public void
+            GetUserCustomDataConfigurationViewFactory_Should_Return_Instance_Of_GetUserCustomDataConfigurationView_Given_By_IGetUserCustomDataConfigurationView
+            ()
         {
             //Arrange
 
-            Mock<ICustomDataJsonConvertService> customDataJsonConvertServiceMock = new Mock<ICustomDataJsonConvertService>();
-            Mock<IUserCustomDataRepository> userMock=new Mock<IUserCustomDataRepository>();
-            Mock<IProjectRepository> projectMock = new Mock<IProjectRepository>();
+            var customDataJsonConvertServiceMock = new Mock<ICustomDataJsonConvertService>();
+            var userMock = new Mock<IUserCustomDataRepository>();
+            var projectMock = new Mock<IProjectRepository>();
 
             //Act
 
-            IGetUserCustomDataConfigurationViewFactory target = new GetUserCustomDataConfigurationViewFactory(projectMock.Object,customDataJsonConvertServiceMock.Object,userMock.Object);
+            IGetUserCustomDataConfigurationViewFactory target =
+                new GetUserCustomDataConfigurationViewFactory(projectMock.Object ,
+                    customDataJsonConvertServiceMock.Object , userMock.Object);
             var result = target.Create();
 
             //Assert

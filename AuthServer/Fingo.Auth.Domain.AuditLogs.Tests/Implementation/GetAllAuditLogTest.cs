@@ -16,21 +16,21 @@ namespace Fingo.Auth.Domain.AuditLogs.Tests.Implementation
         {
             //Arrange
 
-            Mock<IUserRepository> userRepositoryMock=new Mock<IUserRepository>();
+            var userRepositoryMock = new Mock<IUserRepository>();
             userRepositoryMock.Setup(m => m.GetAll()).Returns(new[]
             {
-                new User()
+                new User
                 {
                     Id = 3 ,
                     FirstName = "firstName" ,
                     LastName = "lastName" ,
                     Status = UserStatus.Active
-                } ,
+                }
             });
-            Mock<IAuditLogRepository> auditLogRepositoryMock=new Mock<IAuditLogRepository>();
+            var auditLogRepositoryMock = new Mock<IAuditLogRepository>();
             auditLogRepositoryMock.Setup(m => m.GetAll()).Returns(new[]
             {
-                new AuditLog()
+                new AuditLog
                 {
                     Id = 1 ,
                     UserId = 1 ,
@@ -38,7 +38,7 @@ namespace Fingo.Auth.Domain.AuditLogs.Tests.Implementation
                     EventType = "myType" ,
                     CreationDate = default(DateTime)
                 } ,
-                new AuditLog()
+                new AuditLog
                 {
                     Id = 2 ,
                     UserId = 2 ,
@@ -46,26 +46,26 @@ namespace Fingo.Auth.Domain.AuditLogs.Tests.Implementation
                     EventType = "myType" ,
                     CreationDate = default(DateTime)
                 } ,
-                new AuditLog()
+                new AuditLog
                 {
                     Id = 3 ,
                     UserId = 3 ,
                     EventMassage = "thirdMessage" ,
                     EventType = "myType" ,
                     CreationDate = default(DateTime)
-                } ,
+                }
             });
 
             //Act
 
-            var target = new GetAllAuditLog(auditLogRepositoryMock.Object,userRepositoryMock.Object);
+            var target = new GetAllAuditLog(auditLogRepositoryMock.Object , userRepositoryMock.Object);
             var result = target.Invoke();
 
             //Assert
 
-            Assert.True(result.Count()==3);
+            Assert.True(result.Count() == 3);
 
-            Assert.True(result.First().UserId==0);
+            Assert.True(result.First().UserId == 0);
             Assert.True(result.First().UserName == "N/A");
             Assert.True(result.First().UserStatus == UserStatus.Deleted);
 

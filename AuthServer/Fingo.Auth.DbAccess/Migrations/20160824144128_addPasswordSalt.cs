@@ -7,16 +7,16 @@ namespace Fingo.Auth.DbAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "PasswordSalt",
-                table: "User",
-                nullable: true);
+                "PasswordSalt" ,
+                "User" ,
+                nullable : true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "PasswordSalt",
-                table: "User");
+                "PasswordSalt" ,
+                "User");
         }
     }
 }

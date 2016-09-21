@@ -6,14 +6,13 @@ namespace Fingo.Auth.Domain.Models.UserModels
 {
     public class BaseUserModelWithProjects : BaseUserModel
     {
-        public BaseUserModelWithProjects(User user,IEnumerable<Project> projects ) : base(user)
+        public BaseUserModelWithProjects(User user , IEnumerable<Project> projects) : base(user)
         {
             Projects = new List<ProjectModel>();
-            foreach(var project in projects)
-            {
+            foreach (var project in projects)
                 Projects.Add(new ProjectModel(project));
-            }
         }
+
         public List<ProjectModel> Projects { get; set; }
     }
 }

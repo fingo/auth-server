@@ -18,19 +18,19 @@ namespace Fingo.Auth.Domain.Projects.Tests.Implementation
         {
             //Arrange
 
-            Mock<IEventBus> eventMock=new Mock<IEventBus>();
-            Mock<IProjectRepository> mockRepository=new Mock<IProjectRepository>();
+            var eventMock = new Mock<IEventBus>();
+            var mockRepository = new Mock<IProjectRepository>();
             mockRepository.Setup(m => m.GetAll()).Returns(() => null);
             mockRepository.Setup(m => m.Add(It.IsAny<Project>()))
-                .Callback((Project p) => mockRepository.Setup(m => m.GetAll()).Returns(new[] { p }));
-            IAddProject service = new AddProject(mockRepository.Object,eventMock.Object);
+                .Callback((Project p) => mockRepository.Setup(m => m.GetAll()).Returns(new[] {p}));
+            IAddProject service = new AddProject(mockRepository.Object , eventMock.Object);
 
-            Project newProject = new Project()
+            var newProject = new Project
             {
                 Name = "newProject"
             };
 
-            ProjectModel modelProject=new ProjectModel(newProject);
+            var modelProject = new ProjectModel(newProject);
 
             //Act
 
@@ -41,7 +41,7 @@ namespace Fingo.Auth.Domain.Projects.Tests.Implementation
             //Assert
 
             Assert.True(newProject.Name == addedProject.Name);
-            Assert.True(allProjects.Count()==1);
+            Assert.True(allProjects.Count() == 1);
             Assert.True(addedProject.Status == ProjectStatus.Active);
         }
     }

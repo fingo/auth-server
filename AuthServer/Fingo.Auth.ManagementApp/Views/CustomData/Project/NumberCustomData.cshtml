@@ -1,7 +1,8 @@
 ﻿@model Fingo.Auth.Domain.CustomData.ConfigurationClasses.Project.NumberProjectConfiguration
 
-<div class="panel panel-success" style="margin-top: 15px; margin-bottom: 0">
-    <div class="panel-heading"><strong>Set number data</strong>
+<div class="panel panel-success" style="margin-bottom: 0; margin-top: 15px;">
+    <div class="panel-heading">
+        <strong>Set number data</strong>
     </div>
     <div class="alert alert-info small" role="alert" id="numberConfigurationAlert" style="display: none; margin-bottom: 0">
         <strong>Information!</strong> Default value should be between lower bound and upper bound.
@@ -23,7 +24,7 @@
 
 <script>
     $('#numberConfigurationForm')
-        .submit(function (event) {
+        .submit(function(event) {
             var upperBound = parseInt($('#UpperBound').val());
             var lowerBound = parseInt($('#LowerBound').val());
             var defaultValue = parseInt($('#Default').val());
@@ -34,4 +35,3 @@
             return;
         });
 </script>
-

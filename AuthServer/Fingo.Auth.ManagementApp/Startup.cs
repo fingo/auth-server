@@ -7,12 +7,12 @@ using Fingo.Auth.DbAccess.Context.Interfaces;
 using Fingo.Auth.ManagementApp.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
 using Serilog;
-using Microsoft.EntityFrameworkCore;
 
 namespace Fingo.Auth.ManagementApp
 {
@@ -22,8 +22,8 @@ namespace Fingo.Auth.ManagementApp
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("appsettings.json" , true , true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json" , true , true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -41,11 +41,11 @@ namespace Fingo.Auth.ManagementApp
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(AuthorizationConfiguration.PolicyName, policy =>
-                   policy.RequireAssertion(context =>
-                       context.User.HasClaim(c =>
-                           c.Type == AuthorizationConfiguration.PolicyName &&
-                           remoteTokenService.VerifyToken(c.Value))));
+                options.AddPolicy(AuthorizationConfiguration.PolicyName , policy =>
+                    policy.RequireAssertion(context =>
+                        context.User.HasClaim(c =>
+                            (c.Type == AuthorizationConfiguration.PolicyName) &&
+                            remoteTokenService.VerifyToken(c.Value))));
             });
 
             services.AddDistributedMemoryCache();
@@ -60,7 +60,7 @@ namespace Fingo.Auth.ManagementApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
+        public void Configure(IApplicationBuilder app , IHostingEnvironment env , ILoggerFactory loggerFactory ,
             IAuthServerContext dbContext)
         {
             app.UseSession();
@@ -80,10 +80,10 @@ namespace Fingo.Auth.ManagementApp
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
-                AuthenticationScheme = "Cookie",
-                LoginPath = new PathString("/Account/LoginPage/"),
-                AccessDeniedPath = new PathString("/Account/LoginPage/"),
-                AutomaticAuthenticate = true,
+                AuthenticationScheme = "Cookie" ,
+                LoginPath = new PathString("/Account/LoginPage/") ,
+                AccessDeniedPath = new PathString("/Account/LoginPage/") ,
+                AutomaticAuthenticate = true ,
                 AutomaticChallenge = true
             });
 
@@ -91,18 +91,18 @@ namespace Fingo.Auth.ManagementApp
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(name: "DefaultRest",
-                    template: "{controller}/{id?}");
+                routes.MapRoute("DefaultRest" ,
+                    "{controller}/{id?}");
 
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Account}/{action=LoginPage}/{id?}");
+                    "default" ,
+                    "{controller=Account}/{action=LoginPage}/{id?}");
             });
 
             // configuring logging
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.RollingFile("C:\\CSharpInternship16DontDelete\\Logs\\managementapp-{Date}.log",
-                    outputTemplate:
+                .WriteTo.RollingFile("C:\\CSharpInternship16DontDelete\\Logs\\managementapp-{Date}.log" ,
+                    outputTemplate :
                     "{Timestamp:dd-MM-yyyy HH:mm:ss.fff} [{Level}] ({ThreadId}) {Message}{NewLine}{Exception}")
                 .Enrich.WithThreadId()
                 .CreateLogger();
@@ -125,12 +125,15 @@ namespace Fingo.Auth.ManagementApp
 
         private void SetAuthServerClientConfiguration()
         {
-            AuthServer.Client.Configuration.CreateNewUserInProjectAdress = Configuration["Data:ApiAdresses:CreateNewUserInProject"];
+            AuthServer.Client.Configuration.CreateNewUserInProjectAdress =
+                Configuration["Data:ApiAdresses:CreateNewUserInProject"];
             AuthServer.Client.Configuration.VerifyTokenAdress = Configuration["Data:ApiAdresses:VerifyToken"];
             AuthServer.Client.Configuration.AcquireTokenAdress = Configuration["Data:ApiAdresses:AcquireToken"];
-            AuthServer.Client.Configuration.ChangingPasswordUserAddress = Configuration["Data:ApiAdresses:PasswordChangeForUser"];
+            AuthServer.Client.Configuration.ChangingPasswordUserAddress =
+                Configuration["Data:ApiAdresses:PasswordChangeForUser"];
             AuthServer.Client.Configuration.Guid = Configuration["Data:ManagementAppGuid"];
-            AuthServer.Client.Configuration.SetPasswordForUserAdress = Configuration["Data:ApiAdresses:SetPasswordForUser"];
+            AuthServer.Client.Configuration.SetPasswordForUserAdress =
+                Configuration["Data:ApiAdresses:SetPasswordForUser"];
         }
 
         private void SetManagementAppEmailConfiguration()
@@ -147,8 +150,7 @@ namespace Fingo.Auth.ManagementApp
             EmailConfiguration.GrantRole = Configuration["Data:ConfigurationToSendEmail:GrantRole"];
             EmailConfiguration.RevokeRole = Configuration["Data:ConfigurationToSendEmail:RevokeRole"];
             EmailConfiguration.EmailGrantTitle = Configuration["Data:ConfigurationToSendEmail:EmailGrantTitle"];
-            EmailConfiguration.NewAccountCreated= Configuration["Data:ConfigurationToSendEmail:NewAccountCreated"];
-            EmailConfiguration.SetPassword= Configuration["Data:ApiAdresses:SetPassword"];
+            EmailConfiguration.NewAccountCreated = Configuration["Data:ConfigurationToSendEmail:NewAccountCreated"];
             EmailConfiguration.ContentSetPassword = Configuration["Data:ConfigurationToSendEmail:ContentSetPassword"];
         }
     }

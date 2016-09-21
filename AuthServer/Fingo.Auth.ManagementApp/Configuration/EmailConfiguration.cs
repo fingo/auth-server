@@ -15,7 +15,6 @@
         public static string RevokeRole;
         public static string EmailGrantTitle;
         public static string NewAccountCreated;
-        public static string SetPassword;
         public static string ContentSetPassword;
     }
 }

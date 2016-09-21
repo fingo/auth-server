@@ -10,8 +10,8 @@ namespace Fingo.Auth.Domain.Infrastructure.EventBus.Events.Project
             ProjectName = projectName;
         }
 
-        public int ProjectId { get; private set; }
-        public string ProjectName { get; private set; }
+        public int ProjectId { get; }
+        public string ProjectName { get; }
 
         public override string ToString()
         {

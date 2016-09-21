@@ -9,12 +9,12 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Implementation
 {
     public class AddProjectCustomDataToProjectFactory : IAddProjectCustomDataToProjectFactory
     {
-        private readonly IProjectRepository _projectRepository;
-        private readonly ICustomDataJsonConvertService _jsonConvertService;
         private readonly IEventBus _eventBus;
+        private readonly ICustomDataJsonConvertService _jsonConvertService;
+        private readonly IProjectRepository _projectRepository;
 
-        public AddProjectCustomDataToProjectFactory(IProjectRepository projectRepository,
-            ICustomDataJsonConvertService jsonConvertService, IEventBus eventBus)
+        public AddProjectCustomDataToProjectFactory(IProjectRepository projectRepository ,
+            ICustomDataJsonConvertService jsonConvertService , IEventBus eventBus)
         {
             _eventBus = eventBus;
             _jsonConvertService = jsonConvertService;
@@ -23,7 +23,7 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Implementation
 
         public IAddProjectCustomDataToProject Create()
         {
-            return new AddProjectCustomDataToProject(_projectRepository, _jsonConvertService, _eventBus);
+            return new AddProjectCustomDataToProject(_projectRepository , _jsonConvertService , _eventBus);
         }
     }
 }

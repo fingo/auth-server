@@ -29,7 +29,9 @@ namespace Fingo.Auth.ManagementApp.Configuration.Modules
             builder.RegisterType<RemoteAccountService>().As<IRemoteAccountService>().InstancePerDependency();
             builder.RegisterType<PostService>().As<IPostService>().InstancePerDependency();
             builder.RegisterType<PolicyJsonConvertService>().As<IPolicyJsonConvertService>().InstancePerDependency();
-            builder.RegisterType<CustomDataJsonConvertService>().As<ICustomDataJsonConvertService>().InstancePerDependency();
+            builder.RegisterType<CustomDataJsonConvertService>()
+                .As<ICustomDataJsonConvertService>()
+                .InstancePerDependency();
             builder.RegisterType<SetDefaultUserCustomDataBasedOnProject>().As<ISetDefaultUserCustomDataBasedOnProject>();
         }
     }

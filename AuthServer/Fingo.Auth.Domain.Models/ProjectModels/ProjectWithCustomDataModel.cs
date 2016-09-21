@@ -4,16 +4,15 @@ using Fingo.Auth.Domain.Models.CustomData;
 
 namespace Fingo.Auth.Domain.Models.ProjectModels
 {
-    public class ProjectWithCustomDataModel:ProjectModel
+    public class ProjectWithCustomDataModel : ProjectModel
     {
-        public ProjectWithCustomDataModel(Project project):base(project)
+        public ProjectWithCustomDataModel(Project project) : base(project)
         {
-            ProjectCustomData=new List<ProjectCustomDataModel>();
+            ProjectCustomData = new List<ProjectCustomDataModel>();
             foreach (var projectCustomData in project.ProjectCustomData)
-            {
                 ProjectCustomData.Add(new ProjectCustomDataModel(projectCustomData));
-            }
         }
+
         public List<ProjectCustomDataModel> ProjectCustomData { get; set; }
     }
 }

@@ -1,111 +1,110 @@
-﻿
-
-@using Fingo.Auth.ManagementApp.Models.Enums
-
-@model  IEnumerable<ProjectModel>
+﻿@using Fingo.Auth.ManagementApp.Models.Enums
+@model IEnumerable<ProjectModel>
 
 @if (!Model.Any())
 {
     <p>There are no projects assigned to this user</p>
+    <p id="pag" style="display: none;"></p>
 }
 else
 {
     <table class="table table-striped" id="projectsList">
         <thead>
-            <tr >
-                <th>No</th>
-                <th>Name</th>
-                <th>Project Guid</th>
-                <th>Creation date</th>
-                <th></th>
-            </tr>
+        <tr >
+            <th>No</th>
+            <th>Name</th>
+            <th>Project Guid</th>
+            <th>Creation date</th>
+            <th></th>
+        </tr>
         </thead>
         <tbody>
-            @{ int rowNo = ViewBag.Number; }
-            @foreach (var project in Model)
+        @{ int rowNo = ViewBag.Number; }
+        @foreach (var project in Model)
+        {
             {
-                {
-                    rowNo++;
-                }
-                <tr class="cell">
-                    <td style="vertical-align: middle;">@rowNo</td>
-                    <td style="vertical-align: middle;">@Html.ActionLink(project.Name, "GetById", "Projects", new { id = project.Id })</td>
-                    <td style="vertical-align: middle;">@project.ProjectGuid</td>
-                    <td style="vertical-align: middle;">@project.CreationDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
-                    <td style="text-align: center">
-                        <button type="button" class="btn btn-success button-narrow" onclick="GetProjectModalWindow('@ModalWidows.UnassignUser',@ViewBag.Id, @project.Id)">Unassign</button>
-                    </td>
-                </tr>
+                rowNo++;
             }
-            @for (int i = 0; i < ViewBag.RowsPerPage - Model.Count(); i++)
-            {
-                <tr class="cell">
-                    <td style="vertical-align: middle;">@(ViewBag.RowsPerPage * (ViewBag.Page - 1) + Model.Count() + i + 1)</td>
-                    <td style="vertical-align: middle;">-</td>
-                    <td style="vertical-align: middle;">-</td>
-                    <td style="vertical-align: middle;">-</td>
-                    <td></td>
-                </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="5">
-                    <p id="pag">
-                    </p>
+            <tr class="cell">
+                <td style="vertical-align: middle;">@rowNo</td>
+                <td style="vertical-align: middle;">@Html.ActionLink(project.Name , "GetById" , "Projects" , new {id = project.Id})</td>
+                <td style="vertical-align: middle;">@project.ProjectGuid</td>
+                <td style="vertical-align: middle;">@project.CreationDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                <td style="text-align: center">
+                    <button type="button" class="btn btn-success button-narrow" onclick="GetProjectModalWindow('@ModalWidows.UnassignUser', @ViewBag.Id, @project.Id)">Unassign</button>
                 </td>
             </tr>
+        }
+        @for (var i = 0 ; i < ViewBag.RowsPerPage - Model.Count() ; i++)
+        {
+            <tr class="cell">
+                <td style="vertical-align: middle;">@(ViewBag.RowsPerPage * (ViewBag.Page - 1) + Model.Count() + i + 1)</td>
+                <td style="vertical-align: middle;">-</td>
+                <td style="vertical-align: middle;">-</td>
+                <td style="vertical-align: middle;">-</td>
+                <td></td>
+            </tr>
+        }
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="5">
+                <p id="pag">
+                </p>
+            </td>
+        </tr>
         </tfoot>
     </table>
 }
 
 <script>
-    
-        $(function () {
-            $("#pag")
-                .bs_pagination({
-                    currentPage: @ViewBag.Page,
-                    rowsPerPage: @ViewBag.RowsPerPage,
-                    totalPages: '@(ViewBag.TotalRows% ViewBag.RowsPerPage == 0? ViewBag.UsersCount: ViewBag.UsersCount+1)',
-                    visiblePageLinks: 7,
-                    totalRows: @ViewBag.TotalRows,
 
-                    showGoToPage: false,
-                    showRowsPerPage: false,
-                    showRowsDefaultInfo: false,
-                    onChangePage: function (event, data) {
-                        var apiUrl = "/users/getAllProjectsFormUser";
-                        var _data = {
-                            number: '@ViewBag.RowNo',
-                            id: '@ViewBag.Id',
-                            page: data.currentPage,
-                            pageSize: data.rowsPerPage
-                        };
-                        $.ajaxLoading({
-                            url: apiUrl,
-                            type: 'GET',
-                            data: _data,
-                            statusCode: {
-                                401: function (data) {
-                                    location.reload();
-                                }
-                            },
-                            success: function (data) {
-                                $('#projectsList').empty();
-                                $('#projectsList').html(data);
-                                $('#projectsList')
-                                    .find("script")
-                                    .each(function (i) {
-                                        eval($(this).text());
-                                    });
-                                $('#projectsList')
-                                    .find("link")
-                                    .each(function (i) {
-                                        eval($(this).text());
-                                    });
+    $(function() {
+        $("#pag")
+            .bs_pagination({
+                currentPage: @ViewBag.Page,
+                rowsPerPage: @ViewBag.RowsPerPage,
+                totalPages:
+                    '@(ViewBag.TotalRows % ViewBag.RowsPerPage == 0 ? ViewBag.UsersCount : ViewBag.UsersCount + 1)',
+                visiblePageLinks: 7,
+                totalRows: @ViewBag.TotalRows,
+
+                showGoToPage: false,
+                showRowsPerPage: false,
+                showRowsDefaultInfo: false,
+                onChangePage: function(event, data) {
+                    var apiUrl = "/users/getAllProjectsFormUser";
+                    var _data = {
+                        number: '@ViewBag.RowNo',
+                        id: '@ViewBag.Id',
+                        page: data.currentPage,
+                        pageSize: data.rowsPerPage
+                    };
+                    $.ajaxLoading({
+                        url: apiUrl,
+                        type: 'GET',
+                        data: _data,
+                        statusCode: {
+                            401: function(data) {
+                                location.reload();
                             }
-                        });
-                    }
-                });
-        });
+                        },
+                        success: function(data) {
+                            $('#projectsList').empty();
+                            $('#projectsList').html(data);
+                            $('#projectsList')
+                                .find("script")
+                                .each(function(i) {
+                                    eval($(this).text());
+                                });
+                            $('#projectsList')
+                                .find("link")
+                                .each(function(i) {
+                                    eval($(this).text());
+                                });
+                        }
+                    });
+                }
+            });
+    });
 </script>

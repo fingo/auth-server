@@ -5,7 +5,7 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Actions.Interfaces
 {
     public interface IEditProjectCustomDataToProject
     {
-        void Invoke(int projectId , string name , ConfigurationType type , ProjectConfiguration configuration,
+        void Invoke(int projectId , string name , ConfigurationType type , ProjectConfiguration configuration ,
             string oldName);
     }
 }

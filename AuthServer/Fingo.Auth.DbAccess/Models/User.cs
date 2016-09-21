@@ -12,14 +12,14 @@ namespace Fingo.Auth.DbAccess.Models
         public User()
         {
             LastPasswordChange = CreationDate;
-            UserCustomData=new List<UserCustomData>();
-            UserPolicies=new List<UserPolicies>();
+            UserCustomData = new List<UserCustomData>();
+            UserPolicies = new List<UserPolicies>();
         }
 
-        [MaxLength(30, ErrorMessage = "First name is too long")]
+        [MaxLength(30 , ErrorMessage = "First name is too long")]
         public string FirstName { get; set; }
 
-        [MaxLength(30, ErrorMessage = "Last name is too long")]
+        [MaxLength(30 , ErrorMessage = "Last name is too long")]
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Login is required")]

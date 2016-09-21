@@ -1,9 +1,9 @@
 ﻿using Fingo.Auth.DbAccess.Repository.Interfaces;
 using Fingo.Auth.Domain.Infrastructure.EventBus.Interfaces;
-using Fingo.Auth.Domain.Policies.Factories.Implementation;
-using Xunit;
-using Moq;
 using Fingo.Auth.Domain.Policies.Factories.Actions.Implementation;
+using Fingo.Auth.Domain.Policies.Factories.Implementation;
+using Moq;
+using Xunit;
 
 namespace Fingo.Auth.Domain.Policies.Tests.Factories.Implementation
 {
@@ -15,7 +15,7 @@ namespace Fingo.Auth.Domain.Policies.Tests.Factories.Implementation
             // arrange
             var repositoryMock = new Mock<IProjectRepository>();
             var busMock = new Mock<IEventBus>();
-            var factory = new DeletePolicyFromProjectFactory(repositoryMock.Object, busMock.Object);
+            var factory = new DeletePolicyFromProjectFactory(repositoryMock.Object , busMock.Object);
 
             // act
             var action = factory.Create();

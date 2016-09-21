@@ -21,7 +21,9 @@ namespace Fingo.Auth.ManagementApp.Configuration.Modules
             builder.RegisterType<ProjectRepository>().As<IProjectRepository>().InstancePerDependency();
             builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerDependency();
             builder.RegisterType<AuditLogRepository>().As<IAuditLogRepository>().InstancePerDependency();
-            builder.RegisterType<ProjectCustomDataRepository>().As<IProjectCustomDataRepository>().InstancePerDependency();
+            builder.RegisterType<ProjectCustomDataRepository>()
+                .As<IProjectCustomDataRepository>()
+                .InstancePerDependency();
             builder.RegisterType<UserCustomDataRepository>().As<IUserCustomDataRepository>().InstancePerDependency();
         }
     }

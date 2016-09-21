@@ -7,8 +7,8 @@ namespace Fingo.Auth.Domain.Models.ProjectModels
     {
         public ProjectModel()
         {
-            
         }
+
         public ProjectModel(Project project)
         {
             Id = project.Id;

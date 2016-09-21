@@ -2,8 +2,8 @@
 {
     public enum ConfigurationType
     {
-        Number,
-        Boolean,
+        Number ,
+        Boolean ,
         Text
     }
 }

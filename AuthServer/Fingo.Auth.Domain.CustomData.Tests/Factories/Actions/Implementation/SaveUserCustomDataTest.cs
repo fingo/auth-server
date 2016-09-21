@@ -17,20 +17,20 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
         {
             // Arrange
 
-            BooleanUserConfiguration booleanConfiguration = new BooleanUserConfiguration() { Value = true };
-            UserCustomData result = new UserCustomData()
+            var booleanConfiguration = new BooleanUserConfiguration {Value = true};
+            var result = new UserCustomData
             {
                 Id = 1 ,
-                ProjectCustomData = new ProjectCustomData()
+                ProjectCustomData = new ProjectCustomData
                 {
                     ConfigurationName = "firstConfiguration"
                 }
             };
 
-            Mock<ICustomDataJsonConvertService> customServiceMock = new Mock<ICustomDataJsonConvertService>();
+            var customServiceMock = new Mock<ICustomDataJsonConvertService>();
             customServiceMock.Setup(m => m.Serialize(booleanConfiguration)).Returns(booleanConfiguration.Value.ToString);
 
-            Mock<IUserCustomDataRepository> userCustomDataRepository = new Mock<IUserCustomDataRepository>();
+            var userCustomDataRepository = new Mock<IUserCustomDataRepository>();
             userCustomDataRepository.Setup(m => m.FindBy(It.IsAny<Expression<Func<UserCustomData , bool>>>())).Returns(
                 new[]
                 {
@@ -39,14 +39,14 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
 
             // Act
 
-            var target = new SaveUserCustomData(userCustomDataRepository.Object,customServiceMock.Object);
-            target.Invoke(1,1,"name",booleanConfiguration);
+            var target = new SaveUserCustomData(userCustomDataRepository.Object , customServiceMock.Object);
+            target.Invoke(1 , 1 , "name" , booleanConfiguration);
 
             // Assert
 
-            Assert.True(result.ModificationDate.Date ==DateTime.UtcNow.Date);
-            Assert.True(result.SerializedConfiguration== true.ToString());
-            userCustomDataRepository.Verify(m=>m.Edit(result));
+            Assert.True(result.ModificationDate.Date == DateTime.UtcNow.Date);
+            Assert.True(result.SerializedConfiguration == true.ToString());
+            userCustomDataRepository.Verify(m => m.Edit(result));
         }
 
         [Fact]
@@ -54,21 +54,22 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
         {
             // Arrange
 
-            NumberUserConfiguration numberUserConfiguration = new NumberUserConfiguration() { Value = 10 };
-            UserCustomData result = new UserCustomData()
+            var numberUserConfiguration = new NumberUserConfiguration {Value = 10};
+            var result = new UserCustomData
             {
-                Id = 1,
-                ProjectCustomData = new ProjectCustomData()
+                Id = 1 ,
+                ProjectCustomData = new ProjectCustomData
                 {
                     ConfigurationName = "firstConfiguration"
                 }
             };
 
-            Mock<ICustomDataJsonConvertService> customServiceMock = new Mock<ICustomDataJsonConvertService>();
-            customServiceMock.Setup(m => m.Serialize(numberUserConfiguration)).Returns(numberUserConfiguration.Value.ToString);
+            var customServiceMock = new Mock<ICustomDataJsonConvertService>();
+            customServiceMock.Setup(m => m.Serialize(numberUserConfiguration))
+                .Returns(numberUserConfiguration.Value.ToString);
 
-            Mock<IUserCustomDataRepository> userCustomDataRepository = new Mock<IUserCustomDataRepository>();
-            userCustomDataRepository.Setup(m => m.FindBy(It.IsAny<Expression<Func<UserCustomData, bool>>>())).Returns(
+            var userCustomDataRepository = new Mock<IUserCustomDataRepository>();
+            userCustomDataRepository.Setup(m => m.FindBy(It.IsAny<Expression<Func<UserCustomData , bool>>>())).Returns(
                 new[]
                 {
                     result
@@ -76,8 +77,8 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
 
             // Act
 
-            var target = new SaveUserCustomData(userCustomDataRepository.Object, customServiceMock.Object);
-            target.Invoke(1, 1, "name", numberUserConfiguration);
+            var target = new SaveUserCustomData(userCustomDataRepository.Object , customServiceMock.Object);
+            target.Invoke(1 , 1 , "name" , numberUserConfiguration);
 
             // Assert
 
@@ -91,21 +92,22 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
         {
             // Arrange
 
-            TextUserConfiguration textUserConfiguration = new TextUserConfiguration() { Value = "test" };
-            UserCustomData result = new UserCustomData()
+            var textUserConfiguration = new TextUserConfiguration {Value = "test"};
+            var result = new UserCustomData
             {
-                Id = 1,
-                ProjectCustomData = new ProjectCustomData()
+                Id = 1 ,
+                ProjectCustomData = new ProjectCustomData
                 {
                     ConfigurationName = "firstConfiguration"
                 }
             };
 
-            Mock<ICustomDataJsonConvertService> customServiceMock = new Mock<ICustomDataJsonConvertService>();
-            customServiceMock.Setup(m => m.Serialize(textUserConfiguration)).Returns(textUserConfiguration.Value.ToString);
+            var customServiceMock = new Mock<ICustomDataJsonConvertService>();
+            customServiceMock.Setup(m => m.Serialize(textUserConfiguration))
+                .Returns(textUserConfiguration.Value.ToString);
 
-            Mock<IUserCustomDataRepository> userCustomDataRepository = new Mock<IUserCustomDataRepository>();
-            userCustomDataRepository.Setup(m => m.FindBy(It.IsAny<Expression<Func<UserCustomData, bool>>>())).Returns(
+            var userCustomDataRepository = new Mock<IUserCustomDataRepository>();
+            userCustomDataRepository.Setup(m => m.FindBy(It.IsAny<Expression<Func<UserCustomData , bool>>>())).Returns(
                 new[]
                 {
                     result
@@ -113,8 +115,8 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
 
             // Act
 
-            var target = new SaveUserCustomData(userCustomDataRepository.Object, customServiceMock.Object);
-            target.Invoke(1, 1, "name", textUserConfiguration);
+            var target = new SaveUserCustomData(userCustomDataRepository.Object , customServiceMock.Object);
+            target.Invoke(1 , 1 , "name" , textUserConfiguration);
 
             // Assert
 

@@ -8,10 +8,10 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Implementation
 {
     public class SaveUserCustomDataFactory : ISaveUserCustomDataFactory
     {
-        private readonly IUserCustomDataRepository userCustomDataRepository;
         private readonly ICustomDataJsonConvertService customDataJsonConvertService;
+        private readonly IUserCustomDataRepository userCustomDataRepository;
 
-        public SaveUserCustomDataFactory(IUserCustomDataRepository userCustomDataRepository,
+        public SaveUserCustomDataFactory(IUserCustomDataRepository userCustomDataRepository ,
             ICustomDataJsonConvertService customDataJsonConvertService)
         {
             this.userCustomDataRepository = userCustomDataRepository;
@@ -20,7 +20,7 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Implementation
 
         public ISaveUserCustomData Create()
         {
-            return new SaveUserCustomData(userCustomDataRepository, customDataJsonConvertService);
+            return new SaveUserCustomData(userCustomDataRepository , customDataJsonConvertService);
         }
     }
 }

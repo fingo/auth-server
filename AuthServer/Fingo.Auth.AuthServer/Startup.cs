@@ -17,8 +17,8 @@ namespace Fingo.Auth.AuthServer
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json" , optional: true , reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json" , optional: true , reloadOnChange: true)
+                .AddJsonFile("appsettings.json" , true , true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json" , true , true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -39,7 +39,7 @@ namespace Fingo.Auth.AuthServer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app , IHostingEnvironment env , ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -48,7 +48,7 @@ namespace Fingo.Auth.AuthServer
 
             // configuring logging
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.RollingFile("C:\\CSharpInternship16DontDelete\\Logs\\authserver-{Date}.log", outputTemplate:
+                .WriteTo.RollingFile("C:\\CSharpInternship16DontDelete\\Logs\\authserver-{Date}.log" , outputTemplate :
                     "{Timestamp:dd-MM-yyyy HH:mm:ss.fff} [{Level}] ({ThreadId}) {Message}{NewLine}{Exception}")
                 .Enrich.WithThreadId()
                 .CreateLogger();

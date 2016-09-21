@@ -7,15 +7,16 @@ namespace Fingo.Auth.AuthServer.Services.Implementation
 {
     public class JwtLibraryWrapperService : IJwtLibraryWrapperService
     {
-        public string Encode(Dictionary<string, object> payload, string secretKey)
+        public string Encode(Dictionary<string , object> payload , string secretKey)
         {
-            return JsonWebToken.Encode(payload, secretKey, JwtHashAlgorithm.HS256);
+            return JsonWebToken.Encode(payload , secretKey , JwtHashAlgorithm.HS256);
         }
-        public DecodeResult Decode(string jwt, string secretKey)
+
+        public DecodeResult Decode(string jwt , string secretKey)
         {
             try
             {
-                JsonWebToken.DecodeToObject<Dictionary<string, object>>(jwt, secretKey);
+                JsonWebToken.DecodeToObject<Dictionary<string , object>>(jwt , secretKey);
             }
             catch (Exception e)
             {
@@ -24,7 +25,7 @@ namespace Fingo.Auth.AuthServer.Services.Implementation
 
                 return DecodeResult.TokenInvalid;
             }
-            
+
             return DecodeResult.TokenValid;
         }
     }

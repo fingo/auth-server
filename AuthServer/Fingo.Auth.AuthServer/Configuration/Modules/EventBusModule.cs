@@ -4,7 +4,7 @@ using Fingo.Auth.Domain.Infrastructure.EventBus.Interfaces;
 
 namespace Fingo.Auth.AuthServer.Configuration.Modules
 {
-    public class EventBusModule : Autofac.Module
+    public class EventBusModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

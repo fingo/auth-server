@@ -11,10 +11,12 @@ namespace Fingo.Auth.Domain.Users.Factories.Implementation
     {
         private readonly IEventBus eventBus;
         private readonly IProjectRepository projectRepository;
-        private readonly IUserRepository userRepository;
         private readonly ISetDefaultUserCustomDataBasedOnProject setDefaultUserCustomDataBasedOnProject;
+        private readonly IUserRepository userRepository;
 
-        public AssignUserFactory(IEventBus eventBus, IProjectRepository projectRepository, IUserRepository userRepository, ISetDefaultUserCustomDataBasedOnProject setDefaultUserCustomDataBasedOnProject)
+        public AssignUserFactory(IEventBus eventBus , IProjectRepository projectRepository ,
+            IUserRepository userRepository ,
+            ISetDefaultUserCustomDataBasedOnProject setDefaultUserCustomDataBasedOnProject)
         {
             this.eventBus = eventBus;
             this.projectRepository = projectRepository;
@@ -24,7 +26,7 @@ namespace Fingo.Auth.Domain.Users.Factories.Implementation
 
         public IAssignUser Create()
         {
-            return new AssignUser(projectRepository, eventBus, userRepository, setDefaultUserCustomDataBasedOnProject);
+            return new AssignUser(projectRepository , eventBus , userRepository , setDefaultUserCustomDataBasedOnProject);
         }
     }
 }

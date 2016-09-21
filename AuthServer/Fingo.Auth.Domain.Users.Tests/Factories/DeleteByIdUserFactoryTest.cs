@@ -16,12 +16,12 @@ namespace Fingo.Auth.Domain.Users.Tests.Factories
         {
             //Arrange
 
-            Mock<IEventBus> eventBusMock = new Mock<IEventBus>();
-            Mock<IUserRepository> userMock = new Mock<IUserRepository>();
+            var eventBusMock = new Mock<IEventBus>();
+            var userMock = new Mock<IUserRepository>();
 
             //Act
 
-            IDeleteByIdUserFactory target = new DeleteByIdUserFactory(userMock.Object,eventBusMock.Object);
+            IDeleteByIdUserFactory target = new DeleteByIdUserFactory(userMock.Object , eventBusMock.Object);
             var result = target.Create();
 
             //Assert

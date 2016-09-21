@@ -13,10 +13,11 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Implementation
 {
     public class SavePolicyToProject : ISavePolicyToProject
     {
-        private readonly IProjectRepository projectRepository;
         private readonly IEventBus eventBus;
         private readonly IPolicyJsonConvertService jsonConvertService;
-        public SavePolicyToProject(IProjectRepository projectRepository, IEventBus eventBus,
+        private readonly IProjectRepository projectRepository;
+
+        public SavePolicyToProject(IProjectRepository projectRepository , IEventBus eventBus ,
             IPolicyJsonConvertService jsonConvertService)
         {
             this.jsonConvertService = jsonConvertService;
@@ -24,7 +25,7 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Implementation
             this.projectRepository = projectRepository;
         }
 
-        public void Invoke(int projectId, Policy policy, PolicyConfiguration policyConfiguration)
+        public void Invoke(int projectId , Policy policy , PolicyConfiguration policyConfiguration)
         {
             var project = projectRepository.GetById(projectId);
 
@@ -37,7 +38,7 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Implementation
                 project.ProjectPolicies.Remove(projectPolicy);
                 project.ProjectPolicies.Add(new ProjectPolicies
                 {
-                    Policy = policy,
+                    Policy = policy ,
                     SerializedProjectPolicySetting = jsonConvertService.Serialize(policyConfiguration)
                 });
             }
@@ -45,12 +46,12 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Implementation
             {
                 project.ProjectPolicies.Add(new ProjectPolicies
                 {
-                    Policy = policy,
+                    Policy = policy ,
                     SerializedProjectPolicySetting = jsonConvertService.Serialize(policyConfiguration)
                 });
             }
             projectRepository.Edit(project);
-            eventBus.Publish(new PolicySaved(projectId, policy));
+            eventBus.Publish(new PolicySaved(projectId , policy));
         }
     }
 }

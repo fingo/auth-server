@@ -9,7 +9,8 @@ namespace Fingo.Auth.Domain.AuditLogs.Factories.Implementation
     {
         private readonly IAuditLogRepository auditLogRepository;
         private readonly IUserRepository userRepository;
-        public GetAllAuditLogFactory(IAuditLogRepository auditLogRepository, IUserRepository userRepository)
+
+        public GetAllAuditLogFactory(IAuditLogRepository auditLogRepository , IUserRepository userRepository)
         {
             this.auditLogRepository = auditLogRepository;
             this.userRepository = userRepository;
@@ -17,7 +18,7 @@ namespace Fingo.Auth.Domain.AuditLogs.Factories.Implementation
 
         public IGetAllAuditLog Create()
         {
-            return new GetAllAuditLog(auditLogRepository, userRepository);
+            return new GetAllAuditLog(auditLogRepository , userRepository);
         }
     }
 }

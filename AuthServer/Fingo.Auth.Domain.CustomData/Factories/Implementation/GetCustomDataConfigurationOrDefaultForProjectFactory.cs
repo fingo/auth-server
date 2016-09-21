@@ -6,12 +6,13 @@ using Fingo.Auth.Domain.CustomData.Services.Interfaces;
 
 namespace Fingo.Auth.Domain.CustomData.Factories.Implementation
 {
-    public class GetCustomDataConfigurationOrDefaultForProjectFactory : IGetCustomDataConfigurationOrDefaultForProjectFactory
+    public class GetCustomDataConfigurationOrDefaultForProjectFactory :
+        IGetCustomDataConfigurationOrDefaultForProjectFactory
     {
-        private readonly IProjectRepository _projectRepository;
         private readonly ICustomDataJsonConvertService _jsonConvertService;
+        private readonly IProjectRepository _projectRepository;
 
-        public GetCustomDataConfigurationOrDefaultForProjectFactory(IProjectRepository projectRepository,
+        public GetCustomDataConfigurationOrDefaultForProjectFactory(IProjectRepository projectRepository ,
             ICustomDataJsonConvertService jsonConvertService)
         {
             _projectRepository = projectRepository;
@@ -20,7 +21,7 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Implementation
 
         public IGetCustomDataConfigurationOrDefaultForProject Create()
         {
-            return new GetCustomDataConfigurationOrDefaultForProject(_projectRepository, _jsonConvertService);
+            return new GetCustomDataConfigurationOrDefaultForProject(_projectRepository , _jsonConvertService);
         }
     }
 }

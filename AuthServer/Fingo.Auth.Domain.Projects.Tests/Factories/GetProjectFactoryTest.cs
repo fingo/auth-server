@@ -15,7 +15,7 @@ namespace Fingo.Auth.Domain.Projects.Tests.Factories
         {
             //Arrange
 
-            Mock<IProjectRepository> projectMock = new Mock<IProjectRepository>();
+            var projectMock = new Mock<IProjectRepository>();
 
             //Act
 

@@ -7,20 +7,35 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fingo.Auth.DbAccess.Context
 {
-    public class AuthServerContext : DbContext, IAuthServerContext
+    public class AuthServerContext : DbContext , IAuthServerContext
     {
         public AuthServerContext()
-        { }
+        {
+        }
 
         public AuthServerContext(DbContextOptions<AuthServerContext> options)
             : base(options)
         {
         }
 
+        public new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+        {
+            return base.Set<TEntity>();
+        }
+
+        public DbSet<AuditLog> AuditLog { get; set; }
+
+        public void PerformMigration()
+        {
+            Database.Migrate();
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server = (localdb)\\mssqllocaldb; Database = AuthServer; Trusted_Connection = True;");
+            optionsBuilder.UseSqlServer(
+                "Server = (localdb)\\mssqllocaldb; Database = AuthServer; Trusted_Connection = True;");
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -62,7 +77,7 @@ namespace Fingo.Auth.DbAccess.Context
         private void SetPoliciesRelation(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ProjectPolicies>()
-                .HasOne(u =>u.Project)
+                .HasOne(u => u.Project)
                 .WithMany(p => p.ProjectPolicies)
                 .HasForeignKey(pu => pu.ProjectId);
 
@@ -103,24 +118,12 @@ namespace Fingo.Auth.DbAccess.Context
             modelBuilder.Entity<ClientInformation>().HasKey(c => c.Id);
             modelBuilder.Entity<Project>().HasKey(p => p.Id);
             modelBuilder.Entity<User>().HasKey(u => u.Id);
-            modelBuilder.Entity<ProjectUser>().HasKey(pu => new { pu.ProjectId, pu.UserId });
-            modelBuilder.Entity<AuditLog>().HasKey(i=>i.Id);
+            modelBuilder.Entity<ProjectUser>().HasKey(pu => new {pu.ProjectId , pu.UserId});
+            modelBuilder.Entity<AuditLog>().HasKey(i => i.Id);
             modelBuilder.Entity<ProjectPolicies>().HasKey(pp => pp.Id);
             modelBuilder.Entity<UserCustomData>().HasKey(ucd => ucd.Id);
             modelBuilder.Entity<ProjectCustomData>().HasKey(pcd => pcd.Id);
             modelBuilder.Entity<UserCustomData>().HasKey(ucd => ucd.Id);
-        }
-
-        public new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
-        {
-            return base.Set<TEntity>();
-        }
-
-        public DbSet<AuditLog> AuditLog { get; set; }
-
-        public void PerformMigration()
-        {
-            Database.Migrate();
         }
     }
 }

@@ -8,10 +8,12 @@ namespace Fingo.Auth.Domain.Users.Factories.Implementation
     public class GetProjectsFromUserFactory : IGetProjectsFromUserFactory
     {
         private readonly IUserRepository userRepository;
+
         public GetProjectsFromUserFactory(IUserRepository userRepository)
         {
             this.userRepository = userRepository;
         }
+
         public IGetProjectsFromUser Create()
         {
             return new GetProjectsFromUser(userRepository);

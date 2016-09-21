@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Fingo.Auth.DbAccess.Repository.Interfaces;
-using Fingo.Auth.Domain.Users.Implementation;
-using Fingo.Auth.Domain.Users.Interfaces;
 using System.Linq;
 using Fingo.Auth.DbAccess.Models;
 using Fingo.Auth.DbAccess.Models.Statuses;
+using Fingo.Auth.DbAccess.Repository.Interfaces;
+using Fingo.Auth.Domain.Users.Implementation;
+using Fingo.Auth.Domain.Users.Interfaces;
 using Moq;
 using Xunit;
 
@@ -17,31 +17,31 @@ namespace Fingo.Auth.Domain.Users.Tests.Implementation
         {
             //Arrange
 
-            Mock<IProjectRepository> mockRepository=new Mock<IProjectRepository>();
-            mockRepository.Setup(m => m.GetAllUsersFromProject(It.IsAny<int>())).Returns(new List<User>()
+            var mockRepository = new Mock<IProjectRepository>();
+            mockRepository.Setup(m => m.GetAllUsersFromProject(It.IsAny<int>())).Returns(new List<User>
             {
-                new User()
+                new User
                 {
-                    Id = 1,
-                    FirstName = "pierwszy",
-                    LastName = "pierwszy",
-                    Login = "pierwszy",
+                    Id = 1 ,
+                    FirstName = "pierwszy" ,
+                    LastName = "pierwszy" ,
+                    Login = "pierwszy" ,
                     Status = UserStatus.Active
-                },
-                new User()
+                } ,
+                new User
                 {
-                    Id = 2,
-                    FirstName = "drugi",
-                    LastName = "drugi",
-                    Login = "drugi",
+                    Id = 2 ,
+                    FirstName = "drugi" ,
+                    LastName = "drugi" ,
+                    Login = "drugi" ,
                     Status = UserStatus.Registered
-                },
-                new User()
+                } ,
+                new User
                 {
-                    Id = 3,
-                    FirstName = "trzeci",
-                    LastName = "trzeci",
-                    Login = "trzeci",
+                    Id = 3 ,
+                    FirstName = "trzeci" ,
+                    LastName = "trzeci" ,
+                    Login = "trzeci" ,
                     Status = UserStatus.Active
                 }
             });

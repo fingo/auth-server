@@ -1,9 +1,20 @@
 # Introduction
-Fingo AuthServer is a project made by three students on summer internship programme in [Fingo](http://www.fingo.pl/en/) using .NET Core 1.0.0 and .NET Framework 4.6.1. The aim was to create a server whose API one can use to authorize users  --  something like "login in with Facebook" -- and a web app to manage the server comfortably.
+Fingo AuthServer is a project made by three students (Justyna Setlak, Szymon Matwijów and Julian Pszczołowski) on summer internship programme in [Fingo](http://www.fingo.pl/en/) using .NET Core 1.0.0 and .NET Framework 4.6.1. The aim was to create a server whose API one can use to authorize users  --  something like "login in with Facebook" -- and a web app to manage the server comfortably.
 
 Each institution which wants to use our server creates their own project using management app, gets a unique project id, and later uses it in communication with API. On the other hand each user that wants to log in to an application that uses our server must (once) create an account in management app. The server's main role is to issue and verify authorization tokens ([JSON Web Token](https://tools.ietf.org/html/rfc7519) standard).
 
 In the solution the following architectural and design patterns were used: dependency injection, repository pattern, factory method pattern, representational state transfer, model-view-controller.
+
+# Frameworks used
+
+*  [Entity Framework](https://github.com/aspnet/EntityFramework)
+*  [Serilog](https://github.com/serilog/serilog)
+*  [Moq](https://github.com/moq/moq4)
+*  [XUnit](https://xunit.github.io/)
+*  [Selenium](https://github.com/SeleniumHQ/selenium)
+*  [JWT](https://github.com/jwt-dotnet/jwt)
+*  [Json.NET](http://www.newtonsoft.com/json)
+*  [Autofac](https://autofac.org/)
 
 # Solution structure
 1. Web applications
@@ -29,6 +40,10 @@ In the solution the following architectural and design patterns were used: depen
 ### AuthServer
 The server is a ASP NET Core web API with a few HTTP POST methods.
 
+Configuration: you have to set database connection string, secret JSON Web Token key etc. in configuration file (appsettings.(environment).json, where (environment) is development, production...).
+
+List of API methods:
+
 (I) /api/authentication/**AcquireToken** function takes three parameters: user's login, password, and a unique project id. Possible results are:
 *  *authenticated* - when one was successful to log in; then there is also a *jwt* property with JSON Web Token, which user should store in cookies and send everytime they need to prove their identity.
 *  *not_authenticated* - wrong login or password were given.
@@ -37,13 +52,14 @@ The server is a ASP NET Core web API with a few HTTP POST methods.
 *  *account_expired* - account expired, administrator of the project can log in to Management App and set a new expiration date.
 *  *error* - see *error_details* property.
 
-Example:
+Example request:
 ```
 POST authserver/api/authentication/acquiretoken HTTP/1.1
 (..)
 
 login=usr1&password=complicated_password&projectGuid=8dbc7265-97b6-4d3e-bc56-2cfc777b9ec7
 ```
+Example answer:
 ```
 HTTP/1.1 200 OK
 (..)
@@ -61,13 +77,14 @@ HTTP/1.1 200 OK
 * *wrong_access_token* - wrong unique project id.
 * *error* - see *error_details* property.
 
-Example:
+Example request:
 ```
 POST authserver/api/authentication/verifytoken HTTP/1.1
 (..)
 
 jwt=doesitlook.like.jsonwebtoken?&projectGuid=a01a050c-baaa-aaa-0aaa-e5ccccccc1ce
 ```
+Example answer:
 ```
 HTTP/1.1 200 OK
 (..)
@@ -79,15 +96,17 @@ HTTP/1.1 200 OK
 * *user_created_in_project* - action was successful.
 * *password_length_incorrect* - project has enabled "Minimum password length" policy and given password is too short.
 * *password_violates_required_characters_constraint* - project has enabled "Required password characters" policy and given password does not satisfy it.
+* *password_too_common* - project has enabled "Exclude common passwords" policy and given password is too common.
 * *error* - see *error_details* property in JSON result.
 
-Example in which wrong project id was given:
+Example request in which wrong project id was given:
 ```
 POST authserver/api/account/createnewuserinproject HTTP/1.1
 (..)
 
 login=new_login&password=their_password&projectGuid=aaaaaaaa-aaaa-43da-90b0-2bb25cb418c1&activationToken=random_token&firstName=John&lastName=Smith
 ```
+Example answer:
 ```
 HTTP/1.1 200 OK
 (..)
@@ -102,15 +121,17 @@ HTTP/1.1 200 OK
 * *users_password_changed* - everything ok.
 * *password_length_incorrect* - some project in which user is has enabled "Minimum password length" policy and given password is too short.
 * *password_violates_required_characters_constraint* - some project in which user is has enabled "Required password characters" policy and given password does not satisfy it.
+* *password_too_common* - some project in which user is has enabled "Exclude common passwords" policy and given password is too common.
 * *error* - see *error_details* included in response.
 
-Example:
+Example request:
 ```
 POST authserver/api/account/passwordchangeforuser HTTP/1.1
 (..)
 
 userEmail=login&password=password&newPassword=new&confirmedNewPassword=new&projectGuid=ba909b38-1e35-43da-90b0-2bb25cb418c1
 ```
+Example answer:
 ```
 HTTP/1.1 200 OK
 (..)
@@ -118,6 +139,29 @@ HTTP/1.1 200 OK
 {"result":"password_violates_required_characters_constraint"}
 ```
 
+(V) /api/account/**SetPasswordForUser** - takes token and password and returns:
+* *password_set* - everything ok.
+* *password_length_incorrect* - project to which user was imported has set "Minimum password length" policy and given password is too short.
+* *password_violates_required_characters_constraint* - project to which user was imported has set "Required password characters" policy and given password does not satisfy it.
+* *password_too_common* - project to which user was imported has set "Exclude common passwords" policy and given password is too common.
+* *error* - see *error_details* included in response.
+
+This method is used after bulk account creation (you can import accounts to project from .CSV file). Then every user has a random token generated and you can set password for him.
+
+Example request:
+```
+POST authserver/api/account/setpasswordforuser HTTP/1.1
+(..)
+
+token=1c25298c72434f1881839491e5567291&password=fingo
+```
+Example answer:
+```
+HTTP/1.1 200 OK
+(..)
+
+{"result":"password_too_common"}
+```
 ### ManagementApp
 
 A web application for managing authorization server. Depending on your privileges, you can modify projects, users, see list of all users assigned to a project, etc. On the authorization layer, management app is like any other institution using the server -- has its own project in the database, a unique project id, and uses API to authorize users.
@@ -153,6 +197,7 @@ Projects (services that use the AuthServer) have a possibility to enable policie
 * *Password expiration date* - checked every logging in - user is forced to change his password after his current one is older than e.g. half a year.
 * *Required password characters* - checked at creating account/changing password - there are three options that may be set: at least one special character, at least one digit, at least one upper-case character. 
 * *Minimum password length* - checked at creating account/changing password.
+* *Exclude common passwords* - checked at creating account/changing password - checks whether password is on a list of 1 million most common passwords
 
 ### Domain.Users and Domain.Projects
 This library has implementations of single action factories. As far as projects are concerned, there are AddProject, DeleteProject, GetAllProject, GetProject, UpdateProject factories. They are later injected in order to interact with database.
@@ -183,21 +228,9 @@ git push
 ```
 Jenkins was building, testing and publishing the code. One can find scripts that were used in JenkinsScripts and AuthServer folders. Besides built-in Jenkins integration with Git, Slack and a plugin to read XUnit tests results, our scripts and other shell commands were executed as follows:
 ```
-JenkinsScripts\build_script.bat
 JenkinsScripts\publish_scipt.bat
 JenkinsScripts\test_script.bat
 JenkinsScripts\nuget_restore_script.bat
 msbuild.exe /p:PublishProfile=FingoJenkins /p:Configuration=Release AuthServer\Fingo.Auth.UiTests\Fingo.Auth.UiTests.csproj
 JenkinsScripts\XUnit4JenkinsExecutor.bat <full path to AuthServer folder>
 ```
-# Frameworks used
-
-*  [Entity Framework](https://github.com/aspnet/EntityFramework)
-*  [Serilog](https://github.com/serilog/serilog)
-*  [Moq](https://github.com/moq/moq4)
-*  [XUnit](https://xunit.github.io/)
-*  [Selenium](https://github.com/SeleniumHQ/selenium)
-*  [JWT](https://github.com/jwt-dotnet/jwt)
-*  [Json.NET](http://www.newtonsoft.com/json)
-*  [Autofac](https://autofac.org/)
-*  [Bootstrap Pagination](http://www.pontikis.net/labs/bs_pagination/)

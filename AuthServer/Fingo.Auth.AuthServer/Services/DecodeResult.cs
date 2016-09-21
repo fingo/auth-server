@@ -2,8 +2,8 @@
 {
     public enum DecodeResult
     {
-        TokenValid = 0,
-        TokenInvalid = 1,
+        TokenValid = 0 ,
+        TokenInvalid = 1 ,
         TokenExpired = 2
     }
 }

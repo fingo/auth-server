@@ -8,9 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fingo.Auth.DbAccess.Repository.Implementation
 {
-    public class UserRepository : GenericRepository<User>, IUserRepository
+    public class UserRepository : GenericRepository<User> , IUserRepository
     {
         private readonly IAuthServerContext _db;
+
         public UserRepository(IAuthServerContext context) : base(context)
         {
             _db = context;
@@ -26,22 +27,23 @@ namespace Fingo.Auth.DbAccess.Repository.Implementation
 
         public override User GetById(int id)
         {
-            User user = _db.Set<User>()
+            var user = _db.Set<User>()
                 .Include(u => u.ProjectUsers)
                 .Include(u => u.UserCustomData)
                 .ThenInclude(m => m.ProjectCustomData)
-                .Include(m=>m.UserPolicies)
+                .Include(m => m.UserPolicies)
                 .ThenInclude(m => m.ProjectPolicies)
                 .FirstOrDefault(u => u.Id == id);
             return user;
         }
 
-        public void UpdateUserPassword(User user, string password)
+        public void UpdateUserPassword(User user , string password)
         {
             user.Password = password;
             _db.Set<User>().Update(user);
             _db.SaveChanges();
         }
+
         public IEnumerable<Project> GetAllProjectsFromUser(int id)
         {
             var d = _db.Set<User>()
@@ -53,9 +55,10 @@ namespace Fingo.Auth.DbAccess.Repository.Implementation
 
             return projects;
         }
+
         public User GetByIdWithCustomDatas(int id)
         {
-            User user = _db.Set<User>()
+            var user = _db.Set<User>()
                 .Include(u => u.UserCustomData)
                 .FirstOrDefault(u => u.Id == id);
             return user;

@@ -3,7 +3,7 @@ using Fingo.Auth.Domain.Policies.Factories.Actions.Interfaces;
 
 namespace Fingo.Auth.Domain.Policies.Factories.Interfaces
 {
-    public interface IGetUserPolicyConfigurationOrDefaultFromProjectFactory:IActionFactory
+    public interface IGetUserPolicyConfigurationOrDefaultFromProjectFactory : IActionFactory
     {
         IGetUserPolicyConfigurationOrDefaultFromProject Create();
     }

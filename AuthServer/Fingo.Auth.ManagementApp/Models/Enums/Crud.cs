@@ -2,9 +2,9 @@
 {
     public enum Crud
     {
-        Add,
-        Edit,
-        Delete,
+        Add ,
+        Edit ,
+        Delete ,
         Read
     }
 }

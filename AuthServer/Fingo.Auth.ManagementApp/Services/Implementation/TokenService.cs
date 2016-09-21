@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Fingo.Auth.ManagementApp.Services.Interfaces;
 using Newtonsoft.Json;
 
@@ -15,11 +16,11 @@ namespace Fingo.Auth.ManagementApp.Services.Implementation
                 while (payloadBase64.Length % 4 != 0)
                     payloadBase64 += "=";
 
-                var payloadJson = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(payloadBase64));
+                var payloadJson = Encoding.UTF8.GetString(Convert.FromBase64String(payloadBase64));
                 var type = new {registration_state = ""};
-                var payload = JsonConvert.DeserializeAnonymousType(payloadJson, type);
+                var payload = JsonConvert.DeserializeAnonymousType(payloadJson , type);
 
-                if (payload.registration_state == "registered" || payload.registration_state == "to_be_confirmed")
+                if ((payload.registration_state == "registered") || (payload.registration_state == "to_be_confirmed"))
                     return payload.registration_state;
 
                 return null;

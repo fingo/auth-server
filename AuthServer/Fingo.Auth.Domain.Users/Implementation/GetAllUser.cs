@@ -8,6 +8,7 @@ namespace Fingo.Auth.Domain.Users.Implementation
     public class GetAllUser : IGetAllUser
     {
         private readonly IUserRepository userRepository;
+
         public GetAllUser(IUserRepository userRepository)
         {
             this.userRepository = userRepository;
@@ -19,9 +20,7 @@ namespace Fingo.Auth.Domain.Users.Implementation
 
             var result = new List<BaseUserModel>();
             foreach (var user in users)
-            {
                 result.Add(new BaseUserModel(user));
-            }
             return result;
         }
     }

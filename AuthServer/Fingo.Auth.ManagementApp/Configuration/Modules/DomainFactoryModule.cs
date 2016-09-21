@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Autofac;
 using Fingo.Auth.Domain.Infrastructure.Interfaces;
 using Microsoft.Extensions.DependencyModel;
 using Module = Autofac.Module;
-using System.Linq;
 
 namespace Fingo.Auth.ManagementApp.Configuration.Modules
 {
-    public class DomainFactoryModule:Module
+    public class DomainFactoryModule : Module
     {
         private const string LibrariesName = "Fingo.Auth.Domain.";
 
@@ -35,14 +35,12 @@ namespace Fingo.Auth.ManagementApp.Configuration.Modules
 
             var deps = DependencyContext.Default;
 
-            foreach(var compilationLibrary in deps.CompileLibraries)
-            {
-                if(compilationLibrary.Name.Contains(LibrariesName))
+            foreach (var compilationLibrary in deps.CompileLibraries)
+                if (compilationLibrary.Name.Contains(LibrariesName))
                 {
                     var assembly = Assembly.Load(new AssemblyName(compilationLibrary.Name));
                     loadableAssemblies.Add(assembly);
                 }
-            }
             return loadableAssemblies;
         }
     }

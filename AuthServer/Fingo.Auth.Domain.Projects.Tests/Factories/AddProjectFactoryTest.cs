@@ -16,12 +16,12 @@ namespace Fingo.Auth.Domain.Projects.Tests.Factories
         {
             //Arrange
 
-            Mock<IProjectRepository> projectMock = new Mock<IProjectRepository>();
-            Mock<IEventBus> eventMock = new Mock<IEventBus>();
+            var projectMock = new Mock<IProjectRepository>();
+            var eventMock = new Mock<IEventBus>();
 
             //Act
 
-            IAddProjectFactory target = new AddProjectFactory(projectMock.Object,eventMock.Object);
+            IAddProjectFactory target = new AddProjectFactory(projectMock.Object , eventMock.Object);
             var result = target.Create();
 
             //Assert

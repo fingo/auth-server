@@ -3,19 +3,19 @@
 @using Fingo.Auth.ManagementApp.Configuration
 @inject IRemoteTokenService remoteTokenService
 @{
-    bool authenticated = User.HasClaim(c => c.Type == AuthorizationConfiguration.PolicyName && remoteTokenService.VerifyToken(c.Value));
+    var authenticated = User.HasClaim(c => (c.Type == AuthorizationConfiguration.PolicyName) && remoteTokenService.VerifyToken(c.Value));
 }
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="~/icon.png" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="~/icon.png"/>
     <title>Fingo Authentication Server</title>
 
     <environment names="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css"/>
+        <link rel="stylesheet" href="~/css/site.css"/>
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css"
@@ -41,7 +41,7 @@
                 }
                 else
                 {
-                    @Html.ActionLink("Fingo Authentication Server", "LoginPage", "Account", new { id = string.Empty }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Fingo Authentication Server" , "LoginPage" , "Account" , new {id = string.Empty} , new {@class = "navbar-brand"})
                 }
 
             </div>
@@ -49,9 +49,15 @@
                 <ul class="nav navbar-nav">
                     @if (authenticated && User.IsInRole("registered"))
                     {
-                        <li><a asp-area="" asp-controller="Projects" asp-action="All">Projects</a></li>
-                        <li><a asp-area="" asp-controller="Users" asp-action="All">Users</a></li>
-                        <li><a asp-area="" asp-controller="AuditLog" asp-action="All">Audit log</a></li>
+                        <li>
+                            <a asp-area="" asp-controller="Projects" asp-action="All">Projects</a>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Users" asp-action="All">Users</a>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="AuditLog" asp-action="All">Audit log</a>
+                        </li>
                     }
 
                 </ul>
@@ -101,15 +107,18 @@
                 asp-fallback-test="window.jQuery">
 
 
+        
         </script>
         <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/bootstrap.min.js"
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
 
+
+        
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-    @if (User.IsInRole("registered") || !User.HasClaim(m=>m.Type == ClaimTypes.Role))
+    @if (User.IsInRole("registered") || !User.HasClaim(m => m.Type == ClaimTypes.Role))
     {
         @RenderBody()
     }
@@ -121,15 +130,14 @@
                     <h3 class="panel-title pull-left">Information</h3>
                     <div class="clearfix"></div>
                 </div>
-                <div class="panel-body">                   
-                    <div style="text-align: center; font-size: 24px; margin:15px">
+                <div class="panel-body">
+                    <div style="font-size: 24px; margin: 15px; text-align: center;">
                         <p>Your account has not been accepted by system administrators.</p>
-                       
+
                     </div>
                 </div>
             </div>
         </div>
-
     }
 </div>
 <environment names="Development">
@@ -137,8 +145,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 </environment>
-@RenderSection("scripts", required: false)
+@RenderSection("scripts" , false)
 <div id="loadingDiv"></div>
 </body>
 </html>
-

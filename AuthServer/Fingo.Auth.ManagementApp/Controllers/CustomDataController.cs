@@ -22,24 +22,27 @@ namespace Fingo.Auth.ManagementApp.Controllers
     [Authorize(Policy = AuthorizationConfiguration.PolicyName)]
     public class CustomDataController : BaseController
     {
-        private readonly IGetUserFactory getUserFactory;
-        private readonly IDeleteCustomDataFromProjectFactory deleteCustomDataFromProjectFactory;
         private readonly IAddProjectCustomDataToProjectFactory addProjectCustomDataToProjectFactory;
+        private readonly IDeleteCustomDataFromProjectFactory deleteCustomDataFromProjectFactory;
+        private readonly IEditProjectCustomDataToProjectFactory editProjectCustomDataToProjectFactory;
+
         private readonly IGetCustomDataConfigurationOrDefaultForProjectFactory
             getCustomDataConfigurationOrDefaultForProjectFactory;
-        private readonly IEditProjectCustomDataToProjectFactory editProjectCustomDataToProjectFactory;
-        private readonly ISaveUserCustomDataFactory saveUserCustomDataFactory;
-        private readonly IGetUserCustomDataConfigurationViewFactory getUserCustomDataConfigurationViewFactory;
-        private readonly IMessageSender messageSender;
 
-        public CustomDataController(IGetUserFactory getUserFactory, IEventWatcher eventWatcher, IEventBus eventBus,
-            IDeleteCustomDataFromProjectFactory deleteCustomDataFromProjectFactory,
-            IGetCustomDataConfigurationOrDefaultForProjectFactory getCustomDataConfigurationOrDefaultForProjectFactory,
-            IAddProjectCustomDataToProjectFactory addProjectCustomDataToProjectFactory,
-            IEditProjectCustomDataToProjectFactory editProjectCustomDataToProjectFactory,
-            ISaveUserCustomDataFactory saveUserCustomDataFactory,
-            IGetUserCustomDataConfigurationViewFactory getUserCustomDataConfigurationViewFactory, IMessageSender messageSender)
-            : base(eventWatcher, eventBus)
+        private readonly IGetUserCustomDataConfigurationViewFactory getUserCustomDataConfigurationViewFactory;
+        private readonly IGetUserFactory getUserFactory;
+        private readonly IMessageSender messageSender;
+        private readonly ISaveUserCustomDataFactory saveUserCustomDataFactory;
+
+        public CustomDataController(IGetUserFactory getUserFactory , IEventWatcher eventWatcher , IEventBus eventBus ,
+            IDeleteCustomDataFromProjectFactory deleteCustomDataFromProjectFactory ,
+            IGetCustomDataConfigurationOrDefaultForProjectFactory getCustomDataConfigurationOrDefaultForProjectFactory ,
+            IAddProjectCustomDataToProjectFactory addProjectCustomDataToProjectFactory ,
+            IEditProjectCustomDataToProjectFactory editProjectCustomDataToProjectFactory ,
+            ISaveUserCustomDataFactory saveUserCustomDataFactory ,
+            IGetUserCustomDataConfigurationViewFactory getUserCustomDataConfigurationViewFactory ,
+            IMessageSender messageSender)
+            : base(eventWatcher , eventBus)
         {
             this.deleteCustomDataFromProjectFactory = deleteCustomDataFromProjectFactory;
             this.getCustomDataConfigurationOrDefaultForProjectFactory =
@@ -53,8 +56,8 @@ namespace Fingo.Auth.ManagementApp.Controllers
         }
 
         [HttpGet("getPartialView")]
-        public IActionResult GetProjectParialViewResult(ConfigurationType configurationType, int projectId,
-            Crud crudOption, string configurationName = null)
+        public IActionResult GetProjectParialViewResult(ConfigurationType configurationType , int projectId ,
+            Crud crudOption , string configurationName = null)
         {
             try
             {
@@ -64,109 +67,121 @@ namespace Fingo.Auth.ManagementApp.Controllers
                 switch (configurationType)
                 {
                     case ConfigurationType.Boolean:
-                        return PartialView("Project/BooleanCustomData",
+                        return PartialView("Project/BooleanCustomData" ,
                             (BooleanProjectConfiguration)
                             getCustomDataConfigurationOrDefaultForProjectFactory.Create()
-                                .Invoke(projectId, configurationName, ConfigurationType.Boolean));
+                                .Invoke(projectId , configurationName , ConfigurationType.Boolean));
                     case ConfigurationType.Number:
-                        return PartialView("Project/NumberCustomData",
+                        return PartialView("Project/NumberCustomData" ,
                             (NumberProjectConfiguration)
                             getCustomDataConfigurationOrDefaultForProjectFactory.Create()
-                                .Invoke(projectId, configurationName, ConfigurationType.Number));
+                                .Invoke(projectId , configurationName , ConfigurationType.Number));
                     case ConfigurationType.Text:
-                        return PartialView("Project/TextCustomData",
+                        return PartialView("Project/TextCustomData" ,
                             (TextProjectConfiguration)
                             getCustomDataConfigurationOrDefaultForProjectFactory.Create()
-                                .Invoke(projectId, configurationName, ConfigurationType.Text));
+                                .Invoke(projectId , configurationName , ConfigurationType.Text));
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(configurationType), configurationType, null);
+                        throw new ArgumentOutOfRangeException(nameof(configurationType) , configurationType , null);
                 }
             }
             catch (Exception ex)
             {
-                Alert(AlertType.Warning, ex.Message);
+                Alert(AlertType.Warning , ex.Message);
                 return StatusCode(400);
             }
         }
 
         [HttpGet("getUserPartialView")]
-        public IActionResult GetUserParialViewResult(ConfigurationType configurationType, string configurationName,
-            int projectId, int userId)
+        public IActionResult GetUserParialViewResult(ConfigurationType configurationType , string configurationName ,
+            int projectId , int userId)
         {
             try
             {
                 switch (configurationType)
                 {
                     case ConfigurationType.Boolean:
-                        return PartialView("User/BooleanCustomData", (BooleanUserConfigurationView)getUserCustomDataConfigurationViewFactory.Create().Invoke(projectId, userId, configurationType, configurationName));
+                        return PartialView("User/BooleanCustomData" ,
+                            (BooleanUserConfigurationView)
+                            getUserCustomDataConfigurationViewFactory.Create()
+                                .Invoke(projectId , userId , configurationType , configurationName));
                     case ConfigurationType.Number:
-                        return PartialView("User/NumberCustomData", (NumberUserConfigurationView)getUserCustomDataConfigurationViewFactory.Create().Invoke(projectId, userId, configurationType, configurationName));
+                        return PartialView("User/NumberCustomData" ,
+                            (NumberUserConfigurationView)
+                            getUserCustomDataConfigurationViewFactory.Create()
+                                .Invoke(projectId , userId , configurationType , configurationName));
                     case ConfigurationType.Text:
-                        return PartialView("User/TextCustomData", (TextUserConfigurationView)getUserCustomDataConfigurationViewFactory.Create().Invoke(projectId, userId, configurationType, configurationName));
+                        return PartialView("User/TextCustomData" ,
+                            (TextUserConfigurationView)
+                            getUserCustomDataConfigurationViewFactory.Create()
+                                .Invoke(projectId , userId , configurationType , configurationName));
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(configurationType), configurationType, null);
+                        throw new ArgumentOutOfRangeException(nameof(configurationType) , configurationType , null);
                 }
             }
             catch (Exception ex)
             {
-                Alert(AlertType.Warning, ex.Message);
+                Alert(AlertType.Warning , ex.Message);
                 return StatusCode(400);
             }
         }
 
         [HttpPost("project/Boolean")]
-        public IActionResult SaveBooleanCustomData(int projectId, BooleanProjectConfiguration booleanProjectConfiguration, string configurationName,
-            Crud crudOption, string oldConfigurationName)
+        public IActionResult SaveBooleanCustomData(int projectId ,
+            BooleanProjectConfiguration booleanProjectConfiguration , string configurationName ,
+            Crud crudOption , string oldConfigurationName)
         {
             try
             {
-                SaveConfiguration(projectId, booleanProjectConfiguration, configurationName, crudOption,
-                    ConfigurationType.Boolean, oldConfigurationName);
-                Alert(AlertType.Success, "Data saved correctly.");
-                return RedirectToAction("GetById", "Projects", new { id = projectId });
+                SaveConfiguration(projectId , booleanProjectConfiguration , configurationName , crudOption ,
+                    ConfigurationType.Boolean , oldConfigurationName);
+                Alert(AlertType.Success , "Data saved correctly.");
+                return RedirectToAction("GetById" , "Projects" , new {id = projectId});
             }
             catch (Exception ex)
             {
-                Alert(AlertType.Warning, ex.Message);
-                return RedirectToAction("GetById", "Projects", new { id = projectId });
+                Alert(AlertType.Warning , ex.Message);
+                return RedirectToAction("GetById" , "Projects" , new {id = projectId});
             }
         }
 
         [HttpPost("project/Number")]
-        public IActionResult SaveNumberCustomData(int projectId, NumberProjectConfiguration numberProjectConfiguration, string configurationName,
-            Crud crudOption, string oldConfigurationName)
+        public IActionResult SaveNumberCustomData(int projectId , NumberProjectConfiguration numberProjectConfiguration ,
+            string configurationName ,
+            Crud crudOption , string oldConfigurationName)
         {
             try
             {
-                SaveConfiguration(projectId, numberProjectConfiguration, configurationName, crudOption,
-                    ConfigurationType.Number, oldConfigurationName);
-                Alert(AlertType.Success, "Data saved correctly.");
-                return RedirectToAction("GetById", "Projects", new { id = projectId });
+                SaveConfiguration(projectId , numberProjectConfiguration , configurationName , crudOption ,
+                    ConfigurationType.Number , oldConfigurationName);
+                Alert(AlertType.Success , "Data saved correctly.");
+                return RedirectToAction("GetById" , "Projects" , new {id = projectId});
             }
             catch (Exception ex)
             {
-                Alert(AlertType.Warning, ex.Message);
-                return RedirectToAction("GetById", "Projects", new { id = projectId });
+                Alert(AlertType.Warning , ex.Message);
+                return RedirectToAction("GetById" , "Projects" , new {id = projectId});
             }
         }
 
         [HttpPost("project/Text")]
-        public IActionResult SaveTextCustomData(int projectId, TextProjectConfiguration textProjectConfiguration, string configurationName,
-            Crud crudOption, string oldConfigurationName)
+        public IActionResult SaveTextCustomData(int projectId , TextProjectConfiguration textProjectConfiguration ,
+            string configurationName ,
+            Crud crudOption , string oldConfigurationName)
         {
             try
             {
                 if (textProjectConfiguration.PossibleValues.Contains(null))
                     textProjectConfiguration.PossibleValues.Remove(null);
-                SaveConfiguration(projectId, textProjectConfiguration, configurationName, crudOption,
-                    ConfigurationType.Text, oldConfigurationName);
-                Alert(AlertType.Success, "Data saved correctly.");
-                return RedirectToAction("GetById", "Projects", new { id = projectId });
+                SaveConfiguration(projectId , textProjectConfiguration , configurationName , crudOption ,
+                    ConfigurationType.Text , oldConfigurationName);
+                Alert(AlertType.Success , "Data saved correctly.");
+                return RedirectToAction("GetById" , "Projects" , new {id = projectId});
             }
             catch (Exception ex)
             {
-                Alert(AlertType.Warning, ex.Message);
-                return RedirectToAction("GetById", "Projects", new { id = projectId });
+                Alert(AlertType.Warning , ex.Message);
+                return RedirectToAction("GetById" , "Projects" , new {id = projectId});
             }
         }
 
@@ -176,43 +191,48 @@ namespace Fingo.Auth.ManagementApp.Controllers
             try
             {
                 saveUserCustomDataFactory.Create()
-                    .Invoke(booleanUserConfigurationView.ProjectId, booleanUserConfigurationView.UserId,
-                        booleanUserConfigurationView.ConfigurationName, new BooleanUserConfiguration() { Value = booleanUserConfigurationView.CurrentValue });
-                Alert(AlertType.Success, "Data for user saved correctly.");
-                return RedirectToAction("GetById", "Projects", new { id = booleanUserConfigurationView.ProjectId });
+                    .Invoke(booleanUserConfigurationView.ProjectId , booleanUserConfigurationView.UserId ,
+                        booleanUserConfigurationView.ConfigurationName ,
+                        new BooleanUserConfiguration {Value = booleanUserConfigurationView.CurrentValue});
+                Alert(AlertType.Success , "Data for user saved correctly.");
+                return RedirectToAction("GetById" , "Projects" , new {id = booleanUserConfigurationView.ProjectId});
             }
             catch (Exception ex)
             {
-                Alert(AlertType.Warning, ex.Message);
-                return RedirectToAction("GetById", "Projects", new { id = booleanUserConfigurationView.ProjectId });
+                Alert(AlertType.Warning , ex.Message);
+                return RedirectToAction("GetById" , "Projects" , new {id = booleanUserConfigurationView.ProjectId});
             }
         }
+
         [HttpPost("user/Number")]
         public IActionResult SaveUserNumberCustomData(NumberUserConfigurationView numberUserConfiguration)
         {
             try
             {
                 saveUserCustomDataFactory.Create()
-                    .Invoke(numberUserConfiguration.ProjectId, numberUserConfiguration.UserId,
-                        numberUserConfiguration.ConfigurationName, new NumberUserConfiguration() { Value = numberUserConfiguration.CurrentValue });
-                Alert(AlertType.Success, "Data for user saved correctly.");
-                return RedirectToAction("GetById", "Projects", new { id = numberUserConfiguration.ProjectId });
+                    .Invoke(numberUserConfiguration.ProjectId , numberUserConfiguration.UserId ,
+                        numberUserConfiguration.ConfigurationName ,
+                        new NumberUserConfiguration {Value = numberUserConfiguration.CurrentValue});
+                Alert(AlertType.Success , "Data for user saved correctly.");
+                return RedirectToAction("GetById" , "Projects" , new {id = numberUserConfiguration.ProjectId});
             }
             catch (Exception ex)
             {
-                Alert(AlertType.Warning, ex.Message);
-                return RedirectToAction("GetById", "Projects", new { id = numberUserConfiguration.ProjectId });
+                Alert(AlertType.Warning , ex.Message);
+                return RedirectToAction("GetById" , "Projects" , new {id = numberUserConfiguration.ProjectId});
             }
         }
+
         [HttpPost("user/Text")]
         public IActionResult SaveUserTextCustomData(TextUserConfigurationView textUserConfiguration)
         {
             try
             {
                 saveUserCustomDataFactory.Create()
-                    .Invoke(textUserConfiguration.ProjectId, textUserConfiguration.UserId,
-                        textUserConfiguration.ConfigurationName, new TextUserConfiguration() { Value = textUserConfiguration.CurrentValue });
-                Alert(AlertType.Success, "Data for user saved correctly.");
+                    .Invoke(textUserConfiguration.ProjectId , textUserConfiguration.UserId ,
+                        textUserConfiguration.ConfigurationName ,
+                        new TextUserConfiguration {Value = textUserConfiguration.CurrentValue});
+                Alert(AlertType.Success , "Data for user saved correctly.");
 
                 if (textUserConfiguration.ConfigurationName != "registration_state")
                     return RedirectToAction("GetById" , "Projects" , new {id = textUserConfiguration.ProjectId});
@@ -222,33 +242,34 @@ namespace Fingo.Auth.ManagementApp.Controllers
                     textUserConfiguration.CurrentValue == "registered"
                         ? EmailConfiguration.GrantRole
                         : EmailConfiguration.RevokeRole , user.FirstName , user.LastName , user.Login);
-                return RedirectToAction("GetById", "Projects", new { id = textUserConfiguration.ProjectId });
+                return RedirectToAction("GetById" , "Projects" , new {id = textUserConfiguration.ProjectId});
             }
             catch (Exception ex)
             {
-                Alert(AlertType.Warning, ex.Message);
-                return RedirectToAction("GetById", "Projects", new { id = textUserConfiguration.ProjectId });
+                Alert(AlertType.Warning , ex.Message);
+                return RedirectToAction("GetById" , "Projects" , new {id = textUserConfiguration.ProjectId});
             }
         }
 
         [HttpDelete("{projectId}/{configurationName}")]
-        public HttpResponseMessage RemoveCustomData(int projectId, string configurationName)
+        public HttpResponseMessage RemoveCustomData(int projectId , string configurationName)
         {
             try
             {
-                deleteCustomDataFromProjectFactory.Create().Invoke(projectId, configurationName);
-                Alert(AlertType.Success, "Data was correctly removed from the project.");
+                deleteCustomDataFromProjectFactory.Create().Invoke(projectId , configurationName);
+                Alert(AlertType.Success , "Data was correctly removed from the project.");
             }
             catch (Exception)
             {
-                Alert(AlertType.Warning, "Could not find such policy in the database.");
+                Alert(AlertType.Warning , "Could not find such policy in the database.");
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
             return new HttpResponseMessage(HttpStatusCode.NoContent);
         }
 
-        private void SaveConfiguration(int projectId, ProjectConfiguration projectConfiguration, string configurationName,
-            Crud crudOption, ConfigurationType configurationType, string oldConfigurationName)
+        private void SaveConfiguration(int projectId , ProjectConfiguration projectConfiguration ,
+            string configurationName ,
+            Crud crudOption , ConfigurationType configurationType , string oldConfigurationName)
         {
             switch (crudOption)
             {
@@ -257,15 +278,15 @@ namespace Fingo.Auth.ManagementApp.Controllers
                     {
                         case ConfigurationType.Boolean:
                             addProjectCustomDataToProjectFactory.Create()
-                        .Invoke(projectId, configurationName, ConfigurationType.Boolean, projectConfiguration);
+                                .Invoke(projectId , configurationName , ConfigurationType.Boolean , projectConfiguration);
                             break;
                         case ConfigurationType.Number:
                             addProjectCustomDataToProjectFactory.Create()
-                        .Invoke(projectId, configurationName, ConfigurationType.Number, projectConfiguration);
+                                .Invoke(projectId , configurationName , ConfigurationType.Number , projectConfiguration);
                             break;
                         case ConfigurationType.Text:
                             addProjectCustomDataToProjectFactory.Create()
-                        .Invoke(projectId, configurationName, ConfigurationType.Text, projectConfiguration);
+                                .Invoke(projectId , configurationName , ConfigurationType.Text , projectConfiguration);
                             break;
                     }
                     break;
@@ -274,29 +295,35 @@ namespace Fingo.Auth.ManagementApp.Controllers
                     {
                         case ConfigurationType.Boolean:
                             editProjectCustomDataToProjectFactory.Create()
-                        .Invoke(projectId, configurationName, ConfigurationType.Boolean, projectConfiguration, oldConfigurationName);
+                                .Invoke(projectId , configurationName , ConfigurationType.Boolean , projectConfiguration ,
+                                    oldConfigurationName);
                             break;
                         case ConfigurationType.Number:
                             editProjectCustomDataToProjectFactory.Create()
-                        .Invoke(projectId, configurationName, ConfigurationType.Number, projectConfiguration, oldConfigurationName);
+                                .Invoke(projectId , configurationName , ConfigurationType.Number , projectConfiguration ,
+                                    oldConfigurationName);
                             break;
                         case ConfigurationType.Text:
                             editProjectCustomDataToProjectFactory.Create()
-                        .Invoke(projectId, configurationName, ConfigurationType.Text, projectConfiguration, oldConfigurationName);
+                                .Invoke(projectId , configurationName , ConfigurationType.Text , projectConfiguration ,
+                                    oldConfigurationName);
                             break;
                     }
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(crudOption), crudOption, null);
+                    throw new ArgumentOutOfRangeException(nameof(crudOption) , crudOption , null);
             }
         }
-        private void SendMessage(string content, string firstName, string lastName, string email)
-        {
-            var emailContent = messageSender.CreateContent(content, EmailConfiguration.Greeting, EmailConfiguration.Sender);
 
-            var message = messageSender.CreateMessage(firstName + lastName, email, EmailConfiguration.Sender,
-               EmailConfiguration.SenderEmail, EmailConfiguration.EmailGrantTitle, emailContent);
-            messageSender.SendEmail(message, EmailConfiguration.ServerEmail, EmailConfiguration.ServerPassword, EmailConfiguration.ServerName, 465);
+        private void SendMessage(string content , string firstName , string lastName , string email)
+        {
+            var emailContent = messageSender.CreateContent(content , EmailConfiguration.Greeting ,
+                EmailConfiguration.Sender);
+
+            var message = messageSender.CreateMessage(firstName + lastName , email , EmailConfiguration.Sender ,
+                EmailConfiguration.SenderEmail , EmailConfiguration.EmailGrantTitle , emailContent);
+            messageSender.SendEmail(message , EmailConfiguration.ServerEmail , EmailConfiguration.ServerPassword ,
+                EmailConfiguration.ServerName , 465);
         }
     }
 }

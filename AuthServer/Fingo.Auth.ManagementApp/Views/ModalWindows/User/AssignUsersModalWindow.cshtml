@@ -2,7 +2,7 @@
 
 <div class="modal fade" id="asignUsersModalWindow" role="dialog" data-backdrop="static">
     <div class="modal-dialog" style="width: 850px">
-        @using (Html.BeginForm("AsignUsersToProject", "Projects", new { projectId = ViewBag.ProjectId }, FormMethod.Post, null, new { id = "assignUsersModalForm" }))
+        @using (Html.BeginForm("AsignUsersToProject" , "Projects" , new {projectId = ViewBag.ProjectId} , FormMethod.Post , null , new {id = "assignUsersModalForm"}))
         {
             <div class="modal-content">
                 <div class="modal-header">
@@ -22,34 +22,37 @@
                             <div class="panel-heading">
                                 <table>
                                     <tr>
-                                        <th>
-                                            <div class="input-group" style="width: 90%">
-                                                <input type="text" autocomplete='off' name="first" class='filter form-control' placeholder='first name' data-col='first' />
-                                                <div class="input-group-btn">
-                                                    <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-search"></span></button>
-                                                </div>
+                                    <th>
+                                        <div class="input-group" style="width: 90%">
+                                            <input type="text" autocomplete='off' name="first" class='filter form-control' placeholder='first name' data-col='first'/>
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-success">
+                                                    <span class="glyphicon glyphicon-search"></span></button>
                                             </div>
-                                        </th>
-                                        <th>
-                                            <div class="input-group" style="width: 90%">
-                                                <input type="text" autocomplete='off' name="last" class='filter form-control' placeholder='last name' data-col='last' />
-                                                <div class="input-group-btn">
-                                                    <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-search"></span></button>
-                                                </div>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="input-group" style="width: 90%">
+                                            <input type="text" autocomplete='off' name="last" class='filter form-control' placeholder='last name' data-col='last'/>
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-success">
+                                                    <span class="glyphicon glyphicon-search"></span></button>
                                             </div>
-                                        </th>
-                                        <th>
-                                            <div class="input-group" style="width: 90%">
-                                                <input type="text" autocomplete='off' name="email" class='filter form-control' placeholder='e-mail' data-col='email' />
-                                                <div class="input-group-btn">
-                                                    <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-search"></span></button>
-                                                </div>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="input-group" style="width: 90%">
+                                            <input type="text" autocomplete='off' name="email" class='filter form-control' placeholder='e-mail' data-col='email'/>
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-success">
+                                                    <span class="glyphicon glyphicon-search"></span></button>
                                             </div>
-                                        </th>
+                                        </div>
+                                    </th>
                                 </table>
                             </div>
-                            <div style="max-height: 200px; overflow-y: scroll; overflow-wrap: normal">
-                                <table class="table table-hover custom" id="notAssignedUsersTable" style="table-layout: fixed; width: 100%; margin-bottom: 0;">
+                            <div style="max-height: 200px; overflow-wrap: normal; overflow-y: scroll;">
+                                <table class="table table-hover custom" id="notAssignedUsersTable" style="margin-bottom: 0; table-layout: fixed; width: 100%;">
                                     <thead class="hidden">
                                     <tr>
                                         <th></th>
@@ -60,14 +63,14 @@
                                     </tr>
                                     </thead>
                                     <tbody style="cursor: pointer;">
-                                        @foreach (var user in Model)
-                                        {
-                                            <tr>
-                                                <td class='first' data-jtable="@user.Id" style="word-wrap: break-word">@user.FirstName</td>
-                                                <td class="last" style="word-wrap: break-word">@user.LastName</td>
-                                                <td class="email" style="word-wrap: break-word">@user.Login</td>
-                                            </tr>
-                                        }
+                                    @foreach (var user in Model)
+                                    {
+                                        <tr>
+                                            <td class='first' data-jtable="@user.Id" style="word-wrap: break-word">@user.FirstName</td>
+                                            <td class="last" style="word-wrap: break-word">@user.LastName</td>
+                                            <td class="email" style="word-wrap: break-word">@user.Login</td>
+                                        </tr>
+                                    }
                                     </tbody>
                                 </table>
                             </div>
@@ -79,7 +82,7 @@
                     {
                         <button id="submitAssignUsers" type="submit" style="display: none;" class="btn btn-success button-narrow">Submit</button>
                     }
-                    <button type="reset" class = "btn btn-info button-narrow" id="closeModalButton">Close</button>
+                    <button type="reset" class="btn btn-info button-narrow" id="closeModalButton">Close</button>
                 </div>
             </div>
         }
@@ -87,14 +90,16 @@
 </div>
 
 <script>
-    $('table[id=notAssignedUsersTable] tr').click(function () {
-        if ($('form[id=assignUsersModalForm] input[type=checkbox]:checked').length > 0)
-            $('#submitAssignUsers').show();
-        else $('#submitAssignUsers').hide();
-    });
-    $('#closeModalButton').click(function() {
-        $('#asignUsersModalWindow').modal('hide');
-    });
+    $('table[id=notAssignedUsersTable] tr')
+        .click(function() {
+            if ($('form[id=assignUsersModalForm] input[type=checkbox]:checked').length > 0)
+                $('#submitAssignUsers').show();
+            else $('#submitAssignUsers').hide();
+        });
+    $('#closeModalButton')
+        .click(function() {
+            $('#asignUsersModalWindow').modal('hide');
+        });
     $('#asignUsersModalWindow').modal('show');
     $('.filter')
         .multifilter({

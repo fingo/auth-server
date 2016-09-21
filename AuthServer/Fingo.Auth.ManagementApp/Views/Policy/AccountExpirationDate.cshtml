@@ -2,14 +2,16 @@
 @using Fingo.Auth.DbAccess.Models.Policies.Enums
 @model Fingo.Auth.Domain.Policies.ConfigurationClasses.AccountExpirationDateConfiguration
 
-<div class="panel panel-success" style="margin-top:15px; margin-bottom:0">
-    <div class="panel-heading"><strong>Set account expiration date policy</strong></div>
+<div class="panel panel-success" style="margin-bottom: 0; margin-top: 15px;">
+    <div class="panel-heading">
+        <strong>Set account expiration date policy</strong>
+    </div>
     <div class="panel-body">
-        @using (Html.BeginForm("SaveAccountExpirationDatePolicy", "Policy", new { policy = Policy.AccountExpirationDate, projectId = ViewData["projectId"] }, FormMethod.Post, null, new { id = "accExpDateForm" }))
+        @using (Html.BeginForm("SaveAccountExpirationDatePolicy" , "Policy" , new {policy = Policy.AccountExpirationDate , projectId = ViewData["projectId"]} , FormMethod.Post , null , new {id = "accExpDateForm"}))
         {
             <div>
                 Enable account expiration date:
-                @Html.CheckBoxFor(m=>m.IsEnabled, new {@style = "margin-left: 5px;"})
+                @Html.CheckBoxFor(m => m.IsEnabled , new {style = "margin-left: 5px;"})
             </div>
             <button type="submit" class="btn btn-success pull-right button-narrow">Save</button>
         }

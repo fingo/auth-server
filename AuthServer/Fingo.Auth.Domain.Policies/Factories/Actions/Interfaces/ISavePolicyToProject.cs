@@ -5,6 +5,6 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Interfaces
 {
     public interface ISavePolicyToProject
     {
-        void Invoke(int projectId, Policy policy, PolicyConfiguration policyConfiguration);
+        void Invoke(int projectId , Policy policy , PolicyConfiguration policyConfiguration);
     }
 }

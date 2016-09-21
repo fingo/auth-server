@@ -6,19 +6,22 @@ using Fingo.Auth.Domain.Policies.Services.Interfaces;
 
 namespace Fingo.Auth.Domain.Policies.Factories.Implementation
 {
-    public class GetUserPolicyConfigurationOrDefaultFromProjectFactory:IGetUserPolicyConfigurationOrDefaultFromProjectFactory
+    public class GetUserPolicyConfigurationOrDefaultFromProjectFactory :
+        IGetUserPolicyConfigurationOrDefaultFromProjectFactory
     {
-        private readonly IUserRepository userRepository;
         private readonly IPolicyJsonConvertService policyJsonConvertService;
+        private readonly IUserRepository userRepository;
 
-        public GetUserPolicyConfigurationOrDefaultFromProjectFactory(IUserRepository userRepository, IPolicyJsonConvertService policyJsonConvertService)
+        public GetUserPolicyConfigurationOrDefaultFromProjectFactory(IUserRepository userRepository ,
+            IPolicyJsonConvertService policyJsonConvertService)
         {
             this.userRepository = userRepository;
             this.policyJsonConvertService = policyJsonConvertService;
         }
+
         public IGetUserPolicyConfigurationOrDefaultFromProject Create()
         {
-            return new GetUserPolicyConfigurationOrDefaultFromProject(userRepository,policyJsonConvertService);
+            return new GetUserPolicyConfigurationOrDefaultFromProject(userRepository , policyJsonConvertService);
         }
     }
 }

@@ -10,8 +10,8 @@ namespace Fingo.Auth.AuthServer.Client.Services.Implementation
 {
     public class RemoteTokenService : IRemoteTokenService
     {
-        private readonly IPostService _postService;
         private readonly ILogger<RemoteTokenService> _logger;
+        private readonly IPostService _postService;
 
         public RemoteTokenService(IPostService postService)
         {
@@ -21,35 +21,35 @@ namespace Fingo.Auth.AuthServer.Client.Services.Implementation
 
         public bool VerifyToken(string jwt)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>
+            var parameters = new Dictionary<string , string>
             {
-                {"jwt", jwt},
-                {"projectGuid", Configuration.Guid}
+                {"jwt" , jwt} ,
+                {"projectGuid" , Configuration.Guid}
             };
 
             JsonObject parsed;
             try
             {
-                string authServerAnswer = _postService.SendAndGetAnswer(Configuration.VerifyTokenAdress, parameters);
+                var authServerAnswer = _postService.SendAndGetAnswer(Configuration.VerifyTokenAdress , parameters);
                 parsed = JsonConvert.DeserializeObject<JsonObject>(authServerAnswer);
             }
             catch (Exception e)
             {
-                _logger.Log(LogLevel.Error,
+                _logger.Log(LogLevel.Error ,
                     $"<VerifyToken> _postService.SendAndGetAnswer({Configuration.VerifyTokenAdress}, parameters) threw a exception: {e.Message}, stacktrace: {e.StackTrace}");
                 return false;
             }
 
-            return parsed != null && parsed.Result == JsonValues.TokenValid;
+            return (parsed != null) && (parsed.Result == JsonValues.TokenValid);
         }
 
-        public string AcquireToken(string login, string password)
+        public string AcquireToken(string login , string password)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>
+            var parameters = new Dictionary<string , string>
             {
-                {"login", login},
-                {"password", password},
-                {"projectGuid", Configuration.Guid}
+                {"login" , login} ,
+                {"password" , password} ,
+                {"projectGuid" , Configuration.Guid}
             };
 
             string authServerAnswer;
@@ -57,7 +57,7 @@ namespace Fingo.Auth.AuthServer.Client.Services.Implementation
 
             try
             {
-                authServerAnswer = _postService.SendAndGetAnswer(Configuration.AcquireTokenAdress, parameters);
+                authServerAnswer = _postService.SendAndGetAnswer(Configuration.AcquireTokenAdress , parameters);
             }
             catch (Exception)
             {

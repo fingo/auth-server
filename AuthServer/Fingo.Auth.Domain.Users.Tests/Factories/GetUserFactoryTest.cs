@@ -15,7 +15,7 @@ namespace Fingo.Auth.Domain.Users.Tests.Factories
         {
             //Arrange
 
-            Mock<IUserRepository> userMock = new Mock<IUserRepository>();
+            var userMock = new Mock<IUserRepository>();
 
             //Act
 

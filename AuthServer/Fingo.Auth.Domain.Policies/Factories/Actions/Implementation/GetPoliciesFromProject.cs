@@ -11,16 +11,17 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Implementation
 {
     public class GetPoliciesFromProject : IGetPoliciesFromProject
     {
-        private readonly IProjectRepository projectRepository;
         private readonly IPolicyJsonConvertService jsonConvertService;
+        private readonly IProjectRepository projectRepository;
 
-        public GetPoliciesFromProject(IProjectRepository projectRepository, IPolicyJsonConvertService jsonConvertService)
+        public GetPoliciesFromProject(IProjectRepository projectRepository ,
+            IPolicyJsonConvertService jsonConvertService)
         {
             this.projectRepository = projectRepository;
             this.jsonConvertService = jsonConvertService;
         }
 
-        public List<Tuple<Policy, PolicyConfiguration>> Invoke(int projectId)
+        public List<Tuple<Policy , PolicyConfiguration>> Invoke(int projectId)
         {
             var project = projectRepository.GetById(projectId);
             if (project == null)
@@ -29,14 +30,15 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Implementation
             try
             {
                 return project.ProjectPolicies
-                    .Select(pp => new Tuple<Policy, PolicyConfiguration>
-                        (pp.Policy, jsonConvertService.Deserialize(pp.Policy, pp.SerializedProjectPolicySetting)))
+                    .Select(pp => new Tuple<Policy , PolicyConfiguration>
+                        (pp.Policy , jsonConvertService.Deserialize(pp.Policy , pp.SerializedProjectPolicySetting)))
                     .ToList();
             }
             catch (Exception e)
             {
-                throw new Exception($"There was a problem with deserializing policy configurations of project with id: {projectId}, " +
-                                    $"exception message: {e.Message}.");
+                throw new Exception(
+                    $"There was a problem with deserializing policy configurations of project with id: {projectId}, " +
+                    $"exception message: {e.Message}.");
             }
         }
     }

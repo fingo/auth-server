@@ -2,10 +2,10 @@
 {
     public enum Policy
     {
-        PasswordExpirationDate,
-        AccountExpirationDate,
-        MinimumPasswordLength,
-        RequiredPasswordCharacters,
+        PasswordExpirationDate ,
+        AccountExpirationDate ,
+        MinimumPasswordLength ,
+        RequiredPasswordCharacters ,
         ExcludeCommonPasswords
     }
 }

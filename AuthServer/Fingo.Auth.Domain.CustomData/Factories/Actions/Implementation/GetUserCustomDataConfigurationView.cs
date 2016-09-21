@@ -15,19 +15,19 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Actions.Implementation
 {
     public class GetUserCustomDataConfigurationView : IGetUserCustomDataConfigurationView
     {
-        private readonly IProjectRepository projectRepository;
         private readonly ICustomDataJsonConvertService jsonConvertService;
+        private readonly IProjectRepository projectRepository;
         private readonly IUserCustomDataRepository userCustomDataRepository;
 
-        public GetUserCustomDataConfigurationView(IProjectRepository projectRepository,
-            ICustomDataJsonConvertService jsonConvertService, IUserCustomDataRepository userCustomDataRepository)
+        public GetUserCustomDataConfigurationView(IProjectRepository projectRepository ,
+            ICustomDataJsonConvertService jsonConvertService , IUserCustomDataRepository userCustomDataRepository)
         {
             this.projectRepository = projectRepository;
             this.jsonConvertService = jsonConvertService;
             this.userCustomDataRepository = userCustomDataRepository;
         }
 
-        public UserConfigurationView Invoke(int projectId, int userId, ConfigurationType configurationType,
+        public UserConfigurationView Invoke(int projectId , int userId , ConfigurationType configurationType ,
             string configurationName)
         {
             var project = projectRepository.GetByIdWithCustomDatas(projectId);
@@ -43,49 +43,50 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Actions.Implementation
             switch (configurationType)
             {
                 case ConfigurationType.Boolean:
-                    {
-                        BooleanUserConfiguration userConfiguration = (BooleanUserConfiguration)
-                            jsonConvertService.DeserializeUser(ConfigurationType.Boolean,
-                                userCustomConfiguration.SerializedConfiguration);
+                {
+                    var userConfiguration = (BooleanUserConfiguration)
+                        jsonConvertService.DeserializeUser(ConfigurationType.Boolean ,
+                            userCustomConfiguration.SerializedConfiguration);
 
-                        return new BooleanUserConfigurationView()
-                        {
-                            ProjectId = projectId,
-                            UserId = userId,
-                            ConfigurationName = configurationName,
-                            CurrentValue = userConfiguration.Value
-                        };
-                    }
+                    return new BooleanUserConfigurationView
+                    {
+                        ProjectId = projectId ,
+                        UserId = userId ,
+                        ConfigurationName = configurationName ,
+                        CurrentValue = userConfiguration.Value
+                    };
+                }
                 case ConfigurationType.Number:
-                    {
-                        NumberProjectConfiguration projectConfiguration =
-                            (NumberProjectConfiguration)
-                            jsonConvertService.DeserializeProject(ConfigurationType.Number,
-                                project.ProjectCustomData.FirstOrDefault(m => m.ConfigurationName == configurationName)
-                                    .SerializedConfiguration);
-                        NumberUserConfiguration userConfiguration =
-                            (NumberUserConfiguration)
-                            jsonConvertService.DeserializeUser(ConfigurationType.Number ,
-                                userCustomConfiguration.SerializedConfiguration);
+                {
+                    var projectConfiguration =
+                        (NumberProjectConfiguration)
+                        jsonConvertService.DeserializeProject(ConfigurationType.Number ,
+                            project.ProjectCustomData.FirstOrDefault(m => m.ConfigurationName == configurationName)
+                                .SerializedConfiguration);
+                    var userConfiguration =
+                        (NumberUserConfiguration)
+                        jsonConvertService.DeserializeUser(ConfigurationType.Number ,
+                            userCustomConfiguration.SerializedConfiguration);
 
-                        return new NumberUserConfigurationView()
-                        {
-                            ProjectId = projectId,
-                            UserId = userId,
-                            ConfigurationName = configurationName,
-                            CurrentValue = userConfiguration.Value,
-                            LowerBound = projectConfiguration.LowerBound,
-                            UpperBound = projectConfiguration.UpperBound
-                        };
-                    }
+                    return new NumberUserConfigurationView
+                    {
+                        ProjectId = projectId ,
+                        UserId = userId ,
+                        ConfigurationName = configurationName ,
+                        CurrentValue = userConfiguration.Value ,
+                        LowerBound = projectConfiguration.LowerBound ,
+                        UpperBound = projectConfiguration.UpperBound
+                    };
+                }
                 case ConfigurationType.Text:
                 {
-                    TextProjectConfiguration projectConfiguration =
+                    var projectConfiguration =
                         (TextProjectConfiguration) jsonConvertService.DeserializeProject(ConfigurationType.Text ,
-                            project.ProjectCustomData.FirstOrDefault(m => m.ConfigurationName == configurationName && m.ProjectId==projectId)
+                            project.ProjectCustomData.FirstOrDefault(
+                                    m => (m.ConfigurationName == configurationName) && (m.ProjectId == projectId))
                                 .SerializedConfiguration);
 
-                    TextUserConfiguration userConfiguration =
+                    var userConfiguration =
                         (TextUserConfiguration)
                         jsonConvertService.DeserializeUser(ConfigurationType.Text ,
                             userCustomConfiguration.SerializedConfiguration);
@@ -97,7 +98,7 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Actions.Implementation
 
                     possibleValues.AddRange(projectConfiguration.PossibleValues);
 
-                    return new TextUserConfigurationView()
+                    return new TextUserConfigurationView
                     {
                         ProjectId = projectId ,
                         UserId = userId ,
@@ -106,7 +107,6 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Actions.Implementation
                         PossibleValuesList = possibleValues
                     };
                 }
-
             }
 
             throw new Exception($"Something went wrong in GetUserConfigurationViewForUser");

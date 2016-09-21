@@ -6,7 +6,7 @@ namespace Fingo.Auth.Domain.Models.UserModels
     {
         public string Email { get; set; }
 
-        
+
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

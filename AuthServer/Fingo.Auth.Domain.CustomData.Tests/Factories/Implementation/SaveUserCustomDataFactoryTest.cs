@@ -16,12 +16,13 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Implementation
         {
             //Arrange
 
-            Mock<ICustomDataJsonConvertService> customDataJsonConvertServiceMock = new Mock<ICustomDataJsonConvertService>();
-            Mock<IUserCustomDataRepository> userMock = new Mock<IUserCustomDataRepository>();
+            var customDataJsonConvertServiceMock = new Mock<ICustomDataJsonConvertService>();
+            var userMock = new Mock<IUserCustomDataRepository>();
 
             //Act
 
-            ISaveUserCustomDataFactory target = new SaveUserCustomDataFactory(userMock.Object, customDataJsonConvertServiceMock.Object);
+            ISaveUserCustomDataFactory target = new SaveUserCustomDataFactory(userMock.Object ,
+                customDataJsonConvertServiceMock.Object);
             var result = target.Create();
 
             //Assert

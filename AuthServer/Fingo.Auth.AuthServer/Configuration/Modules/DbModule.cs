@@ -6,7 +6,7 @@ using Fingo.Auth.DbAccess.Repository.Interfaces;
 
 namespace Fingo.Auth.AuthServer.Configuration.Modules
 {
-    public class DbModule:Autofac.Module
+    public class DbModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

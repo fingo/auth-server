@@ -8,9 +8,10 @@ namespace Fingo.Auth.Domain.Projects.Factories.Implementation
 {
     public class DeleteProjectFactory : IDeleteProjectFactory
     {
-        private readonly IProjectRepository _repository;
         private readonly IEventBus _eventBus;
-        public DeleteProjectFactory(IProjectRepository repository,IEventBus eventBus)
+        private readonly IProjectRepository _repository;
+
+        public DeleteProjectFactory(IProjectRepository repository , IEventBus eventBus)
         {
             _repository = repository;
             _eventBus = eventBus;
@@ -18,7 +19,7 @@ namespace Fingo.Auth.Domain.Projects.Factories.Implementation
 
         public IDeleteProject Create()
         {
-            return new DeleteProject(_repository,_eventBus);
+            return new DeleteProject(_repository , _eventBus);
         }
     }
 }

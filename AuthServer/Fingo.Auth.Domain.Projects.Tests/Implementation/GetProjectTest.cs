@@ -16,12 +16,12 @@ namespace Fingo.Auth.Domain.Projects.Tests.Implementation
         {
             //Arrange
 
-            Mock<IProjectRepository> mockRepository=new Mock<IProjectRepository>();
-            mockRepository.Setup(m => m.GetById(It.IsAny<int>())).Returns(new Project()
+            var mockRepository = new Mock<IProjectRepository>();
+            mockRepository.Setup(m => m.GetById(It.IsAny<int>())).Returns(new Project
             {
                 Id = 1 ,
                 Name = "pierwszy" ,
-                Information = new ClientInformation() { ContactData = "contactData1" },
+                Information = new ClientInformation {ContactData = "contactData1"} ,
                 Status = ProjectStatus.Active
             });
             IGetProject service = new GetProject(mockRepository.Object);

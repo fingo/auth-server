@@ -4,18 +4,18 @@ namespace Fingo.Auth.Domain.Infrastructure.EventBus.Events.User
 {
     public class UserChangedPassword : EventBase
     {
-        public UserChangedPassword(int userId, string firstName, string lastName)
+        public UserChangedPassword(int userId , string firstName , string lastName)
         {
             UserId = userId;
             FirstName = firstName;
             LastName = lastName;
         }
 
-        public int UserId { get; private set; }
+        public int UserId { get; }
 
-        public string FirstName { get; private set; }
+        public string FirstName { get; }
 
-        public string LastName { get; private set; }
+        public string LastName { get; }
 
         public override string ToString()
         {

@@ -11,11 +11,13 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Implementation
     public class GetAllCustomDataFromProjectFactoryTest
     {
         [Fact]
-        public void GetAllCustomDataFromProjectFactory_Should_Return_Instance_Of_GetAllCustomDataFromProject_Given_By_IGetAllCustomDataFromProject()
+        public void
+            GetAllCustomDataFromProjectFactory_Should_Return_Instance_Of_GetAllCustomDataFromProject_Given_By_IGetAllCustomDataFromProject
+            ()
         {
             //Arrange
 
-            Mock<IProjectRepository> projectMock = new Mock<IProjectRepository>();
+            var projectMock = new Mock<IProjectRepository>();
 
             //Act
 

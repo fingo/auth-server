@@ -13,8 +13,8 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Actions.Implementation
 {
     public class EditProjectCustomDataToProject : IEditProjectCustomDataToProject
     {
-        private readonly IProjectRepository _projectRepository;
         private readonly ICustomDataJsonConvertService _jsonConvertService;
+        private readonly IProjectRepository _projectRepository;
 
         public EditProjectCustomDataToProject(IProjectRepository projectRepository ,
             ICustomDataJsonConvertService jsonConvertService)
@@ -23,7 +23,7 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Actions.Implementation
             _projectRepository = projectRepository;
         }
 
-        public void Invoke(int projectId , string name , ConfigurationType type , ProjectConfiguration configuration,
+        public void Invoke(int projectId , string name , ConfigurationType type , ProjectConfiguration configuration ,
             string oldName)
         {
             var project = _projectRepository.GetByIdWithCustomDatas(projectId);
@@ -32,9 +32,7 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Actions.Implementation
 
             var customData = project.ProjectCustomData.FirstOrDefault(data => data.ConfigurationName == oldName);
             if (customData == null)
-            {
                 throw new Exception($"You cannot edit non-existing custom data (name: {oldName}).");
-            }
 
             customData.ConfigurationName = name;
             customData.ConfigurationType = type;
@@ -65,7 +63,7 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Actions.Implementation
                     break;
                 }
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                    throw new ArgumentOutOfRangeException(nameof(type) , type , null);
             }
         }
 
@@ -95,21 +93,21 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Actions.Implementation
         //    }
         //}
 
-        private void EditNumberConfigurationToUsers(NumberProjectConfiguration configuration, Project project,
+        private void EditNumberConfigurationToUsers(NumberProjectConfiguration configuration , Project project ,
             string configurationName)
         {
-            var projectCustomData = project.ProjectCustomData.FirstOrDefault(m => m.ConfigurationName == configurationName);
+            var projectCustomData =
+                project.ProjectCustomData.FirstOrDefault(m => m.ConfigurationName == configurationName);
             foreach (var userCustomData in projectCustomData.UserCustomData)
-            {
                 try
                 {
                     var userConfiguration =
                         (NumberUserConfiguration)
-                        _jsonConvertService.DeserializeUser(ConfigurationType.Number,
+                        _jsonConvertService.DeserializeUser(ConfigurationType.Number ,
                             userCustomData.SerializedConfiguration);
 
-                    var userValueUpdateIsNeeded = userConfiguration.Value < configuration.LowerBound ||
-                                                      userConfiguration.Value > configuration.UpperBound;
+                    var userValueUpdateIsNeeded = (userConfiguration.Value < configuration.LowerBound) ||
+                                                  (userConfiguration.Value > configuration.UpperBound);
 
                     if (!userValueUpdateIsNeeded)
                         continue;
@@ -122,14 +120,14 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Actions.Implementation
                 {
                     //ignore
                 }
-            }
         }
 
-        private void EditTextConfigurationToUsers(TextProjectConfiguration configuration, Project project, string configurationName)
+        private void EditTextConfigurationToUsers(TextProjectConfiguration configuration , Project project ,
+            string configurationName)
         {
-            var projectCustomData = project.ProjectCustomData.FirstOrDefault(m => m.ConfigurationName == configurationName);
+            var projectCustomData =
+                project.ProjectCustomData.FirstOrDefault(m => m.ConfigurationName == configurationName);
             foreach (var userCustomData in projectCustomData.UserCustomData)
-            {
                 try
                 {
                     var userConfiguration =
@@ -138,7 +136,7 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Actions.Implementation
                             userCustomData.SerializedConfiguration);
 
                     var userValueUpdateIsNeeded = !(configuration.PossibleValues.Contains(userConfiguration.Value) ||
-                                                    configuration.Default == userConfiguration.Value);
+                                                    (configuration.Default == userConfiguration.Value));
 
                     if (!userValueUpdateIsNeeded)
                         continue;
@@ -151,7 +149,6 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Actions.Implementation
                 {
                     //ignore
                 }
-            }
         }
     }
 }

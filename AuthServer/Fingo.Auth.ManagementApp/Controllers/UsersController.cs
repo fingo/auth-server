@@ -19,23 +19,27 @@ namespace Fingo.Auth.ManagementApp.Controllers
     [Route("users")]
     public class UsersController : BaseController
     {
-        private readonly IGetProjectFactory getProjectFactory;
-        private readonly IGetUserFactory _getUserFactory;
-        private readonly IGetAllUserFactory getAllUserFactory;
-        private readonly ICsvService csvService;
         private readonly IAddImportedUsersFactory addImportedUsersFactory;
+        private readonly ICsvService csvService;
+        private readonly IGetAddressForSetPasswordFactory getAddressForSetPasswordFactory;
+        private readonly IGetAllUserFactory getAllUserFactory;
+        private readonly IGetProjectFactory getProjectFactory;
+        private readonly IGetUserFactory getUserFactory;
         private readonly IMessageSender messageSender;
 
         public UsersController(IGetProjectFactory getProjectFactory , IGetAllUserFactory getAllUserFactory ,
-            IEventWatcher eventWatcher , IGetUserFactory getUserFactory , IAddImportedUsersFactory addImportedUsersFactory,
-            ICsvService csvService, IEventBus eventBus , IMessageSender messageSender,
+            IEventWatcher eventWatcher , IGetUserFactory getUserFactory ,
+            IAddImportedUsersFactory addImportedUsersFactory ,
+            IGetAddressForSetPasswordFactory getAddressForSetPasswordFactory ,
+            ICsvService csvService , IEventBus eventBus , IMessageSender messageSender ,
             ILogger<UsersController> logger) : base(eventWatcher , eventBus)
         {
             this.getProjectFactory = getProjectFactory;
-            _getUserFactory = getUserFactory;
+            this.getUserFactory = getUserFactory;
             this.getAllUserFactory = getAllUserFactory;
             this.csvService = csvService;
-            this.addImportedUsersFactory= addImportedUsersFactory;
+            this.addImportedUsersFactory = addImportedUsersFactory;
+            this.getAddressForSetPasswordFactory = getAddressForSetPasswordFactory;
             this.messageSender = messageSender;
 
             eventBus.SubscribeAll(m => logger.Log(LogLevel.Information , $"Event message:{m.ToString()}"));
@@ -53,8 +57,8 @@ namespace Fingo.Auth.ManagementApp.Controllers
         [HttpGet("getByLogin")]
         public IActionResult GetByLogin(string login)
         {
-           var userID = getAllUserFactory.Create().Invoke().FirstOrDefault(x => x.Login == login).Id;
-           return RedirectToAction("GetById", new { id = userID });
+            var userID = getAllUserFactory.Create().Invoke().FirstOrDefault(x => x.Login == login).Id;
+            return RedirectToAction("GetById" , new {id = userID});
         }
 
         [HttpGet("{id}")]
@@ -62,7 +66,7 @@ namespace Fingo.Auth.ManagementApp.Controllers
         {
             try
             {
-                var user = _getUserFactory.Create().Invoke(id);
+                var user = getUserFactory.Create().Invoke(id);
                 return View("UserDetails" , user);
             }
             catch (Exception)
@@ -74,48 +78,57 @@ namespace Fingo.Auth.ManagementApp.Controllers
 
         [HttpPost]
         [Route("import/{projectId}")]
-        public IActionResult Import(IFormFile file, int projectId)
+        public IActionResult Import(IFormFile file , int projectId)
         {
             try
             {
                 var usersAdded = 0;
                 var usersDuplicated = 0;
                 var importedUsers = csvService.CsvToUsersList(file);
-                var userAddedEmails = new List<Tuple<string,string>>();
+                var userAddedEmails = new List<Tuple<string , string>>();
                 var projectName = getProjectFactory.Create().Invoke(projectId).Name;
+                var setPasswordAddress = getAddressForSetPasswordFactory.Create().Invoke(projectId);
 
-                addImportedUsersFactory.Create().Invoke(importedUsers, projectId, ref usersAdded, ref usersDuplicated, ref userAddedEmails);
+                addImportedUsersFactory.Create()
+                    .Invoke(importedUsers , projectId , ref usersAdded , ref usersDuplicated , ref userAddedEmails);
 
                 var content = $"\na new account has been created for you in {projectName} project.\n";
 
                 foreach (var userAddedEmail in userAddedEmails)
-                    SendMessageAboutImportUser(projectName, content, userAddedEmail.Item1, userAddedEmail.Item2);
+                    SendMessageAboutImportUser(projectName , setPasswordAddress , content , userAddedEmail.Item1 ,
+                        userAddedEmail.Item2);
 
                 if (usersAdded == importedUsers.Count)
-                    Alert(AlertType.Success, $"All loaded users ({usersAdded}) were added correctly.");
+                    Alert(AlertType.Success , $"All loaded users ({usersAdded}) were added correctly.");
                 else
-                    Alert(AlertType.Information, $"Successfully added {usersAdded} users. {usersDuplicated} users were not added " +
-                                                 $"because of being a duplicate, {importedUsers.Count - usersAdded - usersDuplicated} " +
-                                                 $"were not added because of having not valid e-mail adress.");
+                    Alert(AlertType.Information ,
+                        $"Successfully added {usersAdded} users. {usersDuplicated} users were not added " +
+                        $"because of being a duplicate, {importedUsers.Count - usersAdded - usersDuplicated} " +
+                        $"were not added because of having not valid e-mail adress.");
 
-                return RedirectToAction("GetById", "Projects", new { id = projectId });
+                return RedirectToAction("GetById" , "Projects" , new {id = projectId});
             }
-            catch (Exception ex)
+            catch (FormatException)
             {
-                Alert(AlertType.Warning, $"Something went wrong ({ex.Message}).");
-                return RedirectToAction("GetById", "Projects", new { id = projectId });
+                Alert(AlertType.Warning , "Wrong file format. Each line must contain two and only two tab characters.");
+                return RedirectToAction("GetById" , "Projects" , new {id = projectId});
+            }
+            catch (Exception)
+            {
+                Alert(AlertType.Warning , "Something went wrong.");
+                return RedirectToAction("GetById" , "Projects" , new {id = projectId});
             }
         }
 
 
         [HttpGet("getAllProjectsFormUser")]
-        public IActionResult GetProjectsFromUser(int id, int pageSize = 10, int page = 1)
+        public IActionResult GetProjectsFromUser(int id , int pageSize = 10 , int page = 1)
         {
             ViewBag.RowsPerPage = pageSize;
             ViewBag.Number = pageSize * page - pageSize;
             try
             {
-                var projects = _getUserFactory.Create().Invoke(id).Projects.AsEnumerable();
+                var projects = getUserFactory.Create().Invoke(id).Projects.AsEnumerable();
 
                 ViewBag.Id = id;
                 ViewBag.UsersCount = projects.Count() / pageSize;
@@ -125,7 +138,7 @@ namespace Fingo.Auth.ManagementApp.Controllers
                 projects = projects.OrderBy(m => m.Id).Skip(pageSize * (page - 1)).Take(pageSize);
 
 
-                return PartialView("Partial/AllProjectFromUser", projects);
+                return PartialView("Partial/AllProjectFromUser" , projects);
             }
             catch
             {
@@ -135,7 +148,8 @@ namespace Fingo.Auth.ManagementApp.Controllers
 
 
         [HttpGet("UsersWithCollapseProject")]
-        public IActionResult UsersWithCollapseProjectParialView(string firstName, string lastName, string login, int pageSize = 10, int page = 1)
+        public IActionResult UsersWithCollapseProjectParialView(string firstName , string lastName , string login ,
+            int pageSize = 10 , int page = 1)
         {
             ViewBag.FirstName = firstName;
             ViewBag.LastName = lastName;
@@ -145,7 +159,7 @@ namespace Fingo.Auth.ManagementApp.Controllers
 
             var users = getAllUserFactory.Create().Invoke();
 
-            users = FilterUsers(firstName, lastName, login, users);
+            users = FilterUsers(firstName , lastName , login , users);
 
             ViewBag.UsersCount = users.Count() / pageSize;
             ViewBag.Page = page;
@@ -153,10 +167,11 @@ namespace Fingo.Auth.ManagementApp.Controllers
 
             users = users.OrderBy(m => m.Id).Skip(pageSize * (page - 1)).Take(pageSize);
 
-            return PartialView("Partial/UsersTableWithCollapseProjectPartial", users);
+            return PartialView("Partial/UsersTableWithCollapseProjectPartial" , users);
         }
 
-        private IEnumerable<BaseUserModel> FilterUsers(string firstName, string lastName, string login, IEnumerable<BaseUserModel> users)
+        private IEnumerable<BaseUserModel> FilterUsers(string firstName , string lastName , string login ,
+            IEnumerable<BaseUserModel> users)
         {
             if (!string.IsNullOrEmpty(firstName))
                 users = users.Where(m => m.FirstName.ToLower().Contains(firstName.ToLower()));
@@ -167,14 +182,17 @@ namespace Fingo.Auth.ManagementApp.Controllers
             return users;
         }
 
-        private void SendMessageAboutImportUser(string projectName, string content, string email, string activationToken)
+        private void SendMessageAboutImportUser(string projectName , string setPasswordAddress , string content ,
+            string email , string activationToken)
         {
-            var emailContent = messageSender.CreateContent(content+EmailConfiguration.ContentSetPassword
-                    + EmailConfiguration.SetPassword + activationToken, EmailConfiguration.Greeting, EmailConfiguration.Sender);
+            var emailContent = messageSender.CreateContent(content + EmailConfiguration.ContentSetPassword
+                                                           + setPasswordAddress + activationToken ,
+                EmailConfiguration.Greeting , EmailConfiguration.Sender);
 
-            var message = messageSender.CreateMessage(projectName, email, EmailConfiguration.Sender,
-               EmailConfiguration.SenderEmail, EmailConfiguration.NewAccountCreated, emailContent);
-            messageSender.SendEmail(message, EmailConfiguration.ServerEmail, EmailConfiguration.ServerPassword, EmailConfiguration.ServerName, 465);
+            var message = messageSender.CreateMessage(projectName , email , EmailConfiguration.Sender ,
+                EmailConfiguration.SenderEmail , EmailConfiguration.NewAccountCreated , emailContent);
+            messageSender.SendEmail(message , EmailConfiguration.ServerEmail , EmailConfiguration.ServerPassword ,
+                EmailConfiguration.ServerName , 465);
         }
     }
 }

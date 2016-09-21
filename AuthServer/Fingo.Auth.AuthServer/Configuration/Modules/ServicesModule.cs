@@ -10,7 +10,7 @@ using Fingo.Auth.Domain.Users.Services.Interfaces;
 
 namespace Fingo.Auth.AuthServer.Configuration.Modules
 {
-    public class ServicesModule : Autofac.Module
+    public class ServicesModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
@@ -24,7 +24,9 @@ namespace Fingo.Auth.AuthServer.Configuration.Modules
             builder.RegisterType<JwtLibraryWrapperService>().As<IJwtLibraryWrapperService>().InstancePerDependency();
             builder.RegisterType<PolicyJsonConvertService>().As<IPolicyJsonConvertService>().InstancePerDependency();
             builder.RegisterType<HashingService>().As<IHashingService>().InstancePerDependency();
-            builder.RegisterType<CustomDataJsonConvertService>().As<ICustomDataJsonConvertService>().InstancePerDependency();
+            builder.RegisterType<CustomDataJsonConvertService>()
+                .As<ICustomDataJsonConvertService>()
+                .InstancePerDependency();
             builder.RegisterType<SetDefaultUserCustomDataBasedOnProject>().As<ISetDefaultUserCustomDataBasedOnProject>();
         }
     }

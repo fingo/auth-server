@@ -9,6 +9,7 @@ namespace Fingo.Auth.Domain.Users.Implementation
     public class GetProjectsFromUser : IGetProjectsFromUser
     {
         private readonly IUserRepository userRepository;
+
         public GetProjectsFromUser(IUserRepository userRepository)
         {
             this.userRepository = userRepository;

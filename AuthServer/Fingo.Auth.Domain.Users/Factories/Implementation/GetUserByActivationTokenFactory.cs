@@ -8,6 +8,7 @@ namespace Fingo.Auth.Domain.Users.Factories.Implementation
     public class GetUserByActivationTokenFactory : IGetUserByActivationTokenFactory
     {
         private readonly IUserRepository _repository;
+
         public GetUserByActivationTokenFactory(IUserRepository repository)
         {
             _repository = repository;

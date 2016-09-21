@@ -3,7 +3,7 @@ using Fingo.Auth.Domain.Projects.Interfaces;
 
 namespace Fingo.Auth.Domain.Projects.Factories.Interfaces
 {
-    public interface IGetProjectWithCustomDataFactory:IActionFactory
+    public interface IGetProjectWithCustomDataFactory : IActionFactory
     {
         IGetProjectWithCustomData Create();
     }

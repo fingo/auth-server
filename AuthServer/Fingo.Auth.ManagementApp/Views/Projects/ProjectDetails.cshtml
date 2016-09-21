@@ -50,25 +50,25 @@
                     {
                         <table class="table table-striped">
                             <tbody>
-                                @foreach (var policy in Model.Policies)
-                                {
-                                    <tr>
-                                        <td style="vertical-align: middle;">
-                                            @PolicyData.Name[policy]
-                                        </td>
-                                        <td style="text-align: right;">
-                                            @if (policy == Policy.ExcludeCommonPasswords)
-                                            {
-                                                <button type="button" data-toggle="tooltip" title="This policy has no configuration." class="btn btn-success button-narrow disabled">Configure</button>
-                                            }
-                                            else
-                                            {
-                                                <button type="button" class="btn btn-success button-narrow" onclick="GetPolicyModalWindow(@Model.Id, '@Crud.Edit', '@policy')">Configure</button>
-                                            }
-                                            <button type="button" class="btn btn-success button-narrow" onclick="GetPolicyModalWindow(@Model.Id, '@Crud.Delete', '@policy')">Remove</button>
-                                        </td>
-                                    </tr>
-                                }
+                            @foreach (var policy in Model.Policies)
+                            {
+                                <tr>
+                                    <td style="vertical-align: middle;">
+                                        @PolicyData.Name[policy]
+                                    </td>
+                                    <td style="text-align: right;">
+                                        @if (policy == Policy.ExcludeCommonPasswords)
+                                        {
+                                            <button type="button" data-toggle="tooltip" title="This policy has no configuration." class="btn btn-success button-narrow disabled">Configure</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-success button-narrow" onclick="GetPolicyModalWindow(@Model.Id, '@Crud.Edit', '@policy')">Configure</button>
+                                        }
+                                        <button type="button" class="btn btn-success button-narrow" onclick="GetPolicyModalWindow(@Model.Id, '@Crud.Delete', '@policy')">Remove</button>
+                                    </td>
+                                </tr>
+                            }
                             </tbody>
                         </table>
                     }
@@ -91,26 +91,26 @@
                     {
                         <table class="table table-striped">
                             <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Type</th>
-                                    <th></th>
-                                </tr>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th></th>
+                            </tr>
                             </thead>
                             <tbody>
-                                @foreach (var data in Model.Data)
-                                {
-                                    <tr>
-                                        <td style="vertical-align: middle;">
-                                            @data.ConfigurationName
-                                        </td>
-                                        <td style="vertical-align: middle;">@data.ConfigurationType.ToString().ToLower()</td>
-                                        <td style="text-align: right;">
-                                            <button type="button" class="btn btn-success button-narrow" onclick="GetCustomDataModalWindow(@Model.Id, '@Crud.Edit', '@data.ConfigurationName', '@data.ConfigurationType')">Configure</button>
-                                            <button type="button" class="btn btn-success button-narrow" onclick="GetCustomDataModalWindow(@Model.Id, '@Crud.Delete', '@data.ConfigurationName')">Remove</button>
-                                        </td>
-                                    </tr>
-                                }
+                            @foreach (var data in Model.Data)
+                            {
+                                <tr>
+                                    <td style="vertical-align: middle;">
+                                        @data.ConfigurationName
+                                    </td>
+                                    <td style="vertical-align: middle;">@data.ConfigurationType.ToString().ToLower()</td>
+                                    <td style="text-align: right;">
+                                        <button type="button" class="btn btn-success button-narrow" onclick="GetCustomDataModalWindow(@Model.Id, '@Crud.Edit', '@data.ConfigurationName', '@data.ConfigurationType')">Configure</button>
+                                        <button type="button" class="btn btn-success button-narrow" onclick="GetCustomDataModalWindow(@Model.Id, '@Crud.Delete', '@data.ConfigurationName')">Remove</button>
+                                    </td>
+                                </tr>
+                            }
                             </tbody>
                         </table>
                     }
@@ -126,7 +126,7 @@
                         User list
                     </h3>
                     <div class="pull-right">
-                        @Html.ActionLink("Export users", "Export", "Projects", new { projectId = Model.Id }, new { @class = "btn btn-success button-wide" })
+                        @Html.ActionLink("Export users" , "Export" , "Projects" , new {projectId = Model.Id} , new {@class = "btn btn-success button-wide"})
                         <button type="button" class="btn btn-success button-wide" onclick="GetUserModalWindow('@ModalWidows.ImportUsersFromCsv', @Model.Id)">Import users</button>
                         <button type="button" class="btn btn-success button-wide" onclick="GetUserModalWindow('@ModalWidows.AssignUsers', @Model.Id)">Assign users</button>
                     </div>
@@ -143,16 +143,17 @@
 
 @section scripts
 {
-    <link href="~/css/jquery.bs_pagination.css" rel="stylesheet" />
+    <link href="~/css/jquery.bs_pagination.css" rel="stylesheet"/>
     <script src="~/js/jquery.bs_pagination.js"></script>
     <script src="~/js/localization/en.js"></script>
 
     <script>
-        $(document).ready(function(){
-            $('[data-toggle="tooltip"]').tooltip();
-        });
+        $(document)
+            .ready(function() {
+                $('[data-toggle="tooltip"]').tooltip();
+            });
 
-        $(document).ready(function () { GetUsersWithProjects(); });
+        $(document).ready(function() { GetUsersWithProjects(); });
 
         function GetUsersWithProjects() {
             var apiUrl = "/projects/userInProject";
@@ -270,7 +271,7 @@
 
         function GetUserCustomDataModalWindow(projectId, userId) {
             var apiUrl = "/ModalWindow/userCustomData";
-            var data = {projectId: projectId, userId: userId };
+            var data = { projectId: projectId, userId: userId };
             $.ajaxLoading({
                 url: apiUrl,
                 type: 'GET',

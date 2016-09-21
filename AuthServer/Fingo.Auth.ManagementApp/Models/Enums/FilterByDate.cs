@@ -2,9 +2,9 @@
 {
     public enum FilterByDate
     {
-        All,
-        LastWeek,
-        LastMonth,
+        All ,
+        LastWeek ,
+        LastMonth ,
         Custom
     }
 }

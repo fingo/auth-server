@@ -6,12 +6,12 @@ using Fingo.Auth.Domain.Policies.Services.Interfaces;
 
 namespace Fingo.Auth.Domain.Policies.Factories.Implementation
 {
-    public class GetUserDataViewFactory: IGetUserDataViewFactory
+    public class GetUserDataViewFactory : IGetUserDataViewFactory
     {
-        private readonly IUserRepository userRepository;
         private readonly IPolicyJsonConvertService jsonConvertService;
+        private readonly IUserRepository userRepository;
 
-        public GetUserDataViewFactory(IUserRepository userRepository, IPolicyJsonConvertService jsonConvertService)
+        public GetUserDataViewFactory(IUserRepository userRepository , IPolicyJsonConvertService jsonConvertService)
         {
             this.userRepository = userRepository;
             this.jsonConvertService = jsonConvertService;
@@ -19,7 +19,7 @@ namespace Fingo.Auth.Domain.Policies.Factories.Implementation
 
         public IGetUserDataView Create()
         {
-            return new GetUserDataView(userRepository, jsonConvertService);
+            return new GetUserDataView(userRepository , jsonConvertService);
         }
     }
 }

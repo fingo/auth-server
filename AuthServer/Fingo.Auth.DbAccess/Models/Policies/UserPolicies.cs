@@ -2,7 +2,7 @@
 
 namespace Fingo.Auth.DbAccess.Models.Policies
 {
-    public class UserPolicies:BaseEntity
+    public class UserPolicies : BaseEntity
     {
         public string SerializedUserPolicySetting { get; set; }
 

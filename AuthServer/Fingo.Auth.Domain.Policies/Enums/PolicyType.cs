@@ -2,7 +2,7 @@
 {
     public enum PolicyType
     {
-        AccountCreation,
+        AccountCreation ,
         LogIn
     }
 }

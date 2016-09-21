@@ -2,9 +2,9 @@
 
 namespace Fingo.Auth.Domain.Infrastructure.EventBus.Events.User
 {
-    public class DuplicateUserImported:EventBase
+    public class DuplicateUserImported : EventBase
     {
-        public DuplicateUserImported(string firstName, string lastName, string login, int projectId)
+        public DuplicateUserImported(string firstName , string lastName , string login , int projectId)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -13,9 +13,9 @@ namespace Fingo.Auth.Domain.Infrastructure.EventBus.Events.User
         }
 
         public int ProjectId { get; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public string Login { get; private set; }
+        public string FirstName { get; }
+        public string LastName { get; }
+        public string Login { get; }
 
         public override string ToString()
         {

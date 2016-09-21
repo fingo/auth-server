@@ -5,9 +5,10 @@ using Fingo.Auth.DbAccess.Repository.Interfaces.CustomData;
 
 namespace Fingo.Auth.DbAccess.Repository.Implementation.CustomData
 {
-    public class ProjectCustomDataRepository : GenericRepository<ProjectCustomData>,IProjectCustomDataRepository
+    public class ProjectCustomDataRepository : GenericRepository<ProjectCustomData> , IProjectCustomDataRepository
     {
         private IAuthServerContext _db;
+
         public ProjectCustomDataRepository(IAuthServerContext context) : base(context)
         {
             _db = context;

@@ -10,17 +10,17 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Implementation
 {
     public class GetPolicyConfigurationOrDefaultFromProject : IGetPolicyConfigurationOrDefaultFromProject
     {
-        private readonly IProjectRepository projectRepository;
         private readonly IPolicyJsonConvertService jsonConvertService;
+        private readonly IProjectRepository projectRepository;
 
-        public GetPolicyConfigurationOrDefaultFromProject(IProjectRepository projectRepository,
+        public GetPolicyConfigurationOrDefaultFromProject(IProjectRepository projectRepository ,
             IPolicyJsonConvertService jsonConvertService)
         {
             this.projectRepository = projectRepository;
             this.jsonConvertService = jsonConvertService;
         }
 
-        public PolicyConfiguration Invoke(int projectId, Policy policy)
+        public PolicyConfiguration Invoke(int projectId , Policy policy)
         {
             var project = projectRepository.GetById(projectId);
             if (project == null)
@@ -28,18 +28,17 @@ namespace Fingo.Auth.Domain.Policies.Factories.Actions.Implementation
 
             var projectPolicy = project.ProjectPolicies.FirstOrDefault(pp => pp.Policy == policy);
             if (projectPolicy != null)
-            {
                 try
                 {
-                    return jsonConvertService.Deserialize(projectPolicy.Policy,
+                    return jsonConvertService.Deserialize(projectPolicy.Policy ,
                         projectPolicy.SerializedProjectPolicySetting);
                 }
                 catch (Exception e)
                 {
-                    throw new Exception($"There was a problem with deserializing policy configurations of project with id: {projectId}, " +
-                                        $"policy: {policy}, exception message: {e.Message}.");
+                    throw new Exception(
+                        $"There was a problem with deserializing policy configurations of project with id: {projectId}, " +
+                        $"policy: {policy}, exception message: {e.Message}.");
                 }
-            }
 
             switch (policy)
             {

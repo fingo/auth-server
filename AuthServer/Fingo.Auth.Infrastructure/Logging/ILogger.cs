@@ -2,6 +2,6 @@
 {
     public interface ILogger<T> where T : class
     {
-        void Log(LogLevel logLevel, string message);
+        void Log(LogLevel logLevel , string message);
     }
 }

@@ -1,13 +1,15 @@
 ﻿@model Fingo.Auth.Domain.CustomData.ConfigurationClasses.Project.BooleanProjectConfiguration
 
-<div class="panel panel-success" style="margin-top:15px; margin-bottom:0">
-    <div class="panel-heading"><strong>Set boolean data</strong></div>
+<div class="panel panel-success" style="margin-bottom: 0; margin-top: 15px;">
+    <div class="panel-heading">
+        <strong>Set boolean data</strong>
+    </div>
     <div class="panel-body">
-        @using (Html.BeginForm("SaveBooleanCustomData", "CustomData", new { projectId = ViewBag.ProjectId, crudOption=ViewBag.CrudOption }, FormMethod.Post))
+        @using (Html.BeginForm("SaveBooleanCustomData" , "CustomData" , new {projectId = ViewBag.ProjectId , crudOption = ViewBag.CrudOption} , FormMethod.Post))
         {
             <div style="max-width: 200px;">
-                @Html.Hidden("oldConfigurationName", (string) ViewBag.ConfigurationName)
-                <p>Name:@Html.TextBox("configurationName", (string) ViewBag.ConfigurationName)</p>
+                @Html.Hidden("oldConfigurationName" , (string) ViewBag.ConfigurationName)
+                <p>Name:@Html.TextBox("configurationName" , (string) ViewBag.ConfigurationName)</p>
             </div>
             <div style="max-width: 200px;">
                 <p>Default value is true: @Html.EditorFor(m => m.Default)</p>

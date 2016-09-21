@@ -12,16 +12,20 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Implementation
     public class GetCustomDataConfigurationOrDefaultForProjectFactoryTest
     {
         [Fact]
-        public void GetCustomDataConfigurationOrDefaultForProjectFactory_Should_Return_Instance_Of_GetCustomDataConfigurationOrDefaultForProject_Given_By_IGetCustomDataConfigurationOrDefaultForProject()
+        public void
+            GetCustomDataConfigurationOrDefaultForProjectFactory_Should_Return_Instance_Of_GetCustomDataConfigurationOrDefaultForProject_Given_By_IGetCustomDataConfigurationOrDefaultForProject
+            ()
         {
             //Arrange
 
-            Mock<ICustomDataJsonConvertService> customDataJsonConvertServiceMock = new Mock<ICustomDataJsonConvertService>();
-            Mock<IProjectRepository> projectMock = new Mock<IProjectRepository>();
+            var customDataJsonConvertServiceMock = new Mock<ICustomDataJsonConvertService>();
+            var projectMock = new Mock<IProjectRepository>();
 
             //Act
 
-            IGetCustomDataConfigurationOrDefaultForProjectFactory target = new GetCustomDataConfigurationOrDefaultForProjectFactory(projectMock.Object, customDataJsonConvertServiceMock.Object);
+            IGetCustomDataConfigurationOrDefaultForProjectFactory target =
+                new GetCustomDataConfigurationOrDefaultForProjectFactory(projectMock.Object ,
+                    customDataJsonConvertServiceMock.Object);
             var result = target.Create();
 
             //Assert

@@ -7,7 +7,6 @@ namespace Fingo.Auth.Domain.Models.ProjectModels
     {
         public ProjectDetailModel()
         {
-            
         }
 
         public ProjectDetailModel(Project project) : base(project)
@@ -16,10 +15,10 @@ namespace Fingo.Auth.Domain.Models.ProjectModels
             ContactData = project.Information?.ContactData;
         }
 
-        [MaxLength(100, ErrorMessage = "Too long name")]
+        [MaxLength(100 , ErrorMessage = "Too long name")]
         public string InformationName { get; set; }
 
-        [MaxLength(200, ErrorMessage = "Too long contact data")]
+        [MaxLength(200 , ErrorMessage = "Too long contact data")]
         public string ContactData { get; set; }
     }
 }

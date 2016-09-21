@@ -10,19 +10,21 @@ namespace Fingo.Auth.Domain.Users.Implementation
     public class GetUser : IGetUser
     {
         private readonly IUserRepository _repo;
+
         public GetUser(IUserRepository repo)
         {
             _repo = repo;
         }
+
         public BaseUserModelWithProjects Invoke(int id)
         {
             var user = _repo.GetById(id).WithoutStatuses(UserStatus.Deleted);
-            if(user==null)
+            if (user == null)
                 throw new ArgumentNullException($"Cannot find user with id={id}");
 
             var projects = _repo.GetAllProjectsFromUser(id).WithStatuses(ProjectStatus.Active);
 
-            var projectDetailWithUsersModel = new BaseUserModelWithProjects(user, projects);
+            var projectDetailWithUsersModel = new BaseUserModelWithProjects(user , projects);
 
             return projectDetailWithUsersModel;
         }

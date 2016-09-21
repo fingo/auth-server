@@ -5,7 +5,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Import users from *.csv file</h4>
             </div>
-            @using (Html.BeginForm("Import", "Users", new { projectId = ViewBag.ProjectId }, FormMethod.Post, null, new { id="formImport", enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("Import" , "Users" , new {projectId = ViewBag.ProjectId} , FormMethod.Post , null , new {id = "formImport" , enctype = "multipart/form-data"}))
             {
                 <div class="modal-body">
                     Each row should represent one user and should contain three columns separated by a tab character:
@@ -25,7 +25,8 @@
 
 <script>
     $('#importUsers').modal('show');
-    $("#formImport").submit(function (event) {
-        $.ajaxLoading.loadingStart();
-    });
+    $("#formImport")
+        .submit(function(event) {
+            $.ajaxLoading.loadingStart();
+        });
 </script>

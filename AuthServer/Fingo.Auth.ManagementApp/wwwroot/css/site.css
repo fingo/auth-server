@@ -1,117 +1,113 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
     overflow-y: scroll;
+    padding-bottom: 20px;
+    padding-top: 50px;
 }
+
 #loadingDiv {
-    display:    none;
-    position:   fixed;
-    z-index:    1000;
-    top:        0;
-    left:       0;
-    height:     100%;
-    width:      100%;
     background: rgba(255, 255, 255, .8)
                 url('/images/loading.gif')
                 50% 50%
                 no-repeat;
-}
-body.loading {
-    overflow: hidden;
-}
-body.loading #loadingDiv {
-    display: block;
-}
-body.error {
-    background-color: rgba(255, 150, 150, .8);
+    display: none;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
-#login{
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
+body.loading { overflow: hidden; }
+
+body.loading #loadingDiv { display: block; }
+
+body.error { background-color: rgba(255, 150, 150, .8); }
+
+#login {
     margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 /* Wrapping element */
+
 /* Set some basic padding to keep content from hitting the edges */
+
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
+
 input,
 select,
-textarea {
-    max-width: 280px;
-}
+textarea { max-width: 280px; }
 
 /* Carousel */
+
 .carousel-caption p {
     font-size: 20px;
     line-height: 1.4;
 }
 
 /* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"]
-{
-    width: 100%;
-}
+
+.carousel-inner .item img[src$=".svg"] { width: 100%; }
 
 
 
-.cell{
-    height: 51px;
-}
+.cell { height: 51px; }
 
 /* Hide/rearrange for smaller screens */
+
 @media screen and (max-width: 767px) {
-  /* Hide captions */
-  .carousel-caption {
-    display: none
-  }
+    /* Hide captions */
+    .carousel-caption { display: none }
 }
 
-body.modal-open{
-    width:100%!important;
-    padding-right:0!important;
-    overflow-y:scroll!important;
-    position:fixed!important;
+body.modal-open {
+    overflow-y: scroll !important;
+    padding-right: 0 !important;
+    position: fixed !important;
+    width: 100% !important;
 }
+
 .panel-heading h3 {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     line-height: normal;
-    width: 60%;
-    padding-top: 8px;
+    overflow: hidden;
     padding-bottom: 8px;
+    padding-top: 8px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 60%;
 }
-.zeroPadding {
-  padding: 0 !important;
-}
+
+.zeroPadding { padding: 0 !important; }
+
 .sort {
-    background-repeat: no-repeat;
-    background-position: center left;
     background-image: url("../images/sort_neutral.png");
+    background-position: center left;
+    background-repeat: no-repeat;
     background-size: 20px;
 }
+
 .desc {
-    background-repeat: no-repeat;
-    background-position: center left;
     background-image: url('../images/sort_down.png');
-    background-size: 20px;
-}
-.asc {
-    background-repeat: no-repeat;
     background-position: center left;
-    background-image: url('../images/sort_up.png');
+    background-repeat: no-repeat;
     background-size: 20px;
 }
-.button-wide {
-    width: 150px;
+
+.asc {
+    background-image: url('../images/sort_up.png');
+    background-position: center left;
+    background-repeat: no-repeat;
+    background-size: 20px;
 }
-.button-narrow {
-    width: 100px;
-}
+
+.button-wide { width: 150px; }
+
+.button-narrow { width: 100px; }

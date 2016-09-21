@@ -11,10 +11,12 @@ namespace Fingo.Auth.Domain.Projects.Implementation
     public class GetAllProjects : IGetAllProjects
     {
         private readonly IProjectRepository _repo;
+
         public GetAllProjects(IProjectRepository repo)
         {
             _repo = repo;
         }
+
         public IEnumerable<ProjectModel> Invoke()
         {
             var projects = _repo.GetAll().WithoutStatuses(ProjectStatus.Deleted);

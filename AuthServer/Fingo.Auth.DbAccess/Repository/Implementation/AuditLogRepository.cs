@@ -6,9 +6,10 @@ using Fingo.Auth.DbAccess.Repository.Interfaces;
 
 namespace Fingo.Auth.DbAccess.Repository.Implementation
 {
-    public class AuditLogRepository: IAuditLogRepository
+    public class AuditLogRepository : IAuditLogRepository
     {
-        private IAuthServerContext _db;
+        private readonly IAuthServerContext _db;
+
         public AuditLogRepository(IAuthServerContext context)
         {
             _db = context;
@@ -19,6 +20,7 @@ namespace Fingo.Auth.DbAccess.Repository.Implementation
             _db.AuditLog.Add(entity);
             _db.SaveChanges();
         }
+
         public virtual IEnumerable<AuditLog> GetAll()
         {
             return _db.AuditLog.AsEnumerable();

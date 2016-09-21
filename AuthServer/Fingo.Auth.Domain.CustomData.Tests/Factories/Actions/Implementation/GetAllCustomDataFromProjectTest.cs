@@ -16,7 +16,7 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
         {
             //Arrange
 
-            Mock<IProjectRepository> projectRepositoryMock=new Mock<IProjectRepository>();
+            var projectRepositoryMock = new Mock<IProjectRepository>();
             projectRepositoryMock.Setup(m => m.GetByIdWithCustomDatas(It.IsAny<int>())).Returns(() => null);
 
             //Act
@@ -34,13 +34,13 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
         {
             //Arrange
 
-            Mock<IProjectRepository> projectRepositoryMock = new Mock<IProjectRepository>();
+            var projectRepositoryMock = new Mock<IProjectRepository>();
             projectRepositoryMock.Setup(m => m.GetByIdWithCustomDatas(It.IsAny<int>()))
-                .Returns(new Project()
+                .Returns(new Project
                 {
-                    ProjectCustomData = new List<ProjectCustomData>()
+                    ProjectCustomData = new List<ProjectCustomData>
                     {
-                        new ProjectCustomData() { },
+                        new ProjectCustomData() ,
                         new ProjectCustomData()
                     }
                 });
@@ -52,7 +52,7 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Actions.Implementation
 
             //Assert
 
-            Assert.True(result.Count==2);
+            Assert.True(result.Count == 2);
         }
     }
 }

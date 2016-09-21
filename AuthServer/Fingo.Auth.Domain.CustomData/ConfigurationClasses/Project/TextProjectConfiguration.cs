@@ -6,8 +6,9 @@ namespace Fingo.Auth.Domain.CustomData.ConfigurationClasses.Project
     {
         public TextProjectConfiguration()
         {
-            PossibleValues=new HashSet<string>();
+            PossibleValues = new HashSet<string>();
         }
+
         public string Default { get; set; }
         public HashSet<string> PossibleValues { get; set; }
     }

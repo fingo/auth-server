@@ -8,7 +8,6 @@ namespace Fingo.Auth.Domain.Models.UserModels
     {
         public BaseUserModel()
         {
-
         }
 
         public BaseUserModel(User user)
@@ -21,21 +20,22 @@ namespace Fingo.Auth.Domain.Models.UserModels
             ActivationToken = user.ActivationToken;
             PasswordSalt = user.PasswordSalt;
         }
+
         public int Id { get; set; }
 
-        [MaxLength(30, ErrorMessage = "First name is too long")]
+        [MaxLength(30 , ErrorMessage = "First name is too long")]
         public string FirstName { get; set; }
 
-        [MaxLength(30, ErrorMessage = "Last name is too long")]
+        [MaxLength(30 , ErrorMessage = "Last name is too long")]
         public string LastName { get; set; }
 
         public string PasswordSalt { get; set; }
 
-        
-        [Required(ErrorMessage = "The email address is required")]      
+
+        [Required(ErrorMessage = "The email address is required")]
         public string Login { get; set; }
 
-        public UserStatus UserStatus {get; set;}
+        public UserStatus UserStatus { get; set; }
 
         public string ActivationToken { get; set; }
     }

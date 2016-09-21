@@ -15,12 +15,13 @@ namespace Fingo.Auth.Domain.AuditLogs.Tests.Factories
         {
             //Arrange
 
-            Mock<IAuditLogRepository> auditLogRepository=new Mock<IAuditLogRepository>();
-            Mock<IUserRepository> userRepositoryMock = new Mock<IUserRepository>();
+            var auditLogRepository = new Mock<IAuditLogRepository>();
+            var userRepositoryMock = new Mock<IUserRepository>();
 
             //Act
 
-            IGetAllAuditLogFactory target = new GetAllAuditLogFactory(auditLogRepository.Object,userRepositoryMock.Object);
+            IGetAllAuditLogFactory target = new GetAllAuditLogFactory(auditLogRepository.Object ,
+                userRepositoryMock.Object);
             var result = target.Create();
 
             //Assert

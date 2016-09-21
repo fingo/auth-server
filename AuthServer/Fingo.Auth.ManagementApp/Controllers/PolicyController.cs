@@ -2,10 +2,10 @@
 using System.Globalization;
 using System.Net;
 using System.Net.Http;
+using Fingo.Auth.DbAccess.Models.Policies.Enums;
 using Fingo.Auth.DbAccess.Repository.Interfaces;
 using Fingo.Auth.Domain.Infrastructure.EventBus.Interfaces;
 using Fingo.Auth.Domain.Policies.ConfigurationClasses;
-using Fingo.Auth.DbAccess.Models.Policies.Enums;
 using Fingo.Auth.Domain.Policies.Factories.Interfaces;
 using Fingo.Auth.ManagementApp.Alerts;
 using Fingo.Auth.ManagementApp.Configuration;
@@ -18,11 +18,11 @@ namespace Fingo.Auth.ManagementApp.Controllers
     [Authorize(Policy = AuthorizationConfiguration.PolicyName)]
     public class PolicyController : BaseController
     {
+        private readonly IGetPolicyConfigurationOrDefaultFromProjectFactory configurationOrDefaultFromProjectFactory;
         private readonly IDeletePolicyFromProjectFactory deletePolicyFromProjectFactory;
+        private readonly IGetUserDataViewFactory getUserDataViewFactory;
         private readonly ISavePolicyToProjectFactory savePolicyToProjectFactory;
         private readonly ISaveUserPolicyToProjectFactory saveUserPolicyToProjectFactory;
-        private readonly IGetUserDataViewFactory getUserDataViewFactory;
-        private readonly IGetPolicyConfigurationOrDefaultFromProjectFactory configurationOrDefaultFromProjectFactory;
 
         public PolicyController(IEventBus eventBus , IProjectRepository projectRepository ,
             IDeletePolicyFromProjectFactory deletePolicyFromProjectFactory , IEventWatcher eventWatcher ,
@@ -70,22 +70,37 @@ namespace Fingo.Auth.ManagementApp.Controllers
                 switch (policy)
                 {
                     case Policy.AccountExpirationDate:
-                        return PartialView("AccountExpirationDate", (AccountExpirationDateConfiguration)configurationOrDefaultFromProjectFactory.Create().Invoke(projectId, Policy.AccountExpirationDate));
+                        return PartialView("AccountExpirationDate" ,
+                            (AccountExpirationDateConfiguration)
+                            configurationOrDefaultFromProjectFactory.Create()
+                                .Invoke(projectId , Policy.AccountExpirationDate));
                     case Policy.MinimumPasswordLength:
-                        return PartialView("MinimumPasswordLength", (MinimumPasswordLengthConfiguration)configurationOrDefaultFromProjectFactory.Create().Invoke(projectId, Policy.MinimumPasswordLength));
+                        return PartialView("MinimumPasswordLength" ,
+                            (MinimumPasswordLengthConfiguration)
+                            configurationOrDefaultFromProjectFactory.Create()
+                                .Invoke(projectId , Policy.MinimumPasswordLength));
                     case Policy.PasswordExpirationDate:
-                        return PartialView("PasswordExpiration", (PasswordExpirationDateConfiguration)configurationOrDefaultFromProjectFactory.Create().Invoke(projectId, Policy.PasswordExpirationDate));
+                        return PartialView("PasswordExpiration" ,
+                            (PasswordExpirationDateConfiguration)
+                            configurationOrDefaultFromProjectFactory.Create()
+                                .Invoke(projectId , Policy.PasswordExpirationDate));
                     case Policy.RequiredPasswordCharacters:
-                        return PartialView("RequiredCharacters", (RequiredPasswordCharactersConfiguration)configurationOrDefaultFromProjectFactory.Create().Invoke(projectId, Policy.RequiredPasswordCharacters));
+                        return PartialView("RequiredCharacters" ,
+                            (RequiredPasswordCharactersConfiguration)
+                            configurationOrDefaultFromProjectFactory.Create()
+                                .Invoke(projectId , Policy.RequiredPasswordCharacters));
                     case Policy.ExcludeCommonPasswords:
-                        return PartialView("ExcludeCommonPasswords", (ExcludeCommonPasswordsConfiguration)configurationOrDefaultFromProjectFactory.Create().Invoke(projectId, Policy.ExcludeCommonPasswords));
+                        return PartialView("ExcludeCommonPasswords" ,
+                            (ExcludeCommonPasswordsConfiguration)
+                            configurationOrDefaultFromProjectFactory.Create()
+                                .Invoke(projectId , Policy.ExcludeCommonPasswords));
                     default:
                         throw new ArgumentOutOfRangeException(nameof(policy) , policy , null);
                 }
             }
             catch (Exception ex)
             {
-                Alert(AlertType.Warning, ex.Message);
+                Alert(AlertType.Warning , ex.Message);
                 return StatusCode(400);
             }
         }
@@ -108,18 +123,18 @@ namespace Fingo.Auth.ManagementApp.Controllers
         }
 
         [HttpPost("/ExcludeCommonPasswords/{projectId}")]
-        public IActionResult ExcludeCommonPasswordsPolicy(Policy policy, int projectId,
+        public IActionResult ExcludeCommonPasswordsPolicy(Policy policy , int projectId ,
             ExcludeCommonPasswordsConfiguration policySettings)
         {
             try
             {
-                savePolicyToProjectFactory.Create().Invoke(projectId, policy, policySettings);
-                Alert(AlertType.Success, "Policy saved correctly.");
-                return RedirectToAction("GetById", "Projects", new { id = projectId });
+                savePolicyToProjectFactory.Create().Invoke(projectId , policy , policySettings);
+                Alert(AlertType.Success , "Policy saved correctly.");
+                return RedirectToAction("GetById" , "Projects" , new {id = projectId});
             }
             catch (Exception ex)
             {
-                Alert(AlertType.Warning, ex.Message);
+                Alert(AlertType.Warning , ex.Message);
                 return View("ErrorPage");
             }
         }
@@ -146,62 +161,66 @@ namespace Fingo.Auth.ManagementApp.Controllers
         {
             try
             {
-                saveUserPolicyToProjectFactory.Create().Invoke(projectId, userAccExpDate.UserId, Policy.AccountExpirationDate, userAccExpDate.DateTime==null?default(DateTime):DateTime.ParseExact(userAccExpDate.DateTime, "dd-MM-yyyy", CultureInfo.InvariantCulture));
-                Alert(AlertType.Success, "Policy saved correctly.");
-                return RedirectToAction("GetById", "Projects", new { id = projectId });
+                saveUserPolicyToProjectFactory.Create()
+                    .Invoke(projectId , userAccExpDate.UserId , Policy.AccountExpirationDate ,
+                        userAccExpDate.DateTime == null
+                            ? default(DateTime)
+                            : DateTime.ParseExact(userAccExpDate.DateTime , "dd-MM-yyyy" , CultureInfo.InvariantCulture));
+                Alert(AlertType.Success , "Policy saved correctly.");
+                return RedirectToAction("GetById" , "Projects" , new {id = projectId});
             }
             catch (Exception ex)
             {
-                Alert(AlertType.Warning, ex.Message);
+                Alert(AlertType.Warning , ex.Message);
                 return View("ErrorPage");
             }
         }
 
         [HttpPost("/MinimumPasswordLength/{projectId}")]
-        public IActionResult SaveMinimumPasswordLengthPolicy(Policy policy, int projectId,
+        public IActionResult SaveMinimumPasswordLengthPolicy(Policy policy , int projectId ,
             MinimumPasswordLengthConfiguration policySettings)
         {
             try
             {
-                savePolicyToProjectFactory.Create().Invoke(projectId, policy, policySettings);
-                Alert(AlertType.Success, "Policy saved correctly.");
-                return RedirectToAction("GetById", "Projects", new { id = projectId });
+                savePolicyToProjectFactory.Create().Invoke(projectId , policy , policySettings);
+                Alert(AlertType.Success , "Policy saved correctly.");
+                return RedirectToAction("GetById" , "Projects" , new {id = projectId});
             }
             catch (Exception ex)
             {
-                Alert(AlertType.Warning, ex.Message);
+                Alert(AlertType.Warning , ex.Message);
                 return View("ErrorPage");
             }
         }
 
         [HttpPost("/PasswordExpirationDate/{projectId}")]
-        public IActionResult SavePasswordExpirationPolicy(Policy policy, int projectId,
-          PasswordExpirationDateConfiguration policySettings)
+        public IActionResult SavePasswordExpirationPolicy(Policy policy , int projectId ,
+            PasswordExpirationDateConfiguration policySettings)
         {
             try
             {
-                savePolicyToProjectFactory.Create().Invoke(projectId, policy, policySettings);
-                Alert(AlertType.Success, "Policy added correctly.");
-                return RedirectToAction("GetById", "Projects", new { id = projectId });
+                savePolicyToProjectFactory.Create().Invoke(projectId , policy , policySettings);
+                Alert(AlertType.Success , "Policy added correctly.");
+                return RedirectToAction("GetById" , "Projects" , new {id = projectId});
             }
             catch (Exception ex)
             {
-                Alert(AlertType.Warning, ex.Message);
+                Alert(AlertType.Warning , ex.Message);
                 return View("ErrorPage");
             }
         }
 
         [HttpDelete("{projectId}/{policy}")]
-        public HttpResponseMessage RemovePolicy(int projectId, Policy policy)
+        public HttpResponseMessage RemovePolicy(int projectId , Policy policy)
         {
             try
             {
-                deletePolicyFromProjectFactory.Create().Invoke(projectId, policy);
-                Alert(AlertType.Success, "Policy was correctly removed from the project.");
+                deletePolicyFromProjectFactory.Create().Invoke(projectId , policy);
+                Alert(AlertType.Success , "Policy was correctly removed from the project.");
             }
             catch (Exception)
             {
-                Alert(AlertType.Warning, "Could not find such policy in the database.");
+                Alert(AlertType.Warning , "Could not find such policy in the database.");
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
             return new HttpResponseMessage(HttpStatusCode.NoContent);

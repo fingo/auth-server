@@ -9,7 +9,7 @@
       <FormPostHttpBody>
         <FormPostParameter Name="login" Value="q@q" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
         <FormPostParameter Name="password" Value="q" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
-        <FormPostParameter Name="projectGuid" Value="AC1A551CB011EDB100D1E55BEEF511CE" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
+        <FormPostParameter Name="projectGuid" Value="968657BC41A34DD58435C33DB07C6833" RecordedValue="" CorrelationBinding="" UrlEncode="True" />
       </FormPostHttpBody>
     </Request>
   </Items>

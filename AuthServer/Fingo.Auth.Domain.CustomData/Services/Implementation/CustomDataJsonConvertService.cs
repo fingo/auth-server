@@ -15,7 +15,7 @@ namespace Fingo.Auth.Domain.CustomData.Services.Implementation
             return JsonConvert.SerializeObject(configuration);
         }
 
-        public UserConfiguration DeserializeUser(ConfigurationType type, string serialized)
+        public UserConfiguration DeserializeUser(ConfigurationType type , string serialized)
         {
             switch (type)
             {
@@ -26,11 +26,11 @@ namespace Fingo.Auth.Domain.CustomData.Services.Implementation
                 case ConfigurationType.Text:
                     return JsonConvert.DeserializeObject<TextUserConfiguration>(serialized);
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, "Invalid ConfigurationType.");
+                    throw new ArgumentOutOfRangeException(nameof(type) , type , "Invalid ConfigurationType.");
             }
         }
 
-        public ProjectConfiguration DeserializeProject(ConfigurationType type, string serialized)
+        public ProjectConfiguration DeserializeProject(ConfigurationType type , string serialized)
         {
             switch (type)
             {
@@ -41,7 +41,7 @@ namespace Fingo.Auth.Domain.CustomData.Services.Implementation
                 case ConfigurationType.Text:
                     return JsonConvert.DeserializeObject<TextProjectConfiguration>(serialized);
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, "Invalid ConfigurationType.");
+                    throw new ArgumentOutOfRangeException(nameof(type) , type , "Invalid ConfigurationType.");
             }
         }
     }

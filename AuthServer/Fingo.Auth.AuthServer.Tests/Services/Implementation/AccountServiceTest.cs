@@ -19,13 +19,11 @@ namespace Fingo.Auth.AuthServer.Tests.Services.Implementation
             _logger = new Logger<AccountService>();
         }
 
-        //TO REPAIR!!!
         [Fact]
-        void CreateNewUserInProjectShouldReturnErrorBecauseOfFactoryException()
+        private void CreateNewUserInProjectShouldReturnErrorBecauseOfFactoryException()
         {
             // arrange
-
-            Mock<IChangePasswordToUserFactory> fac=new Mock<IChangePasswordToUserFactory>();
+            var fac = new Mock<IChangePasswordToUserFactory>();
             var addUserFactoryMock = new Mock<IAddUserFactory>();
 
             addUserFactoryMock.Setup(fact => fact.Create().Invoke(It.IsAny<UserModel>(), It.IsAny<Guid>()))

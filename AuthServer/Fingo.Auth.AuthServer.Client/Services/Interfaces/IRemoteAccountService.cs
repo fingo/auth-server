@@ -6,6 +6,6 @@ namespace Fingo.Auth.AuthServer.Client.Services.Interfaces
     {
         void CreateNewUserInProject(UserModel user);
         void PasswordChangeForUser(ChangingPasswordUser user);
-        void SetPasswordForUser(string token, string password);
+        void SetPasswordForUser(string token , string password);
     }
 }

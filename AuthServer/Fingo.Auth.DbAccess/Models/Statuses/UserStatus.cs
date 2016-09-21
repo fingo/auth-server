@@ -2,9 +2,9 @@
 {
     public enum UserStatus
     {
-        Active = 0,
-        Deleted = 1,
-        Registered = 2,
+        Active = 0 ,
+        Deleted = 1 ,
+        Registered = 2 ,
         AccountCreated
     }
 }

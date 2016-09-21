@@ -2,6 +2,6 @@
 {
     public interface IUpdateProject
     {
-        void Invoke(int id, string newName);
+        void Invoke(int id , string newName);
     }
 }

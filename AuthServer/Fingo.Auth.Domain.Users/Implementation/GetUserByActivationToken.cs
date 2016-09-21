@@ -8,6 +8,7 @@ namespace Fingo.Auth.Domain.Users.Implementation
     public class GetUserByActivationToken : IGetUserByActivationToken
     {
         private readonly IUserRepository _repo;
+
         public GetUserByActivationToken(IUserRepository repo)
         {
             _repo = repo;
@@ -20,7 +21,7 @@ namespace Fingo.Auth.Domain.Users.Implementation
             if (user == null)
                 return null;
 
-            UserModel userModel = new UserModel(user) { Id = user.Id };
+            var userModel = new UserModel(user) {Id = user.Id};
             return userModel;
         }
     }

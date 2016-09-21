@@ -13,6 +13,7 @@ namespace Fingo.Auth.Domain.Policies.Factories.Implementation
         {
             _projectRepository = projectRepository;
         }
+
         public IGetPoliciesUnassignedToProject Create()
         {
             return new GetPoliciesUnassignedToProject(_projectRepository);

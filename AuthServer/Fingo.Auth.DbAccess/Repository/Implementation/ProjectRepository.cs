@@ -9,9 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fingo.Auth.DbAccess.Repository.Implementation
 {
-    public class ProjectRepository : GenericRepository<Project>, IProjectRepository
+    public class ProjectRepository : GenericRepository<Project> , IProjectRepository
     {
-        private IAuthServerContext _db;
+        private readonly IAuthServerContext _db;
+
         public ProjectRepository(IAuthServerContext context) : base(context)
         {
             _db = context;
@@ -26,9 +27,10 @@ namespace Fingo.Auth.DbAccess.Repository.Implementation
             var users = d.ProjectUsers.Select(m => m.User);
             return users;
         }
+
         public override Project GetById(int id)
         {
-            Project project = _db.Set<Project>()
+            var project = _db.Set<Project>()
                 .Where(m => m.Id == id)
                 .Include(m => m.Information)
                 .Include(m => m.ProjectPolicies)
@@ -41,16 +43,17 @@ namespace Fingo.Auth.DbAccess.Repository.Implementation
 
         public Project GetByIdWithPolicies(int id)
         {
-            Project project = _db.Set<Project>()
+            var project = _db.Set<Project>()
                 .Where(m => m.Id == id)
                 .Include(m => m.ProjectPolicies)
                 .ThenInclude(m => m.UserPolicies)
                 .FirstOrDefault();
             return project;
         }
+
         public Project GetByIdWithAll(int id)
         {
-            Project project = _db.Set<Project>()
+            var project = _db.Set<Project>()
                 .Where(m => m.Id == id)
                 .Include(m => m.Information)
                 .Include(m => m.ProjectPolicies)
@@ -64,7 +67,7 @@ namespace Fingo.Auth.DbAccess.Repository.Implementation
 
         public Project GetByGuid(Guid guid)
         {
-            Project project =
+            var project =
                 _db.Set<Project>()
                     .Where(m => m.ProjectGuid == guid)
                     .Include(m => m.Information)
@@ -76,7 +79,7 @@ namespace Fingo.Auth.DbAccess.Repository.Implementation
 
         public Project GetByIdWithCustomDatas(int projectId)
         {
-            Project project = _db.Set<Project>()
+            var project = _db.Set<Project>()
                 .Where(m => m.Id == projectId)
                 .Include(m => m.ProjectCustomData)
                 .ThenInclude(m => m.UserCustomData)

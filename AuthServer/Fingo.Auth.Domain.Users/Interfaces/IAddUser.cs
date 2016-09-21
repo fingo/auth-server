@@ -5,6 +5,6 @@ namespace Fingo.Auth.Domain.Users.Interfaces
 {
     public interface IAddUser
     {
-        void Invoke(UserModel user, Guid guid);
+        void Invoke(UserModel user , Guid guid);
     }
 }

@@ -8,10 +8,10 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Implementation
 {
     public class EditProjectCustomDataToProjectFactory : IEditProjectCustomDataToProjectFactory
     {
-        private readonly IProjectRepository _projectRepository;
         private readonly ICustomDataJsonConvertService _jsonConvertService;
+        private readonly IProjectRepository _projectRepository;
 
-        public EditProjectCustomDataToProjectFactory(IProjectRepository projectRepository,
+        public EditProjectCustomDataToProjectFactory(IProjectRepository projectRepository ,
             ICustomDataJsonConvertService jsonConvertService)
         {
             _jsonConvertService = jsonConvertService;
@@ -20,7 +20,7 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Implementation
 
         public IEditProjectCustomDataToProject Create()
         {
-            return new EditProjectCustomDataToProject(_projectRepository, _jsonConvertService);
+            return new EditProjectCustomDataToProject(_projectRepository , _jsonConvertService);
         }
     }
 }

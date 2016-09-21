@@ -12,18 +12,21 @@ namespace Fingo.Auth.Domain.CustomData.Tests.Factories.Implementation
     public class GetUserCustomDataListFromProjectFactoryTest
     {
         [Fact]
-        public void GetUserCustomDataListFromProjectFactory_Should_Return_Instance_Of_GetUserCustomDataListFromProject_Given_By_IGetUserCustomDataListFromProject()
+        public void
+            GetUserCustomDataListFromProjectFactory_Should_Return_Instance_Of_GetUserCustomDataListFromProject_Given_By_IGetUserCustomDataListFromProject
+            ()
         {
             //Arrange
 
-            Mock<IProjectRepository> projectMock = new Mock<IProjectRepository>();
-            Mock<IUserRepository> userMock = new Mock<IUserRepository>();
+            var projectMock = new Mock<IProjectRepository>();
+            var userMock = new Mock<IUserRepository>();
             var convertServiceMock = new Mock<ICustomDataJsonConvertService>();
 
             //Act
 
-            IGetUserCustomDataListFromProjectFactory target = new GetUserCustomDataListFromProjectFactory(projectMock.Object,
-                userMock.Object, convertServiceMock.Object);
+            IGetUserCustomDataListFromProjectFactory target =
+                new GetUserCustomDataListFromProjectFactory(projectMock.Object ,
+                    userMock.Object , convertServiceMock.Object);
 
             var result = target.Create();
 

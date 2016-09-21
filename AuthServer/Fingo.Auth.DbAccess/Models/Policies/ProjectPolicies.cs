@@ -14,6 +14,7 @@ namespace Fingo.Auth.DbAccess.Models.Policies
 
         [Required]
         public Policy Policy { get; set; }
+
         public string SerializedProjectPolicySetting { get; set; }
 
         public int ProjectId { get; set; }

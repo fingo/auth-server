@@ -5,10 +5,10 @@
 
 <table class="table table-hover" id="auditLogTable">
     <colgroup>
-        <col style="width:15%">
-        <col style="width:15%">
-        <col style="width:55%">
-        <col style="width:15%">
+        <col style="width: 15%">
+        <col style="width: 15%">
+        <col style="width: 55%">
+        <col style="width: 15%">
     </colgroup>
     <thead>
     <tr>
@@ -37,15 +37,15 @@
             <td style="word-wrap: break-word">@auditLog.CreationDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
         </tr>
     }
-        @for (int i = 0; i < ViewBag.RowsPerPage - Model.Count(); i++)
-        {
-            <tr>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-            </tr>
-        }
+    @for (var i = 0 ; i < ViewBag.RowsPerPage - Model.Count() ; i++)
+    {
+        <tr>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+    }
     </tbody>
     <tfoot>
     <tr>
@@ -63,7 +63,8 @@
             .bs_pagination({
                 currentPage: @ViewBag.Page,
                 rowsPerPage: @ViewBag.RowsPerPage,
-                totalPages:'@(ViewBag.TotalRows % ViewBag.RowsPerPage == 0 ? ViewBag.UsersCount : ViewBag.UsersCount + 1)',
+                totalPages:
+                    '@(ViewBag.TotalRows % ViewBag.RowsPerPage == 0 ? ViewBag.UsersCount : ViewBag.UsersCount + 1)',
                 visiblePageLinks: 7,
                 totalRows: @ViewBag.TotalRows,
                 onChangePage: function(event, data) {
@@ -136,9 +137,7 @@
                 }
             });
             $('#' + filterOption).addClass("asc");
-        }
-        else
-        {
+        } else {
             var data = {
                 descending: true,
                 filterOption: '@ViewBag.FilterOption',

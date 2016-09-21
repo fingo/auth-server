@@ -21,9 +21,10 @@
 </div>
 
 <script>
-    $('#closeModalButton').click(function() {
-        $('#customDataModalWindow').modal('hide');
-    });
+    $('#closeModalButton')
+        .click(function() {
+            $('#customDataModalWindow').modal('hide');
+        });
     $('#customDataModalWindow').modal('show');
     $(document)
         .ready(
@@ -54,6 +55,7 @@
                     }
                 });
             });
+
     function decodeCharRefs(string) {
         return string
             .replace(/&#(\d+);/g,

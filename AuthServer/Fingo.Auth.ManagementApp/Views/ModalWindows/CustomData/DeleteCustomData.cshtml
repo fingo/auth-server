@@ -22,14 +22,15 @@
 
 <script>
     $('#deleteData').modal('show');
+
     function RemoveData(projectId, configurationName) {
-        var apiUrl = "/customData/"+projectId+"/"+configurationName;
+        var apiUrl = "/customData/" + projectId + "/" + configurationName;
         $.ajaxLoading({
             url: apiUrl,
             type: 'DELETE',
             cache: false,
             statusCode: {
-                200: function (data) {
+                200: function(data) {
                     location.reload();
                 }
             }

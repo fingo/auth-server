@@ -2,9 +2,9 @@
 {
     public enum SortByColumn
     {
-       Name,
-       EventType,
-       EventMessage,
-       CreationDate
+        Name ,
+        EventType ,
+        EventMessage ,
+        CreationDate
     }
 }

@@ -5,7 +5,7 @@ using Fingo.Auth.Domain.Infrastructure.EventBus.Interfaces;
 
 namespace Fingo.Auth.Domain.Infrastructure.EventBus.Implementation
 {
-    public class EventWatcher:IEventWatcher
+    public class EventWatcher : IEventWatcher
     {
         private readonly IAuditLogRepository auditLogRepository;
 
@@ -21,10 +21,10 @@ namespace Fingo.Auth.Domain.Infrastructure.EventBus.Implementation
 
             try
             {
-                auditLogRepository.Add(new AuditLog()
+                auditLogRepository.Add(new AuditLog
                 {
                     EventType = eventType ,
-                    UserId = parsedUserId,
+                    UserId = parsedUserId ,
                     EventMassage = eventMessage
                 });
             }

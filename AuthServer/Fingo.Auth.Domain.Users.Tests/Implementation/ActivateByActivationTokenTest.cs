@@ -15,24 +15,23 @@ namespace Fingo.Auth.Domain.Users.Tests.Implementation
         [Fact]
         public void Can_Activate_User()
         {
-            Mock<IUserRepository> userMock = new Mock<IUserRepository>();
-            Mock<IEventBus> eventBusMock = new Mock<IEventBus>();
-            User user = new User
+            var userMock = new Mock<IUserRepository>();
+            var eventBusMock = new Mock<IEventBus>();
+            var user = new User
             {
-                Id = 1,
-                FirstName = "Pierwszy",
-                LastName = "Pierwszy",
-                Login = "jeden",
-                Password = "jeden",
-                ActivationToken = "859e3ecf-9558-4c22-9651-74fe600a94ab",
+                Id = 1 ,
+                FirstName = "Pierwszy" ,
+                LastName = "Pierwszy" ,
+                Login = "jeden" ,
+                Password = "jeden" ,
+                ActivationToken = "859e3ecf-9558-4c22-9651-74fe600a94ab" ,
                 Status = UserStatus.Registered
-
             };
             userMock.Setup(repo => repo.GetAll()).Returns(new List<User> {user});
             userMock.Setup(repo => repo.GetById(It.IsAny<int>())).Returns(user);
-            
 
-            IActivateByActivationToken service = new ActivateByActivationToken(userMock.Object, eventBusMock.Object);
+
+            IActivateByActivationToken service = new ActivateByActivationToken(userMock.Object , eventBusMock.Object);
 
             service.Invoke(user.ActivationToken);
 
@@ -40,7 +39,6 @@ namespace Fingo.Auth.Domain.Users.Tests.Implementation
 
             Assert.True(userToActivate.FirstName == "Pierwszy");
             Assert.True(userToActivate.Status == UserStatus.Active);
-
         }
     }
 }

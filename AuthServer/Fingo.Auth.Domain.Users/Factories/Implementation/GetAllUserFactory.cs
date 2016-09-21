@@ -8,10 +8,12 @@ namespace Fingo.Auth.Domain.Users.Factories.Implementation
     public class GetAllUserFactory : IGetAllUserFactory
     {
         private readonly IUserRepository userRepository;
+
         public GetAllUserFactory(IUserRepository userRepository)
         {
             this.userRepository = userRepository;
         }
+
         public IGetAllUser Create()
         {
             return new GetAllUser(userRepository);

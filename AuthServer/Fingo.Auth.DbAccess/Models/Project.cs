@@ -14,6 +14,7 @@ namespace Fingo.Auth.DbAccess.Models
             ProjectGuid = Guid.NewGuid();
             ProjectPolicies = new List<ProjectPolicies>();
             ProjectCustomData = new List<ProjectCustomData>();
+            SetPasswordAddress = "https://192.168.2.94:1252/setpassword/";
             Information = new ClientInformation();
         }
 
@@ -22,6 +23,8 @@ namespace Fingo.Auth.DbAccess.Models
         [Required(ErrorMessage = "Project name is required")]
         [MaxLength(30)]
         public string Name { get; set; }
+
+        public string SetPasswordAddress { get; set; }
 
         public virtual ClientInformation Information { get; set; }
         public virtual List<ProjectUser> ProjectUsers { get; set; }

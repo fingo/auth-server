@@ -4,21 +4,21 @@
     <div class="panel-body">
         <table class="table table-striped" id="projectList">
             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Unique project id</th>
-                    <th>Creation date</th>
-                </tr>
+            <tr>
+                <th>Name</th>
+                <th>Unique project id</th>
+                <th>Creation date</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var project in Model)
-                {
-                    <tr>
-                        <td>@Html.ActionLink(project.Name, "GetById", "Projects", new { id = project.Id })</td>
-                        <td>@project.ProjectGuid</td>
-                        <td>@project.CreationDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
-                    </tr>
-                }
+            @foreach (var project in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink(project.Name , "GetById" , "Projects" , new {id = project.Id})</td>
+                    <td>@project.ProjectGuid</td>
+                    <td>@project.CreationDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                </tr>
+            }
             </tbody>
         </table>
     </div>

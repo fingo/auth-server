@@ -8,10 +8,10 @@ namespace Fingo.Auth.Domain.Users.Factories.Implementation
 {
     public class ChangePasswordToUserFactory : IChangePasswordToUserFactory
     {
-        private IUserRepository _userRepository;
         private readonly IEventBus _eventBus;
+        private readonly IUserRepository _userRepository;
 
-        public ChangePasswordToUserFactory(IUserRepository userRepository, IEventBus eventBus)
+        public ChangePasswordToUserFactory(IUserRepository userRepository , IEventBus eventBus)
         {
             _userRepository = userRepository;
             _eventBus = eventBus;
@@ -19,7 +19,7 @@ namespace Fingo.Auth.Domain.Users.Factories.Implementation
 
         public IChangePasswordToUser Create()
         {
-            return new ChangePasswordToUser(_userRepository, _eventBus);
+            return new ChangePasswordToUser(_userRepository , _eventBus);
         }
     }
 }

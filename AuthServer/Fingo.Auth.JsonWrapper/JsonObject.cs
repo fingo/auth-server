@@ -11,7 +11,7 @@ namespace Fingo.Auth.JsonWrapper
 
         public string ToJson()
         {
-            JTokenWriter writer = new JTokenWriter();
+            var writer = new JTokenWriter();
 
             writer.WriteStartObject();
 
@@ -28,7 +28,7 @@ namespace Fingo.Auth.JsonWrapper
                 writer.WritePropertyName("errordetails");
                 writer.WriteValue(ErrorDetails);
             }
-            
+
             writer.WriteEndObject();
             return writer.Token.ToString(Formatting.None);
         }

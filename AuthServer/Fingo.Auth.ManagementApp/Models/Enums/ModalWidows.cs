@@ -2,10 +2,10 @@
 {
     public enum ModalWidows
     {
-        EditUserPolicyModalWindow,
-        DeleteUser,
-        AssignUsers,
-        UnassignUser,
+        EditUserPolicyModalWindow ,
+        DeleteUser ,
+        AssignUsers ,
+        UnassignUser ,
         ImportUsersFromCsv
     }
 }

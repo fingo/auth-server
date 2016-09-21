@@ -21,33 +21,34 @@ namespace Fingo.Auth.Domain.Users.Tests.Implementation
         {
             // Arrange
 
-            Mock<IEventBus> eventBusMock = new Mock<IEventBus>();
-            Mock<IUserRepository> userRepository = new Mock<IUserRepository>();
-            Mock<ISetDefaultUserCustomDataBasedOnProject> setDefaultUserCUstomDatea = new Mock<ISetDefaultUserCustomDataBasedOnProject>();
+            var eventBusMock = new Mock<IEventBus>();
+            var userRepository = new Mock<IUserRepository>();
+            var setDefaultUserCUstomDatea = new Mock<ISetDefaultUserCustomDataBasedOnProject>();
 
             userRepository.Setup(m => m.GetAll()).Returns(new List<User>());
             userRepository.Setup(m => m.Add(It.IsAny<User>()))
-                .Callback((User u) => userRepository.Setup(m => m.GetAll()).Returns(new [] {u}));
+                .Callback((User u) => userRepository.Setup(m => m.GetAll()).Returns(new[] {u}));
 
-            Mock<IProjectRepository> projectRepository=new Mock<IProjectRepository>();
-            projectRepository.Setup(m => m.GetByGuid(It.IsAny<Guid>())).Returns(new Project()
+            var projectRepository = new Mock<IProjectRepository>();
+            projectRepository.Setup(m => m.GetByGuid(It.IsAny<Guid>())).Returns(new Project
             {
-                Id = 1,
-                Status = ProjectStatus.Active,
+                Id = 1 ,
+                Status = ProjectStatus.Active
             });
 
-            IAddUser service = new AddUser(userRepository.Object,projectRepository.Object,eventBusMock.Object,setDefaultUserCUstomDatea.Object);
+            IAddUser service = new AddUser(userRepository.Object , projectRepository.Object , eventBusMock.Object ,
+                setDefaultUserCUstomDatea.Object);
 
-            UserModel userToAdd = new UserModel
+            var userToAdd = new UserModel
             {
-                FirstName = "drugi",
-                LastName = "drugi",
+                FirstName = "drugi" ,
+                LastName = "drugi" ,
                 Login = "drugi"
             };
 
             // Act
 
-            service.Invoke(userToAdd, new Guid());
+            service.Invoke(userToAdd , new Guid());
 
             var users = userRepository.Object.GetAll();
             var addedUser = userRepository.Object.GetAll().Last();
@@ -57,7 +58,7 @@ namespace Fingo.Auth.Domain.Users.Tests.Implementation
             Assert.True(userToAdd.FirstName == addedUser.FirstName);
             Assert.True(userToAdd.LastName == addedUser.LastName);
             Assert.True(users.Count() == 1);
-            Assert.True(addedUser.ProjectUsers.Count()==1);
+            Assert.True(addedUser.ProjectUsers.Count() == 1);
             Assert.True(addedUser.Status == UserStatus.Registered);
         }
     }

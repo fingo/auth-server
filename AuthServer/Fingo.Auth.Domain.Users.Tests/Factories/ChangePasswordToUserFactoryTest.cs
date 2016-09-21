@@ -14,10 +14,10 @@ namespace Fingo.Auth.Domain.Users.Tests.Factories
         [Fact]
         public void ChangePasswordToUserFactory_Returns_Instance_Of_AddUser_Given_By_IChangePasswordToUser()
         {
-            Mock<IUserRepository> userMock = new Mock<IUserRepository>();
-            Mock<IEventBus> eventBusMock = new Mock<IEventBus>();
+            var userMock = new Mock<IUserRepository>();
+            var eventBusMock = new Mock<IEventBus>();
 
-            IChangePasswordToUserFactory target = new ChangePasswordToUserFactory(userMock.Object, eventBusMock.Object);
+            IChangePasswordToUserFactory target = new ChangePasswordToUserFactory(userMock.Object , eventBusMock.Object);
 
             var result = target.Create();
 

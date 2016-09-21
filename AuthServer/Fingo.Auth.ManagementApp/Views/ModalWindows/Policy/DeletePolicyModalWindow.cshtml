@@ -24,6 +24,7 @@
 
 <script>
     $('#deletePolicy').modal('show');
+
     function RemoveData(projectId, policy) {
         var apiUrl = "/policy/{projectId}/{policy}";
         apiUrl = apiUrl.replace("{projectId}", projectId);
@@ -33,7 +34,7 @@
             type: 'DELETE',
             cache: false,
             statusCode: {
-                200: function (data) {
+                200: function(data) {
                     location.reload();
                 }
             }

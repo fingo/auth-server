@@ -8,6 +8,7 @@ namespace Fingo.Auth.Domain.Projects.Factories.Implementation
     public class GetProjectFactory : IGetProjectFactory
     {
         private readonly IProjectRepository _repository;
+
         public GetProjectFactory(IProjectRepository repository)
         {
             _repository = repository;

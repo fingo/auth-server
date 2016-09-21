@@ -1,5 +1,5 @@
 <div class="container">
-    <button type="button" style="width:15%;" class="btn btn-success btn-lg button-wide pull-right" data-toggle="modal" data-target="#myModal">Add new project</button>
+    <button type="button" style="width: 15%;" class="btn btn-success btn-lg button-wide pull-right" data-toggle="modal" data-target="#myModal">Add new project</button>
 
     <div class="row" style="margin-top: 5%">
         <div class="col-lg-12">
@@ -16,12 +16,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 style="text-align:left" class="modal-title">Add new project</h4>
+                    <h4 style="text-align: left" class="modal-title">Add new project</h4>
                 </div>
                 <div class="modal-body">
                     <p>Name</p>
                     <input id="inputName" type="text" class="form-control">
-                    <p id="hide" style="display:none; color:red">Please write a name of project</p>
+                    <p id="hide" style="color: red; display: none;">Please write a name of project</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" onclick="addProject()" id="addProject" class="btn btn-success button-narrow">Add</button>
@@ -33,74 +33,74 @@
 </div>
 
 
-
 @section scripts
 {
-    <link href="~/css/jquery.bs_pagination.css" rel="stylesheet" />
+    <link href="~/css/jquery.bs_pagination.css" rel="stylesheet"/>
     <script src="~/js/jquery.bs_pagination.js"></script>
     <script src="~/js/localization/en.js"></script>
-<script>
+    <script>
 
-    $(document).ready(function GetAllProjects(){
-        var apiUrl = "/projects/getAllProjects";
-        $.ajaxLoading({
-            url: apiUrl,
-            type: 'GET',
-            success: function (data) {
-                $('#projectsList').empty();
-                $('#projectsList').html(data);
-                $('#projectsList')
-                    .find("script")
-                    .each(function (i) {
-                        eval($(this).text());
-                    });
-                $('#projectsList')
-                    .find("link")
-                    .each(function (i) {
-                        eval($(this).text());
-                    });
+        $(document)
+            .ready(function GetAllProjects() {
+                var apiUrl = "/projects/getAllProjects";
+                $.ajaxLoading({
+                    url: apiUrl,
+                    type: 'GET',
+                    success: function(data) {
+                        $('#projectsList').empty();
+                        $('#projectsList').html(data);
+                        $('#projectsList')
+                            .find("script")
+                            .each(function(i) {
+                                eval($(this).text());
+                            });
+                        $('#projectsList')
+                            .find("link")
+                            .each(function(i) {
+                                eval($(this).text());
+                            });
 
 
-            }
-        });
-    });
+                    }
+                });
+            });
 
-     function addProject() {
-        var apiUrl = "/projects";
-        var name = $("#inputName").val();
-        if ($("#inputName").val() === '') {
-            $("#hide").show();
-            return false;
-        };
-        $("#inputName").click();
-        var postData = { name: name };
-        $.ajaxLoading({
-            url: apiUrl,
-            type: 'POST',
-            cache: false,
-            data: postData,
-            statusCode: {
-                200: function (data) {
-                    location.reload();
+        function addProject() {
+            var apiUrl = "/projects";
+            var name = $("#inputName").val();
+            if ($("#inputName").val() === '') {
+                $("#hide").show();
+                return false;
+            };
+            $("#inputName").click();
+            var postData = { name: name };
+            $.ajaxLoading({
+                url: apiUrl,
+                type: 'POST',
+                cache: false,
+                data: postData,
+                statusCode: {
+                    200: function(data) {
+                        location.reload();
+                    }
                 }
-            }
-        }); // ajax call
-    }
+            }); // ajax call
+        }
 
-    function deleteProject(id) {
-        var apiUrl = "/projects/{0}";
-        apiUrl = apiUrl.replace("{0}", id);
-        $.ajaxLoading({
-            url: apiUrl,
-            type: 'DELETE',
-            data: id,
-            cache: false,
-            statusCode: {
-                200: function (data) {
-                    location.reload();
+        function deleteProject(id) {
+            var apiUrl = "/projects/{0}";
+            apiUrl = apiUrl.replace("{0}", id);
+            $.ajaxLoading({
+                url: apiUrl,
+                type: 'DELETE',
+                data: id,
+                cache: false,
+                statusCode: {
+                    200: function(data) {
+                        location.reload();
+                    }
                 }
-            }
-        }); // ajax call
-    }
-</script>
-    }
+            }); // ajax call
+        }
+    </script>
+}

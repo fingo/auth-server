@@ -16,47 +16,55 @@ namespace Fingo.Auth.Domain.Users.Tests.Implementation
         {
             //Arrange
 
-            Mock<IUserRepository> repository = new Mock<IUserRepository>();
+            var repository = new Mock<IUserRepository>();
             repository.Setup(m => m.GetAll()).Returns(new[]
             {
-                new User() {
-                    Id = 1,
-                    Status = UserStatus.Active,
-                    ProjectUsers = new List<ProjectUser>()
+                new User
+                {
+                    Id = 1 ,
+                    Status = UserStatus.Active ,
+                    ProjectUsers = new List<ProjectUser>
                     {
-                    new ProjectUser() {ProjectId = 2 , UserId = 1}
-                    } },
-                new User() {
-                    Id = 2,
-                    Status = UserStatus.Active,
-                    ProjectUsers = new List<ProjectUser>()
+                        new ProjectUser {ProjectId = 2 , UserId = 1}
+                    }
+                } ,
+                new User
+                {
+                    Id = 2 ,
+                    Status = UserStatus.Active ,
+                    ProjectUsers = new List<ProjectUser>
                     {
-                    new ProjectUser() {ProjectId = 2 , UserId = 2}
-                    } },
-                new User() {
-                    Id = 3,
-                    Status = UserStatus.Active,
-                    ProjectUsers = new List<ProjectUser>()
+                        new ProjectUser {ProjectId = 2 , UserId = 2}
+                    }
+                } ,
+                new User
+                {
+                    Id = 3 ,
+                    Status = UserStatus.Active ,
+                    ProjectUsers = new List<ProjectUser>
                     {
-                    new ProjectUser() {ProjectId = 2 , UserId = 3}
-                    } },
-                new User() {
-                    Id = 4,
-                    Status = UserStatus.Active,
-                    ProjectUsers = new List<ProjectUser>()
+                        new ProjectUser {ProjectId = 2 , UserId = 3}
+                    }
+                } ,
+                new User
+                {
+                    Id = 4 ,
+                    Status = UserStatus.Active ,
+                    ProjectUsers = new List<ProjectUser>
                     {
-                    new ProjectUser() {ProjectId = 1 , UserId = 4}
-                    } },
+                        new ProjectUser {ProjectId = 1 , UserId = 4}
+                    }
+                }
             });
 
             //Act
 
-            GetAllNotAssignedUsersToProject target = new GetAllNotAssignedUsersToProject(repository.Object);
+            var target = new GetAllNotAssignedUsersToProject(repository.Object);
             var result = target.Invoke(1);
 
             //Assert
 
-            Assert.True(result.Count()==3);
+            Assert.True(result.Count() == 3);
         }
 
         [Fact]
@@ -64,41 +72,46 @@ namespace Fingo.Auth.Domain.Users.Tests.Implementation
         {
             //Arrange
 
-            Mock<IUserRepository> repository = new Mock<IUserRepository>();
+            var repository = new Mock<IUserRepository>();
             repository.Setup(m => m.GetAll()).Returns(new[]
             {
-                new User() {
-                    Id = 1,
-                    Status = UserStatus.Active,
-                    ProjectUsers = new List<ProjectUser>()
+                new User
+                {
+                    Id = 1 ,
+                    Status = UserStatus.Active ,
+                    ProjectUsers = new List<ProjectUser>
                     {
-                    new ProjectUser() {ProjectId = 2 , UserId = 1}
-                    } },
-                new User() {
-                    Id = 2,
-                    Status = UserStatus.Deleted,
-                    ProjectUsers = new List<ProjectUser>()
+                        new ProjectUser {ProjectId = 2 , UserId = 1}
+                    }
+                } ,
+                new User
+                {
+                    Id = 2 ,
+                    Status = UserStatus.Deleted ,
+                    ProjectUsers = new List<ProjectUser>
                     {
-                    new ProjectUser() {ProjectId = 2 , UserId = 2}
-                    } },
-                new User() {
-                    Id = 3,
-                    Status = UserStatus.Deleted,
-                    ProjectUsers = new List<ProjectUser>()
+                        new ProjectUser {ProjectId = 2 , UserId = 2}
+                    }
+                } ,
+                new User
+                {
+                    Id = 3 ,
+                    Status = UserStatus.Deleted ,
+                    ProjectUsers = new List<ProjectUser>
                     {
-                    new ProjectUser() {ProjectId = 2 , UserId = 3}
-                    } }
+                        new ProjectUser {ProjectId = 2 , UserId = 3}
+                    }
+                }
             });
 
             //Act
 
-            GetAllNotAssignedUsersToProject target = new GetAllNotAssignedUsersToProject(repository.Object);
+            var target = new GetAllNotAssignedUsersToProject(repository.Object);
             var result = target.Invoke(1);
 
             //Assert
 
             Assert.True(result.Count() == 1);
         }
-
     }
 }

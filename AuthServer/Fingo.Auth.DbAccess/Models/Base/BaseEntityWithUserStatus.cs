@@ -2,7 +2,7 @@
 
 namespace Fingo.Auth.DbAccess.Models.Base
 {
-    public class BaseEntityWithUserStatus:BaseEntity
+    public class BaseEntityWithUserStatus : BaseEntity
     {
         public BaseEntityWithUserStatus()
         {

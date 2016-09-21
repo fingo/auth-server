@@ -4,16 +4,16 @@ namespace Fingo.Auth.Domain.Infrastructure.EventBus.Events.User
 {
     public class UserMerged : EventBase
     {
-        public UserMerged(string login, string firstName, string lastName)
+        public UserMerged(string login , string firstName , string lastName)
         {
             FirstName = firstName;
             LastName = lastName;
             Login = login;
         }
 
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public string Login { get; private set; }
+        public string FirstName { get; }
+        public string LastName { get; }
+        public string Login { get; }
 
 
         public override string ToString()

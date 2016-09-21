@@ -20,16 +20,17 @@
 </div>
 
 <script>
-    $('#closeModalButton').click(function() {
-        $('#policyModalWindow').modal('hide');
-    });
+    $('#closeModalButton')
+        .click(function() {
+            $('#policyModalWindow').modal('hide');
+        });
     $('#policyModalWindow').modal('show');
     $(document)
         .ready(
-            function () {
+            function() {
                 var apiUrl = "/policy/{policyOption}/{projectId}";
-                apiUrl = apiUrl.replace("{policyOption}", '@Model' );
-                apiUrl = apiUrl.replace("{projectId}", @ViewData["projectId"] );
+                apiUrl = apiUrl.replace("{policyOption}", '@Model');
+                apiUrl = apiUrl.replace("{projectId}", @ViewData["projectId"]);
                 $.ajaxLoading({
                     url: apiUrl,
                     type: 'GET',
@@ -46,5 +47,6 @@
                                 eval($(this).text());
                             });
                     }
-                })});
+                });
+            });
 </script>

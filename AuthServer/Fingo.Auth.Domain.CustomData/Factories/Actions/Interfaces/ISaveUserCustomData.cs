@@ -4,6 +4,6 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Actions.Interfaces
 {
     public interface ISaveUserCustomData
     {
-        void Invoke(int projectId, int userId, string name,  UserConfiguration configuration);
+        void Invoke(int projectId , int userId , string name , UserConfiguration configuration);
     }
 }

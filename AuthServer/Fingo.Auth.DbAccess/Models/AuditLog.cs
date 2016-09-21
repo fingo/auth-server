@@ -6,7 +6,7 @@ namespace Fingo.Auth.DbAccess.Models
     {
         public AuditLog()
         {
-            CreationDate=DateTime.UtcNow;
+            CreationDate = DateTime.UtcNow;
         }
 
         public int Id { get; set; }

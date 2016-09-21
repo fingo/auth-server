@@ -8,10 +8,10 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Implementation
 {
     public class DeleteCustomDataFromProjectFactory : IDeleteCustomDataFromProjectFactory
     {
-        private readonly IProjectRepository projectRepository;
         private readonly IEventBus _eventBus;
+        private readonly IProjectRepository projectRepository;
 
-        public DeleteCustomDataFromProjectFactory(IProjectRepository projectRepository, IEventBus eventBus)
+        public DeleteCustomDataFromProjectFactory(IProjectRepository projectRepository , IEventBus eventBus)
         {
             _eventBus = eventBus;
             this.projectRepository = projectRepository;
@@ -19,7 +19,7 @@ namespace Fingo.Auth.Domain.CustomData.Factories.Implementation
 
         public IDeleteCustomDataFromProject Create()
         {
-            return new DeleteCustomDataFromProject(projectRepository, _eventBus);
+            return new DeleteCustomDataFromProject(projectRepository , _eventBus);
         }
     }
 }

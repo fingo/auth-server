@@ -1,47 +1,74 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Fingo.Auth.DbAccess.Models.Base;
 using Fingo.Auth.DbAccess.Models.Statuses;
-using Xunit;
 using Fingo.Auth.Domain.Infrastructure.ExtensionMethods;
-using System.Linq;
+using Xunit;
 
 namespace Fingo.Auth.Domain.Infrastructure.Tests.ExtensionMethods
 {
     public class CheckInProjectStatusesTest
     {
-        //Test : T WithStatuses<T>(this T model, params Status[] list)
-
         [Fact]
-        public void Recive_Null_When_Filtering_Null_Entity()
+        public void Recive_Collection_When_Filtering_Collection_With_Valid_Multiple_Statuses()
         {
             //Arrange
 
-            BaseEntityWithProjectStatus baseEntity = null;
+            IEnumerable<BaseEntityWithProjectStatus> nullCollection = new List<BaseEntityWithProjectStatus>
+            {
+                new BaseEntityWithProjectStatus {Status = ProjectStatus.Active} ,
+                new BaseEntityWithProjectStatus {Status = ProjectStatus.Deleted}
+            };
 
             //Act
 
-            var result = baseEntity.WithStatuses(ProjectStatus.Active , ProjectStatus.Deleted);
+            var result = nullCollection.WithStatuses(ProjectStatus.Active , ProjectStatus.Deleted);
 
             //Assert
 
-            Assert.Null(result);
-            Assert.Null(baseEntity);
+            Assert.NotEmpty(result);
+            Assert.True(result.Count() == 2);
         }
 
         [Fact]
-        public void Recive_Null_When_Filtering_One_Entity_With_Wrong_Status()
+        public void Recive_Collection_When_Filtering_Collection_With_Valid_Status()
         {
             //Arrange
 
-            BaseEntityWithProjectStatus baseEntity = new BaseEntityWithProjectStatus() { Status = ProjectStatus.Deleted };
+            IEnumerable<BaseEntityWithProjectStatus> nullCollection = new List<BaseEntityWithProjectStatus>
+            {
+                new BaseEntityWithProjectStatus {Status = ProjectStatus.Active} ,
+                new BaseEntityWithProjectStatus {Status = ProjectStatus.Active}
+            };
+
             //Act
 
-            var result = baseEntity.WithStatuses(ProjectStatus.Active);
+            var result = nullCollection.WithStatuses(ProjectStatus.Active);
 
             //Assert
 
-            Assert.Null(result);
-            Assert.NotNull(baseEntity);
+            Assert.NotEmpty(result);
+            Assert.True(result.Count() == 2);
+        }
+
+        [Fact]
+        public void Recive_Empty_Collection_When_Filtering_Collection_With_Wrong_Status()
+        {
+            //Arrange
+
+            IEnumerable<BaseEntityWithProjectStatus> nullCollection = new List<BaseEntityWithProjectStatus>
+            {
+                new BaseEntityWithProjectStatus {Status = ProjectStatus.Deleted} ,
+                new BaseEntityWithProjectStatus {Status = ProjectStatus.Deleted}
+            };
+
+            //Act
+
+            var result = nullCollection.WithStatuses(ProjectStatus.Active);
+
+            //Assert
+
+            Assert.Empty(result);
         }
 
         [Fact]
@@ -49,7 +76,7 @@ namespace Fingo.Auth.Domain.Infrastructure.Tests.ExtensionMethods
         {
             //Arrange
 
-            BaseEntityWithProjectStatus baseEntity = new BaseEntityWithProjectStatus() { Status = ProjectStatus.Active };
+            var baseEntity = new BaseEntityWithProjectStatus {Status = ProjectStatus.Active};
 
             //Act
 
@@ -78,72 +105,10 @@ namespace Fingo.Auth.Domain.Infrastructure.Tests.ExtensionMethods
             Assert.Null(nullCollection);
         }
 
-        [Fact]
-        public void Recive_Empty_Collection_When_Filtering_Collection_With_Wrong_Status()
-        {
-            //Arrange
-
-            IEnumerable<BaseEntityWithProjectStatus> nullCollection = new List<BaseEntityWithProjectStatus>()
-            {
-                new BaseEntityWithProjectStatus() {Status = ProjectStatus.Deleted},
-                new BaseEntityWithProjectStatus() {Status = ProjectStatus.Deleted}
-            };
-
-            //Act
-
-            var result = nullCollection.WithStatuses(ProjectStatus.Active);
-
-            //Assert
-
-            Assert.Empty(result);
-        }
+        //Test : T WithStatuses<T>(this T model, params Status[] list)
 
         [Fact]
-        public void Recive_Collection_When_Filtering_Collection_With_Valid_Status()
-        {
-            //Arrange
-
-            IEnumerable<BaseEntityWithProjectStatus> nullCollection = new List<BaseEntityWithProjectStatus>()
-            {
-                new BaseEntityWithProjectStatus() {Status = ProjectStatus.Active},
-                new BaseEntityWithProjectStatus() {Status = ProjectStatus.Active}
-            };
-
-            //Act
-
-            var result = nullCollection.WithStatuses(ProjectStatus.Active);
-
-            //Assert
-
-            Assert.NotEmpty(result);
-            Assert.True(result.Count() == 2);
-        }
-
-        [Fact]
-        public void Recive_Collection_When_Filtering_Collection_With_Valid_Multiple_Statuses()
-        {
-            //Arrange
-
-            IEnumerable<BaseEntityWithProjectStatus> nullCollection = new List<BaseEntityWithProjectStatus>()
-            {
-                new BaseEntityWithProjectStatus() {Status = ProjectStatus.Active},
-                new BaseEntityWithProjectStatus() {Status = ProjectStatus.Deleted}
-            };
-
-            //Act
-
-            var result = nullCollection.WithStatuses(ProjectStatus.Active , ProjectStatus.Deleted);
-
-            //Assert
-
-            Assert.NotEmpty(result);
-            Assert.True(result.Count() == 2);
-        }
-
-        //Test : T WithoutStatuses<T>(this T model , params Status[] list)
-
-        [Fact]
-        public void WithoutStatuses_Recive_Null_When_Filtering_Null_Entity()
+        public void Recive_Null_When_Filtering_Null_Entity()
         {
             //Arrange
 
@@ -151,7 +116,7 @@ namespace Fingo.Auth.Domain.Infrastructure.Tests.ExtensionMethods
 
             //Act
 
-            var result = baseEntity.WithoutStatuses(ProjectStatus.Active , ProjectStatus.Deleted);
+            var result = baseEntity.WithStatuses(ProjectStatus.Active , ProjectStatus.Deleted);
 
             //Assert
 
@@ -160,14 +125,14 @@ namespace Fingo.Auth.Domain.Infrastructure.Tests.ExtensionMethods
         }
 
         [Fact]
-        public void WithoutStatuses_Recive_Null_When_Filtering_One_Entity_With_Matching_Status()
+        public void Recive_Null_When_Filtering_One_Entity_With_Wrong_Status()
         {
             //Arrange
 
-            BaseEntityWithProjectStatus baseEntity = new BaseEntityWithProjectStatus() { Status = ProjectStatus.Deleted };
+            var baseEntity = new BaseEntityWithProjectStatus {Status = ProjectStatus.Deleted};
             //Act
 
-            var result = baseEntity.WithoutStatuses(ProjectStatus.Deleted);
+            var result = baseEntity.WithStatuses(ProjectStatus.Active);
 
             //Assert
 
@@ -176,11 +141,72 @@ namespace Fingo.Auth.Domain.Infrastructure.Tests.ExtensionMethods
         }
 
         [Fact]
+        public void WithoutStatuses_Recive_Collection_When_Filtering_Collection_With_Not_Matching_Status()
+        {
+            //Arrange
+
+            IEnumerable<BaseEntityWithProjectStatus> nullCollection = new List<BaseEntityWithProjectStatus>
+            {
+                new BaseEntityWithProjectStatus {Status = ProjectStatus.Active}
+            };
+
+            //Act
+
+            var result = nullCollection.WithoutStatuses(ProjectStatus.Deleted);
+
+            //Assert
+
+            Assert.NotEmpty(result);
+            Assert.True(result.Count() == 1);
+        }
+
+        [Fact]
+        public void WithoutStatuses_Recive_Collection_When_Filtering_Collection_With_Valid_Multiple_Statuses()
+        {
+            //Arrange
+
+            IEnumerable<BaseEntityWithProjectStatus> nullCollection = new List<BaseEntityWithProjectStatus>
+            {
+                new BaseEntityWithProjectStatus {Status = ProjectStatus.Active} ,
+                new BaseEntityWithProjectStatus {Status = ProjectStatus.Deleted}
+            };
+
+            //Act
+
+            var result = nullCollection.WithoutStatuses(ProjectStatus.Active);
+
+            //Assert
+
+            Assert.NotEmpty(result);
+            Assert.True(result.Count() == 1);
+        }
+
+        [Fact]
+        public void WithoutStatuses_Recive_Empty_Collection_When_Filtering_Collection_With_Matching_Statuses()
+        {
+            //Arrange
+
+            IEnumerable<BaseEntityWithProjectStatus> nullCollection = new List<BaseEntityWithProjectStatus>
+            {
+                new BaseEntityWithProjectStatus {Status = ProjectStatus.Deleted} ,
+                new BaseEntityWithProjectStatus {Status = ProjectStatus.Active}
+            };
+
+            //Act
+
+            var result = nullCollection.WithoutStatuses(ProjectStatus.Active , ProjectStatus.Deleted);
+
+            //Assert
+
+            Assert.Empty(result);
+        }
+
+        [Fact]
         public void WithoutStatuses_Recive_Entity_When_Filtering_One_Entity_With_Not_Matching_Status()
         {
             //Arrange
 
-            BaseEntityWithProjectStatus baseEntity = new BaseEntityWithProjectStatus() { Status = ProjectStatus.Active };
+            var baseEntity = new BaseEntityWithProjectStatus {Status = ProjectStatus.Active};
 
             //Act
 
@@ -209,65 +235,39 @@ namespace Fingo.Auth.Domain.Infrastructure.Tests.ExtensionMethods
             Assert.Null(nullCollection);
         }
 
+        //Test : T WithoutStatuses<T>(this T model , params Status[] list)
+
         [Fact]
-        public void WithoutStatuses_Recive_Empty_Collection_When_Filtering_Collection_With_Matching_Statuses()
+        public void WithoutStatuses_Recive_Null_When_Filtering_Null_Entity()
         {
             //Arrange
 
-            IEnumerable<BaseEntityWithProjectStatus> nullCollection = new List<BaseEntityWithProjectStatus>()
-            {
-                new BaseEntityWithProjectStatus() {Status = ProjectStatus.Deleted},
-                new BaseEntityWithProjectStatus() {Status = ProjectStatus.Active}
-            };
+            BaseEntityWithProjectStatus baseEntity = null;
 
             //Act
 
-            var result = nullCollection.WithoutStatuses(ProjectStatus.Active , ProjectStatus.Deleted);
+            var result = baseEntity.WithoutStatuses(ProjectStatus.Active , ProjectStatus.Deleted);
 
             //Assert
 
-            Assert.Empty(result);
+            Assert.Null(result);
+            Assert.Null(baseEntity);
         }
 
         [Fact]
-        public void WithoutStatuses_Recive_Collection_When_Filtering_Collection_With_Not_Matching_Status()
+        public void WithoutStatuses_Recive_Null_When_Filtering_One_Entity_With_Matching_Status()
         {
             //Arrange
 
-            IEnumerable<BaseEntityWithProjectStatus> nullCollection = new List<BaseEntityWithProjectStatus>()
-            {
-                new BaseEntityWithProjectStatus() {Status = ProjectStatus.Active},
-            };
-
+            var baseEntity = new BaseEntityWithProjectStatus {Status = ProjectStatus.Deleted};
             //Act
 
-            var result = nullCollection.WithoutStatuses(ProjectStatus.Deleted);
+            var result = baseEntity.WithoutStatuses(ProjectStatus.Deleted);
 
             //Assert
 
-            Assert.NotEmpty(result);
-            Assert.True(result.Count() == 1);
-        }
-
-        [Fact]
-        public void WithoutStatuses_Recive_Collection_When_Filtering_Collection_With_Valid_Multiple_Statuses()
-        {
-            //Arrange
-
-            IEnumerable<BaseEntityWithProjectStatus> nullCollection = new List<BaseEntityWithProjectStatus>()
-            {
-                new BaseEntityWithProjectStatus() {Status = ProjectStatus.Active},
-                new BaseEntityWithProjectStatus() {Status = ProjectStatus.Deleted},
-            };
-
-            //Act
-
-            var result = nullCollection.WithoutStatuses(ProjectStatus.Active);
-
-            //Assert
-
-            Assert.NotEmpty(result);
-            Assert.True(result.Count() == 1);
+            Assert.Null(result);
+            Assert.NotNull(baseEntity);
         }
     }
 }

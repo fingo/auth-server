@@ -5,13 +5,15 @@ using Fingo.Auth.Domain.Users.Interfaces;
 
 namespace Fingo.Auth.Domain.Users.Factories.Implementation
 {
-    public class GetUserByLoginFactory:IGetUserByLoginFactory
+    public class GetUserByLoginFactory : IGetUserByLoginFactory
     {
         private readonly IUserRepository _repository;
+
         public GetUserByLoginFactory(IUserRepository repository)
         {
             _repository = repository;
         }
+
         public IGetUserByLogin Create()
         {
             return new GetUserByLogin(_repository);

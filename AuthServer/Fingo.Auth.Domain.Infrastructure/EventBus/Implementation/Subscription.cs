@@ -6,14 +6,15 @@ namespace Fingo.Auth.Domain.Infrastructure.EventBus.Implementation
 {
     public class Subscription<TEventBase> : ISubscription where TEventBase : EventBase
     {
-        public Type SubscriptionType { get; private set; }
         private readonly Action<TEventBase> _action;
 
-        public Subscription(Type subscriptionType, Action<TEventBase> action)
+        public Subscription(Type subscriptionType , Action<TEventBase> action)
         {
             SubscriptionType = subscriptionType;
             _action = action;
         }
+
+        public Type SubscriptionType { get; }
 
         public void Publish(EventBase eventItem)
         {

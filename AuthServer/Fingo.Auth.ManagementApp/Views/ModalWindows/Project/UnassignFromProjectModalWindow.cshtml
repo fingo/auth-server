@@ -13,7 +13,7 @@
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" onclick="UnassignUser(@ViewBag.UserId, '@Model.Id')"  class="btn btn-success button-narrow">Yes</button>
+                <button type="button" onclick="UnassignUser(@ViewBag.UserId, '@Model.Id')" class="btn btn-success button-narrow">Yes</button>
                 <button type="button" class="btn btn-info button-narrow" data-dismiss="modal">No</button>
             </div>
         </div>
@@ -22,6 +22,7 @@
 
 <script>
     $('#UnassignUser').modal('show');
+
     function UnassignUser(userId, projectId) {
         var apiUrl = "/projects/{projectId}/{userId}";
         apiUrl = apiUrl.replace("{projectId}", projectId);
@@ -31,7 +32,7 @@
             type: 'DELETE',
             cache: false,
             statusCode: {
-                200: function (data) {
+                200: function(data) {
                     location.reload();
                 }
             }

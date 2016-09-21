@@ -10,13 +10,20 @@ namespace Fingo.Auth.Domain.Policies.Tests.ExtensionMethods
     public class CheckTypeTest
     {
         [Fact]
-        public void WithTypesShouldReturnNull()
+        public void WithTypesShouldReturnAccountCreationTypes()
         {
             // arrange
-            List<Policy> list = null;
+            var list = new List<Policy>
+            {
+                Policy.PasswordExpirationDate ,
+                Policy.MinimumPasswordLength ,
+                Policy.RequiredPasswordCharacters ,
+                Policy.AccountExpirationDate
+            };
 
             // act & assert
-            Assert.Equal(null, list.WithTypes(PolicyType.AccountCreation));
+            Assert.Equal(new List<Policy> {Policy.MinimumPasswordLength , Policy.RequiredPasswordCharacters} ,
+                list.WithTypes(PolicyType.AccountCreation));
         }
 
         [Fact]
@@ -25,9 +32,9 @@ namespace Fingo.Auth.Domain.Policies.Tests.ExtensionMethods
             // arrange
             var list = new List<Policy>
             {
-                Policy.PasswordExpirationDate,
-                Policy.MinimumPasswordLength,
-                Policy.RequiredPasswordCharacters,
+                Policy.PasswordExpirationDate ,
+                Policy.MinimumPasswordLength ,
+                Policy.RequiredPasswordCharacters ,
                 Policy.AccountExpirationDate
             };
 
@@ -35,26 +42,20 @@ namespace Fingo.Auth.Domain.Policies.Tests.ExtensionMethods
             Assert.Equal(
                 new List<Policy>
                 {
-                    Policy.PasswordExpirationDate,
+                    Policy.PasswordExpirationDate ,
                     Policy.AccountExpirationDate
-                },
+                } ,
                 list.WithTypes(PolicyType.LogIn));
         }
 
         [Fact]
-        public void WithTypesShouldReturnAccountCreationTypes()
+        public void WithTypesShouldReturnNull()
         {
             // arrange
-            var list = new List<Policy>
-            {
-                Policy.PasswordExpirationDate,
-                Policy.MinimumPasswordLength,
-                Policy.RequiredPasswordCharacters,
-                Policy.AccountExpirationDate
-            };
+            List<Policy> list = null;
 
             // act & assert
-            Assert.Equal(new List<Policy> { Policy.MinimumPasswordLength, Policy.RequiredPasswordCharacters }, list.WithTypes(PolicyType.AccountCreation));
+            Assert.Equal(null , list.WithTypes(PolicyType.AccountCreation));
         }
 
         [Fact]
@@ -63,80 +64,80 @@ namespace Fingo.Auth.Domain.Policies.Tests.ExtensionMethods
             // arrange
             var list = new List<Policy>
             {
-                Policy.RequiredPasswordCharacters,
+                Policy.RequiredPasswordCharacters ,
                 Policy.AccountExpirationDate
             };
 
             // act & assert
-            Assert.Equal(list, list.WithTypes());
-        }
-
-        [Fact]
-        public void WithTypesTupleShouldReturnNull()
-        {
-            // arrange
-            List<Tuple<Policy, object>> list = null;
-
-            // act & assert
-            Assert.Equal(null, list.WithTypes(PolicyType.AccountCreation));
-        }
-
-        [Fact]
-        public void WithTypesTupleShouldReturnLogInTypes()
-        {
-            // arrange
-            var list = new List<Tuple<Policy, int>>
-            {
-                new Tuple<Policy, int>(Policy.PasswordExpirationDate, 2),
-                new Tuple<Policy, int>(Policy.MinimumPasswordLength, 42),
-                new Tuple<Policy, int>(Policy.RequiredPasswordCharacters, -20000000),
-                new Tuple<Policy, int>(Policy.AccountExpirationDate, -41)
-            };
-
-            // act & assert
-            Assert.Equal(
-                new List<Tuple<Policy, int>>
-                {
-                    new Tuple<Policy, int>(Policy.PasswordExpirationDate, 2),
-                    new Tuple<Policy, int>(Policy.AccountExpirationDate, -41)
-                },
-                list.WithTypes(PolicyType.LogIn));
+            Assert.Equal(list , list.WithTypes());
         }
 
         [Fact]
         public void WithTypesTupleShouldReturnAccountCreationTypes()
         {
             // arrange
-            var list = new List<Tuple<Policy, double>>
+            var list = new List<Tuple<Policy , double>>
             {
-                new Tuple<Policy, double>(Policy.PasswordExpirationDate, Math.E),
-                new Tuple<Policy, double>(Policy.MinimumPasswordLength, Math.PI),
-                new Tuple<Policy, double>(Policy.RequiredPasswordCharacters, Math.Exp(Math.PI)),
-                new Tuple<Policy, double>(Policy.AccountExpirationDate, 42)
+                new Tuple<Policy , double>(Policy.PasswordExpirationDate , Math.E) ,
+                new Tuple<Policy , double>(Policy.MinimumPasswordLength , Math.PI) ,
+                new Tuple<Policy , double>(Policy.RequiredPasswordCharacters , Math.Exp(Math.PI)) ,
+                new Tuple<Policy , double>(Policy.AccountExpirationDate , 42)
             };
 
             // act & assert
             Assert.Equal(
-                new List<Tuple<Policy, double>>
+                new List<Tuple<Policy , double>>
                 {
-                    new Tuple<Policy, double>(Policy.MinimumPasswordLength, Math.PI),
-                    new Tuple<Policy, double>(Policy.RequiredPasswordCharacters, Math.Exp(Math.PI))
-                },
+                    new Tuple<Policy , double>(Policy.MinimumPasswordLength , Math.PI) ,
+                    new Tuple<Policy , double>(Policy.RequiredPasswordCharacters , Math.Exp(Math.PI))
+                } ,
                 list.WithTypes(PolicyType.AccountCreation));
+        }
+
+        [Fact]
+        public void WithTypesTupleShouldReturnLogInTypes()
+        {
+            // arrange
+            var list = new List<Tuple<Policy , int>>
+            {
+                new Tuple<Policy , int>(Policy.PasswordExpirationDate , 2) ,
+                new Tuple<Policy , int>(Policy.MinimumPasswordLength , 42) ,
+                new Tuple<Policy , int>(Policy.RequiredPasswordCharacters , -20000000) ,
+                new Tuple<Policy , int>(Policy.AccountExpirationDate , -41)
+            };
+
+            // act & assert
+            Assert.Equal(
+                new List<Tuple<Policy , int>>
+                {
+                    new Tuple<Policy , int>(Policy.PasswordExpirationDate , 2) ,
+                    new Tuple<Policy , int>(Policy.AccountExpirationDate , -41)
+                } ,
+                list.WithTypes(PolicyType.LogIn));
+        }
+
+        [Fact]
+        public void WithTypesTupleShouldReturnNull()
+        {
+            // arrange
+            List<Tuple<Policy , object>> list = null;
+
+            // act & assert
+            Assert.Equal(null , list.WithTypes(PolicyType.AccountCreation));
         }
 
         [Fact]
         public void WithTypesTupleShouldReturnWhatWasGiven()
         {
             // arrange
-            var list = new List<Tuple<Policy, string>>
+            var list = new List<Tuple<Policy , string>>
             {
-                new Tuple<Policy, string>(Policy.RequiredPasswordCharacters, "a"),
-                new Tuple<Policy, string>(Policy.AccountExpirationDate, "b")
+                new Tuple<Policy , string>(Policy.RequiredPasswordCharacters , "a") ,
+                new Tuple<Policy , string>(Policy.AccountExpirationDate , "b")
             };
 
             // act & assert
-            Assert.Equal(list, list.WithTypes());
+            Assert.Equal(list , list.WithTypes());
         }
     }
 }

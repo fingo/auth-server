@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Fingo.Auth.DbAccess.Models;
 using Fingo.Auth.DbAccess.Models.Statuses;
 using Fingo.Auth.DbAccess.Repository.Interfaces;
 using Fingo.Auth.Domain.Infrastructure.ExtensionMethods;
@@ -20,18 +19,17 @@ namespace Fingo.Auth.Domain.Projects.Implementation
 
         public ProjectDetailWithAll Invoke(int projectId)
         {
-            Project project = _projectRepository.GetById(projectId).WithoutStatuses(ProjectStatus.Deleted);
+            var project = _projectRepository.GetById(projectId).WithoutStatuses(ProjectStatus.Deleted);
 
             if (project == null)
-            {
                 throw new ArgumentNullException($"Cannot find project with id={projectId}.");
-            }
 
-            var users = _projectRepository.GetAllUsersFromProject(projectId).WithStatuses(UserStatus.Active, UserStatus.Registered);
+            var users = _projectRepository.GetAllUsersFromProject(projectId)
+                .WithStatuses(UserStatus.Active , UserStatus.Registered);
             var customData = _projectRepository.GetByIdWithCustomDatas(projectId).ProjectCustomData;
             var policies = project.ProjectPolicies.Select(pp => pp.Policy).Distinct();
 
-            return new ProjectDetailWithAll(project, users, customData, policies);
+            return new ProjectDetailWithAll(project , users , customData , policies);
         }
     }
 }

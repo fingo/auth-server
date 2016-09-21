@@ -5,64 +5,65 @@
 <div class="tableWithCollapseContainer">
     <table class="table table-responsive" id="userTable">
         <thead>
-            <tr>
-                <th>No</th>
-                <th>Name</th>
-                <th>Login</th>
-            </tr>
+        <tr>
+            <th>No</th>
+            <th>Name</th>
+            <th>Login</th>
+        </tr>
         </thead>
         <tbody class="Registered">
-            @{ int rowNo = ViewBag.Number; }
-            @foreach (var user in Model)
+        @{ int rowNo = ViewBag.Number; }
+        @foreach (var user in Model)
+        {
             {
-                {
-                    rowNo++;
-                }
-                <tr style="cursor: pointer;" onclick="GetUserProjectsCollapseWindow(@user.Id)">
-                    <td>@rowNo</td>
-                    <td>
-                        @{ string name = user.FirstName + " " + user.LastName; }
-                        @(user.UserStatus == UserStatus.Registered ? Html.ActionLink(name, "GetById", "Users", new { id = user.Id }, new { style = "color: brown; " }) : Html.ActionLink(name, "GetById", "Users", new { id = user.Id }))
-                    </td>
-                    <td>@user.Login</td>
-                </tr>
-                <tr>
-                    <td colspan="12" class="zeroPadding">
-                        <div id="@user.Id" class="collapse">
-                        </div>
-                    </td>
-                </tr>
-                            }
-            @for (int i = 0; i < ViewBag.RowsPerPage - Model.Count(); i++)
-            {
-                <tr>
-                    <td>@(ViewBag.RowsPerPage * (ViewBag.Page-1)+Model.Count()+i+1)</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
+                rowNo++;
             }
-        </tbody>
-        <tfoot>
+            <tr style="cursor: pointer;" onclick="GetUserProjectsCollapseWindow(@user.Id)">
+                <td>@rowNo</td>
+                <td>
+                    @{ var name = user.FirstName + " " + user.LastName; }
+                    @(user.UserStatus == UserStatus.Registered ? Html.ActionLink(name , "GetById" , "Users" , new {id = user.Id} , new {style = "color: brown; "}) : Html.ActionLink(name , "GetById" , "Users" , new {id = user.Id}))
+                </td>
+                <td>@user.Login</td>
+            </tr>
             <tr>
-                <td colspan="12">
-                    <p id="pag">
-                    </p>
+                <td colspan="12" class="zeroPadding">
+                    <div id="@user.Id" class="collapse">
+                    </div>
                 </td>
             </tr>
+        }
+        @for (var i = 0 ; i < ViewBag.RowsPerPage - Model.Count() ; i++)
+        {
+            <tr>
+                <td>@(ViewBag.RowsPerPage * (ViewBag.Page - 1) + Model.Count() + i + 1)</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        }
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="12">
+                <p id="pag">
+                </p>
+            </td>
+        </tr>
         </tfoot>
     </table>
 </div>
 
 <script>
-    $(function () {
+    $(function() {
         $("#pag")
             .bs_pagination({
                 currentPage: @ViewBag.Page,
                 rowsPerPage: @ViewBag.RowsPerPage,
-                totalPages: '@(ViewBag.TotalRows% ViewBag.RowsPerPage == 0? ViewBag.UsersCount: ViewBag.UsersCount+1)',
+                totalPages:
+                    '@(ViewBag.TotalRows % ViewBag.RowsPerPage == 0 ? ViewBag.UsersCount : ViewBag.UsersCount + 1)',
                 visiblePageLinks: 7,
                 totalRows: @ViewBag.TotalRows,
-                onChangePage: function (event, data) {
+                onChangePage: function(event, data) {
                     var apiUrl = "/users/UsersWithCollapseProject";
                     var _data = {
                         firstName: '@ViewBag.FirstName',
@@ -75,17 +76,17 @@
                         url: apiUrl,
                         type: 'GET',
                         data: _data,
-                        success: function (data) {
+                        success: function(data) {
                             $('#usersContainer').empty();
                             $('#usersContainer').html(data);
                             $('#usersContainer')
                                 .find("script")
-                                .each(function (i) {
+                                .each(function(i) {
                                     eval($(this).text());
                                 });
                             $('#usersContainer')
                                 .find("link")
-                                .each(function (i) {
+                                .each(function(i) {
                                     eval($(this).text());
                                 });
                         }
@@ -99,11 +100,11 @@
             $('#' + userId).collapse("hide");
             return;
         }
-        var apiUrl = "/CollapseWindow/"+userId;
+        var apiUrl = "/CollapseWindow/" + userId;
         $.ajaxLoading({
             url: apiUrl,
             type: 'GET',
-            success: function (data) {
+            success: function(data) {
                 $('#' + userId).empty();
                 $('#' + userId).html(data);
                 $('#' + userId)

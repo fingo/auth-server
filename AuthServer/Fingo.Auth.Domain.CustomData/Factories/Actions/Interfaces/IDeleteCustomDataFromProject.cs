@@ -2,6 +2,6 @@
 {
     public interface IDeleteCustomDataFromProject
     {
-        void Invoke(int projectId, string configurationName);
+        void Invoke(int projectId , string configurationName);
     }
 }

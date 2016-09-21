@@ -11,34 +11,22 @@ namespace Fingo.Auth.Domain.Infrastructure.Tests.EventBus
             public static string Results { get; set; }
             public string Result { get; set; }
         }
-        private class CustomEventClass : BaseCustomEventClass { }
-        private class CustomEventClass1 : BaseCustomEventClass { }
 
-        [Fact]
-        public void Can_Subscribe_One()
+        private class CustomEventClass : BaseCustomEventClass
         {
-            //Arrange
+        }
 
-            CustomEventClass eventClass = new CustomEventClass();
-            IEventBus eventBus = new Infrastructure.EventBus.Implementation.EventBus();
-
-            //Act
-
-            eventBus.Subscribe<CustomEventClass>(cec => cec.Result = "Received CustomEvent");
-            eventBus.Publish(eventClass);
-
-            //Assert
-
-            Assert.True(eventClass.Result == "Received CustomEvent");
+        private class CustomEventClass1 : BaseCustomEventClass
+        {
         }
 
         [Fact]
         public void Can_Subscribe_All()
         {
             //Arrange
-            BaseCustomEventClass baseCustomEventClass = new BaseCustomEventClass();
-            CustomEventClass eventClass = new CustomEventClass();
-            CustomEventClass1 eventClass1 = new CustomEventClass1();
+            var baseCustomEventClass = new BaseCustomEventClass();
+            var eventClass = new CustomEventClass();
+            var eventClass1 = new CustomEventClass1();
 
             IEventBus eventBus = new Infrastructure.EventBus.Implementation.EventBus();
 
@@ -64,12 +52,30 @@ namespace Fingo.Auth.Domain.Infrastructure.Tests.EventBus
         }
 
         [Fact]
+        public void Can_Subscribe_One()
+        {
+            //Arrange
+
+            var eventClass = new CustomEventClass();
+            IEventBus eventBus = new Infrastructure.EventBus.Implementation.EventBus();
+
+            //Act
+
+            eventBus.Subscribe<CustomEventClass>(cec => cec.Result = "Received CustomEvent");
+            eventBus.Publish(eventClass);
+
+            //Assert
+
+            Assert.True(eventClass.Result == "Received CustomEvent");
+        }
+
+        [Fact]
         public void Dont_Recive_Message_When_Not_Subscribing_Event()
         {
             //Arrange
 
-            CustomEventClass eventClass = new CustomEventClass();
-            CustomEventClass1 eventClass1 = new CustomEventClass1();
+            var eventClass = new CustomEventClass();
+            var eventClass1 = new CustomEventClass1();
             IEventBus eventBus = new Infrastructure.EventBus.Implementation.EventBus();
 
             //Act

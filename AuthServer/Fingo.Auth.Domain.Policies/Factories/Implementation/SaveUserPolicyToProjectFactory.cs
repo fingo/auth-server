@@ -6,19 +6,21 @@ using Fingo.Auth.Domain.Policies.Services.Interfaces;
 
 namespace Fingo.Auth.Domain.Policies.Factories.Implementation
 {
-    public class SaveUserPolicyToProjectFactory:ISaveUserPolicyToProjectFactory
+    public class SaveUserPolicyToProjectFactory : ISaveUserPolicyToProjectFactory
     {
-        private readonly IProjectRepository projectRepository;
         private readonly IPolicyJsonConvertService policyJsonConvertService;
+        private readonly IProjectRepository projectRepository;
 
-        public SaveUserPolicyToProjectFactory(IProjectRepository projectRepository, IPolicyJsonConvertService policyJsonConvertService)
+        public SaveUserPolicyToProjectFactory(IProjectRepository projectRepository ,
+            IPolicyJsonConvertService policyJsonConvertService)
         {
             this.projectRepository = projectRepository;
             this.policyJsonConvertService = policyJsonConvertService;
         }
+
         public ISaveUserPolicyToProject Create()
         {
-            return new SaveUserPolicyToProject(projectRepository, policyJsonConvertService);
+            return new SaveUserPolicyToProject(projectRepository , policyJsonConvertService);
         }
     }
 }
